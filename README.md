@@ -1,6 +1,7 @@
-plog1.1
+plog2.0
 =======
 
-P-log: probabilistic reasoning with a knowledge representation language allowing representation of commonsense knowledge involving logic and probabilities
+P-log: a language combining non-monotonic logic and probabilities.
 
-This project is a fork from http://www.ailaboratory.org/plog/ created mainly for the purpose to correct found errors.
+This repository is an implementation of P-log solver for dynamically causally ordered programs.
+
