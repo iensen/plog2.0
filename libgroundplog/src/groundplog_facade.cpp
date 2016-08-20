@@ -5,7 +5,8 @@
 #include <groundplog/groundplog_facade.h>
 
 GroundPlog::BasicSatConfig::BasicSatConfig() {
-    throw "not implemented yet";
+    opts_ = SolverParams();
+    heu_ = 0;
 }
 
 GroundPlog::DecisionHeuristic *GroundPlog::BasicSatConfig::heuristic(uint32 i) const {

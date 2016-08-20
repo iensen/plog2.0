@@ -41,9 +41,6 @@ namespace GroundPlog { namespace Cli {
         struct GroundPlogAppOptions {
             GroundPlogAppOptions();
             typedef std::vector<std::string>  StringSeq;
-            static bool mappedOpts(GroundPlogAppOptions*, const std::string&, const std::string&);
-            void initOptions(ProgramOptions::OptionContext& root);
-            bool validateOptions(const ProgramOptions::ParsedOptions& parsed);
             StringSeq   input;     // list of input files - only first used!
         };
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +96,7 @@ namespace GroundPlog { namespace Cli {
             typedef SingleOwnerPtr<Output>      OutPtr;
             typedef SingleOwnerPtr<GroundPlogFacade> ClaspPtr;
             GroundPlogCliConfig  groundPlogConfig_;
-            GroundPlogAppOptions claspAppOpts_;
+            GroundPlogAppOptions groundPlogAppOpts_;
             ClaspPtr        clasp_;
             OutPtr          out_;
         };

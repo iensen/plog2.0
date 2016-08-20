@@ -103,8 +103,7 @@ namespace GroundPlog {
             throw "not implemented yet";
         }
 
-        GroundPlogAppOptions::GroundPlogAppOptions() {
-            throw "not implemented yet";
+        GroundPlogAppOptions::GroundPlogAppOptions(){
         }
     }
 }
