@@ -1,0 +1,7 @@
+
+attributes
+a: boolean.
+rules
+random(a).
+pr(a) = 3/10.
+?a.
