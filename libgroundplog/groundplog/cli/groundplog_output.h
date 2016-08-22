@@ -49,7 +49,7 @@ public:
 	virtual bool onUnsat(const Solver& s);
 	//! Called on unsat - may print new info.
 	virtual void printUnsat();
-	//! Pring Probability.
+	//! Print Probability.
 	virtual void printProbability();
 	//! A solving step has started.
 	virtual void startStep(const GroundPlogFacade&);

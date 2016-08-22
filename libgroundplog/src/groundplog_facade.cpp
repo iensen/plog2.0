@@ -125,5 +125,5 @@ GroundPlog::GroundPlogFacade::~GroundPlogFacade() {
 }
 
 void GroundPlog::GroundPlogFacade::Summary::init(GroundPlog::GroundPlogFacade &f) {
-    throw "not implemented yet";
+    std::memset(this, 0, sizeof(Summary)); facade = &f;
 }

@@ -7,7 +7,7 @@
 
 #include <groundplog/solver_strategies.h>
 #include <groundplog/shared_context.h>
-#include<groundplog/solver_types.h>
+#include <groundplog/solver_types.h>
 
 namespace GroundPlog {
 
@@ -27,7 +27,7 @@ namespace GroundPlog {
 		friend class SharedContext;
 
 		//! Creates an empty solver object with all strategies set to their default value.
-		Solver(SharedContext *ctx, uint32 id);
+		Solver(SharedContext *ctx);
 
 		//! Destroys the solver object and all contained constraints.
 		~Solver();
@@ -54,9 +54,10 @@ namespace GroundPlog {
 
 		VarInfo varInfo(Var v) const { return shared_->varInfo(v); }
 
+        uint32   numFreeRandomVars() const;
 
 
-		//! Removes any implications made between the top-level and the root-level.
+        //! Removes any implications made between the top-level and the root-level.
 		/*!
          * The function also resets the current backtrack-level and re-assigns learnt facts.
          * \note
@@ -229,8 +230,86 @@ namespace GroundPlog {
         std::vector<Literal>            conflict_;    // conflict-literals for later analysis
         SharedContext *shared_;      // initialized by master thread - otherwise read-only!
 		HeuristicPtr heuristic_;   // active decision heuristic
-		Assignment assign_;      // three-valued assignment.
+		Assignment assign_;      // assignment.
 	};
+
+
+    class DecisionHeuristic {
+    public:
+        DecisionHeuristic() {}
+        virtual ~DecisionHeuristic();
+        /*!
+         * Called once after all problem variables are known to the solver.
+         * The default-implementation is a noop.
+         * \param s The solver in which this heuristic is used.
+         */
+        virtual void startInit(const Solver& /* s */) {}
+
+        /*!
+         * Called once after all problem constraints are known to the solver
+         * and the problem was simplified.
+         * The default-implementation is a noop.
+         * \param s The solver in which this heuristic is used.
+         */
+        virtual void endInit(Solver& /* s */) { }
+
+        //! Called once if s switches to a different heuristic.
+        virtual void detach(Solver& /* s */) {}
+
+
+        /*!
+         * Called if the state of one or more variables changed.
+         * A state change is one of:
+         *   - A previously eliminated variable is resurrected.
+         *   - A new aux variable was added.
+         *   - An aux variable was removed.
+         *   .
+         * \param s Solver in which the state change occurred.
+         * \param v The first variable affected by the change.
+         * \param n The range of variables affected, i.e. [v, v+n).
+         * \note Use s.validVar(v) and s.auxVar(v) to determine the reason for the update.
+         */
+        virtual void updateVar(const Solver& /* s */, Var /* v */, uint32 /* n */) = 0;
+
+        /*!
+         * Called whenever the solver backracks.
+         * Literals in the range [s.trail()[st], s.trail().size()) are subject to backtracking.
+         * The default-implementation is a noop.
+         * \param s The solver that is about to backtrack.
+         * \param st Position in the trail of the first literal that will be backtracked.
+         */
+        virtual void undoUntil(const Solver& /* s */, std::vector<Literal>::size_type /* st */) {}
+
+
+
+
+        /*!
+         * Called whenever the solver must pick a new variable to branch on.
+         * \param s The solver that needs a new decision variable.
+         * \return
+         *  - true  : if the decision heuristic assumed a literal
+         *  - false : if no decision could be made because assignment is total or there is a conflict
+         *  .
+         * \post
+         * If true is returned, the heuristic has asserted a literal.
+         */
+        //! Implements the actual selection process.
+        /*!
+         * \pre s.numFreeVars() > 0, i.e. there is at least one variable to branch on.
+         * \return
+         *  - a literal that is currently free or
+         *  - a sentinel literal. In that case, the heuristic shall have asserted a literal!
+         */
+        virtual ATTID select(Solver& /* s */) = 0;
+
+
+    private:
+        DecisionHeuristic(const DecisionHeuristic&);
+        DecisionHeuristic& operator=(const DecisionHeuristic&);
+    };
+
+
+
 }
 
 #endif //PLOG_SOLVER_H

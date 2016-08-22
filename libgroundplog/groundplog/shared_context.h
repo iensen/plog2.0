@@ -10,7 +10,7 @@
 #include <groundplog/literal.h>
 #include <groundplog/solver_strategies.h>
 #include <groundplog/dependency_graph.h>
-#include<groundplog/program_types.h>
+#include <groundplog/program_types.h>
 
 
 namespace GroundPlog {
@@ -209,6 +209,9 @@ namespace GroundPlog {
         Solver*    solver_;       // solvers associated with this context
         LogPtr       progress_;      // event handler or 0 if not used
     };
+
+
+
 //@}
 }
 #endif //PLOG_SHARED_CONTEXT_H

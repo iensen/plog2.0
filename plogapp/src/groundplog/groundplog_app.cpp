@@ -12,7 +12,9 @@ namespace GroundPlog {
         GroundPlogAppBase::~GroundPlogAppBase() {}
 
         Output *GroundPlogAppBase::createOutput() {
-            throw "not implemented yet";
+            SingleOwnerPtr<Output> out;
+            // all options go here
+            return out.release();
         }
 
         void GroundPlogAppBase::storeCommandArgs(const ProgramOptions::ParsedValues &values) {

@@ -29,6 +29,7 @@ namespace GroundPlog {
         typedef std::vector<uint32> AssignVec;
         typedef std::vector<uint32> LevelVec;
         typedef std::vector<uint32> TrailVec;
+        Assignment() { }
 
         //! Number of variables in the assignment.
         uint32 numVars() const { return (uint32) assign_.size(); }

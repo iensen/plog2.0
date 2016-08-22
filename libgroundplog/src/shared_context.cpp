@@ -4,7 +4,7 @@
 
 #include <groundplog/shared_context.h>
 #include <groundplog/groundplog_facade.h>
-
+#include <groundplog/solver.h>
 namespace GroundPlog {
     GroundPlog::EventHandler::EventHandler() {
 
@@ -28,6 +28,11 @@ namespace GroundPlog {
     }
 
     Solver &SharedContext::pushSolver() {
-        throw "not implemented yet";
+        Solver* s    = new Solver(this);
+        if(solver_ != 0) {
+            throw std::logic_error("there cannot be more then one solver!");
+        }
+        solver_=s;
+        return *s;
     }
 }
