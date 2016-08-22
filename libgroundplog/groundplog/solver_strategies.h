@@ -11,6 +11,7 @@
 
 
 
+
 namespace GroundPlog {
     class  SharedContext;
     class Solver;
@@ -26,13 +27,19 @@ namespace GroundPlog {
 
     };
 
-    class ModelHandler {
+    class ResultHandler {
     public:
-        virtual ~ModelHandler();
+        virtual ~ResultHandler();
         virtual bool onUnsat(const Solver&);
+        virtual bool onResult(const Solver&, double result);
+        virtual bool onNonDCO(const Solver&);
+
     };
     //! Parameters for a SharedContext object.
     struct ContextParams {
+        bool hasConfig;
+        uint8        cliConfig;     /*!< Reserved for command-line interface.      */
+
     };
 
     //! Interface for configuring a SharedContext object and its associated solvers.
@@ -45,10 +52,9 @@ namespace GroundPlog {
         virtual void               prepare(SharedContext&)    = 0;
         //! Returns the options for the shared context.
         virtual const CtxOpts&     context()            const = 0;
-        //! Returns the number of solver options in this config.
-        virtual uint32             numSolver()          const = 0;
+
         //! Returns the solver options for the i'th solver to be attached to the SharedContext.
-        virtual const SolverOpts&  solver(uint32 i)     const = 0;
+        virtual const SolverOpts&  solver()     const = 0;
         //! Returns the heuristic to be used in the i'th solver.
         /*!
          * The function is called in Solver::startInit().
@@ -75,7 +81,26 @@ namespace GroundPlog {
         typedef DecisionHeuristic* (*Creator)(Type t);
         static DecisionHeuristic* create(Type t);
     };
+    class BasicSatConfig : public UserConfiguration, public ContextParams {
+    public:
+        typedef Heuristic_t::Creator HeuristicCreator;
+        BasicSatConfig();
+        void               prepare(SharedContext&);
+        const CtxOpts&     context()            const { return *this; }
+        const SolverOpts&  solver()     const { return opts_; }
+        DecisionHeuristic* heuristic(uint32 i)  const;
+        SolverOpts&        addSolver(uint32 i);
+        virtual void       reset();
+        virtual void       resize(uint32 numSolver, uint32 numSearch);
+        //! Sets callback function for creating heuristics.
+        void               setHeuristicCreator(HeuristicCreator hc);
+    private:
+        SolverOpts opts_;
+        HeuristicCreator heu_;
+    };
 
+
+    class SharedContext;
 }
 
 #endif //PLOG_SOLVER_STRATEGIES_H

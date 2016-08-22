@@ -57,14 +57,8 @@ private:
 enum ConfigKey {
 #define CONFIG(id,k,c,s,p) config_##k,
 #define CLASP_CLI_DEFAULT_CONFIGS config_default = 0,
-#define CLASP_CLI_AUX_CONFIGS     config_default_max_value,
 #include <groundplog/cli/groundplog_cli_configs.inl>
-	config_aux_max_value,
-	config_many, // default portfolio
-	config_max_value,
-	config_asp_default   = config_tweety,
-	config_sat_default   = config_trendy,
-	config_tester_default= config_tester,
+
 };
 /*!
  * Configuration object for storing/processing command-line options.
@@ -91,8 +85,14 @@ enum ConfigKey {
  */
 class GroundPlogCliConfig:GroundPlogConfig{
 public:
+
+    typedef ProgramOptions::ParsedOptions ParsedOpts;
 	uint32             numSolver()const {return 0;};
-    void validate(const char* ctx, const SolverParams& solver) {}
+    bool validate();
+	bool finalize(const ProgramOptions::ParsedOptions& parsed, bool applyDefaults);
+    bool finalizeAppConfig(UserConfig* active, const ParsedOpts& exclude, bool defs);
+    bool setAppDefaults(UserConfig* active, const ParsedOpts& exclude);
+
 
 };
 

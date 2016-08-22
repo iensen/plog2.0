@@ -18,7 +18,12 @@
 #include <groundplog/util/misc_types.h>
 #include <groundplog/solver.h>
 
-namespace GroundPlog { namespace Cli {
+namespace GroundPlog {
+
+    inline bool isStdIn(const std::string& in)  { return in == "-" || in == "stdin"; }
+    inline bool isStdOut(const std::string& out){ return out == "-" || out == "stdout"; }
+
+    namespace Cli {
 /////////////////////////////////////////////////////////////////////////////////////////
 // groundplog exit codes !!! check why this codes are used
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -40,6 +45,7 @@ namespace GroundPlog { namespace Cli {
 /////////////////////////////////////////////////////////////////////////////////////////
         struct GroundPlogAppOptions {
             GroundPlogAppOptions();
+            bool validateOptions(const ProgramOptions::ParsedOptions& parsed);
             typedef std::vector<std::string>  StringSeq;
             StringSeq   input;     // list of input files - only first used!
         };

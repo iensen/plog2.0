@@ -2,6 +2,8 @@
 // Created by iensen on 8/15/16.
 //
 #include "groundplog_app.h"
+#include <iostream>
+#include <fstream>
 
 namespace GroundPlog {
     namespace Cli {
@@ -14,7 +16,7 @@ namespace GroundPlog {
         }
 
         void GroundPlogAppBase::storeCommandArgs(const ProgramOptions::ParsedValues &values) {
-            throw "not implemented yet";
+            /* for whatever reason, we don't need the values */
         }
 
         void GroundPlogAppBase::handleStartOptions(GroundPlogFacade &clasp) {
@@ -30,21 +32,43 @@ namespace GroundPlog {
         }
 
         const int *GroundPlogAppBase::getSignals() const {
-            throw "not implemented yet";
+            static const int signals[] = {
+                    SIGINT, SIGTERM
+#if !defined (_WIN32)
+                    , SIGUSR1, SIGUSR2, SIGQUIT, SIGHUP, SIGXCPU, SIGXFSZ
+#endif
+                    , 0};
+            return signals;
+
         }
 
         void GroundPlogAppBase::initOptions(ProgramOptions::OptionContext &root) {
-            throw "not implemented yet";
-        }
+            using namespace ProgramOptions;
+            OptionGroup basic("Basic Options");
+            // add options here
+            root.add(basic);        }
 
         void GroundPlogAppBase::validateOptions(const ProgramOptions::OptionContext &root,
                                                 const ProgramOptions::ParsedOptions &parsed,
                                                 const ProgramOptions::ParsedValues &values) {
-            throw "not implemented yet";
+            using ProgramOptions::Error;
+            if (!groundPlogAppOpts_.validateOptions(parsed) || !groundPlogConfig_.finalize(parsed, true)) {
+                throw Error("command-line error!");
+            }
+            GroundPlogAppOptions& app = groundPlogAppOpts_;
+            for (std::size_t i = 1; i < app.input.size(); ++i) {
+                if (!isStdIn(app.input[i]) && !std::ifstream(app.input[i].c_str()).is_open()) {
+                    throw Error(ClaspErrorString("'%s': could not open input file!", app.input[i].c_str()).c_str());
+                }
+            }
+            setExitCode(0);
+            storeCommandArgs(values);
         }
 
         void GroundPlogAppBase::setup() {
-            throw "not implemented yet";
+            clasp_         = new GroundPlogFacade();
+            out_ = createOutput();
+            clasp_->ctx.setEventHandler(this);
         }
 
         void GroundPlogAppBase::run() {
@@ -104,6 +128,10 @@ namespace GroundPlog {
         }
 
         GroundPlogAppOptions::GroundPlogAppOptions(){
+        }
+
+        bool GroundPlogAppOptions::validateOptions(const ProgramOptions::ParsedOptions &parsed) {
+            return true; // no options yet
         }
     }
 }

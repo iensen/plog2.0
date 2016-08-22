@@ -34,31 +34,14 @@ namespace GroundPlog {
         uint8 signal; // term signal or 0
     };
 
-    class BasicSatConfig : public UserConfiguration, public ContextParams {
-    public:
-        typedef Heuristic_t::Creator HeuristicCreator;
-        BasicSatConfig();
-        void               prepare(SharedContext&);
-        const CtxOpts&     context()            const { return *this; }
-        const SolverOpts&  solver(uint32 i)     const { return opts_; }
-        DecisionHeuristic* heuristic(uint32 i)  const;
-        SolverOpts&        addSolver(uint32 i);
-
-        virtual void       reset();
-        virtual void       resize(uint32 numSolver, uint32 numSearch);
-        //! Sets callback function for creating heuristics.
-        void               setHeuristicCreator(HeuristicCreator hc);
-    private:
-        SolverOpts opts_;
-        HeuristicCreator heu_;
-    };
 
     class GroundPlogConfig : public BasicSatConfig {
-
+    public:
+        typedef BasicSatConfig UserConfig;
     };
 
 
-    class GroundPlogFacade : public ModelHandler {
+    class GroundPlogFacade : public ResultHandler {
         struct SolveData;
         struct SolveStrategy;
     public:
@@ -70,12 +53,9 @@ namespace GroundPlog {
 
             void init(GroundPlogFacade &f);
 
-
-
             bool notdco() const { return result.notdco(); }
 
             bool complete() const { return result.exhausted(); }
-
 
 
             FacadePtr facade;    /**< Facade object of this run.          */
@@ -114,7 +94,7 @@ namespace GroundPlog {
 
 
         //! Returns the summary of the active (accu = false) or all steps.
-        const Summary &summary(bool accu) const;
+        const Summary &summary() const;
 
 
 
@@ -219,6 +199,13 @@ namespace GroundPlog {
 
         ProgramBuilder &update(bool updateConfig = false);
 
+
+        struct Ready : Event_t<Ready> {
+            explicit Ready(const Summary& x) : Event_t<Ready>(subsystem_facade), summary(&x) {}
+            const Summary* summary;
+        };
+
+        SharedContext ctx; /*!< Context-object used to store problem. */
     private:
         struct Statistics;
         typedef SingleOwnerPtr <ProgramBuilder> BuilderPtr;
@@ -232,9 +219,10 @@ namespace GroundPlog {
 
         void discardProblem();
 
-        void startStep(uint32 num);
+        void start();
 
-        Result stopStep(int signal, bool complete);
+        Result stop();
+
 
         void updateStats();
 
@@ -243,6 +231,7 @@ namespace GroundPlog {
         BuilderPtr   builder_;
         std::vector<Lit_t> assume_;
         GroundPlogConfig *config_;
+        Summary      sum;
         SolvePtr solve_; // NOTE: last so that it is destroyed first;
     };
 

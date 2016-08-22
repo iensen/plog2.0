@@ -11,7 +11,8 @@
 namespace  GroundPlog {
     struct Event {
         enum Subsystem {
-            subsystem_solve = 3//???
+            subsystem_solve = 3,//???
+            subsystem_facade = 0
         };
 
         explicit Event(Subsystem sys, uint32 evId) : system(sys), op(0),

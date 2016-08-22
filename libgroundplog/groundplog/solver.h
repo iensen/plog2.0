@@ -90,6 +90,9 @@ namespace GroundPlog {
         }
 
 
+		bool     hasConflict()          const { return !conflict_.empty(); }
+
+
 		//! Assigns p at dl because of r.
 		/*!
          * \pre dl <= decisionLevel()
@@ -223,7 +226,7 @@ namespace GroundPlog {
 
 		void undoLevel();
         std::vector<DLevel>    levels_;      // information (e.g. position in trail) on each decision level
-
+        std::vector<Literal>            conflict_;    // conflict-literals for later analysis
         SharedContext *shared_;      // initialized by master thread - otherwise read-only!
 		HeuristicPtr heuristic_;   // active decision heuristic
 		Assignment assign_;      // three-valued assignment.

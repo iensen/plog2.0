@@ -12,9 +12,10 @@
 #include <groundplog/dependency_graph.h>
 #include<groundplog/program_types.h>
 
+
 namespace GroundPlog {
 
-    class EventHandler : public ModelHandler {
+    class EventHandler : public ResultHandler {
     public:
         explicit EventHandler();
         virtual ~EventHandler();
@@ -43,6 +44,11 @@ namespace GroundPlog {
         /*!
          * \name Configuration
          */
+
+        //! Enables event reporting via the given event handler.
+        void       setEventHandler(LogPtr r) { progress_ = r; }
+
+
         //@{
         //! Creates a new object for sharing variables and the binary and ternary implication graph.
         explicit SharedContext();
@@ -201,6 +207,7 @@ namespace GroundPlog {
         VarVec       varInfo_;       // varInfo[v] stores info about variable v
         Config       config_;        // active configuration
         Solver*    solver_;       // solvers associated with this context
+        LogPtr       progress_;      // event handler or 0 if not used
     };
 //@}
 }

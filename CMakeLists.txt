@@ -3,6 +3,7 @@ project(plog)
 #project(clingo)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 
 file(GLOB_RECURSE PLOG_SOURCES
         clingo/liblp/src/*.cpp
@@ -46,8 +47,8 @@ include_directories(/usr/include/python2.7)
 
 
 #set(SOURCE_FILES main.cpp clingo/app/plog/src/main.cpp clingo/app/plog/src/plog_app.cpp clingo/app/plog/src/plog_app.h clingo/app/plog/src/groundplog/grndplog_app.cpp clingo/app/plog/src/groundplog/grndplog_app.h)
-set(PLOG_SOURCE_FILES plogapp/src/main.cpp  libgroundplog/groundplog/program.h libgroundplog/groundplog/groundplog_facade.h libgroundplog/groundplog/solver_strategies.h libgroundplog/groundplog/shared_context.h libgroundplog/groundplog/program_types.h libgroundplog/groundplog/rule_utils.h libgroundplog/groundplog/solver_types.h libplog/plog/plog.h libgroundplog/src/shared_context.cpp libgroundplog/src/groundplog_facade.cpp libgroundplog/src/solver_strategies.cpp)
-set(CLINGO_SOURCE_FILES clingo/app/clingo/src/main.cc )
+set(PLOG_SOURCE_FILES plogapp/src/main.cpp  libgroundplog/groundplog/program.h libgroundplog/groundplog/groundplog_facade.h libgroundplog/groundplog/solver_strategies.h libgroundplog/groundplog/shared_context.h libgroundplog/groundplog/program_types.h libgroundplog/groundplog/rule_utils.h libgroundplog/groundplog/solver_types.h libplog/plog/plog.h libgroundplog/src/shared_context.cpp libgroundplog/src/groundplog_options.cpp libgroundplog/src/groundplog_facade.cpp libgroundplog/src/solver_strategies.cpp libgroundplog/groundplog/solve_algorithms.h)
+set(CLINGO_SOURCE_FILES clingo/app/clingo/src/main.cc libgroundplog/groundplog/solve_algorithms.h)
 
 #set(SOURCE_FILES plogapp/src/main.cpp)
 
@@ -69,5 +70,5 @@ add_definitions(-DWITH_PYTHON)
 add_executable(clingo ${CLINGO_SOURCE_FILES} ${CLINGO_SOURCES})
 TARGET_LINK_LIBRARIES(clingo lua python2.7 tbb pthread dl)
 
-add_executable(plog ${PLOG_SOURCE_FILES} ${PLOG_SOURCES})
-TARGET_LINK_LIBRARIES(plog lua python2.7 tbb pthread dl)
+add_executable(plog1 ${PLOG_SOURCE_FILES} ${PLOG_SOURCES})
+TARGET_LINK_LIBRARIES(plog1 lua python2.7 tbb pthread dl)

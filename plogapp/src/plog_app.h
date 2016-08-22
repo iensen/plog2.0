@@ -37,7 +37,7 @@ public:
 
     void shutdown() override;
 protected:
-    enum Mode { mode_clingo = 0, mode_ground_plog = 1, mode_gringo = 2 };
+    enum Mode { mode_plog = 0, mode_ground_plog = 1, mode_gringo = 2 };
     void        initOptions(ProgramOptions::OptionContext& root) override;
     void        validateOptions(const ProgramOptions::OptionContext& root, const ProgramOptions::ParsedOptions& parsed, const ProgramOptions::ParsedValues& vals) override;
     void        run(GroundPlog::GroundPlogFacade& clasp) override;

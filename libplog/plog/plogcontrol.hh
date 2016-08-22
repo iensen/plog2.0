@@ -38,7 +38,20 @@ struct plog_control {
 
 
 struct PlogOptions {
-
+    using Foobar = std::vector<Gringo::Sig>;
+    ProgramOptions::StringSeq     defines;
+    Gringo::Output::OutputOptions outputOptions;
+    Gringo::Output::OutputFormat  outputFormat          = Gringo::Output::OutputFormat::INTERMEDIATE;
+    bool                          verbose               = false;
+    bool                          wNoOperationUndefined = false;
+    bool                          wNoAtomUndef          = false;
+    bool                          wNoFileIncluded       = false;
+    bool                          wNoVariableUnbounded  = false;
+    bool                          wNoGlobalVariable     = false;
+    bool                          wNoOther              = false;
+    bool                          rewriteMinimize       = false;
+    bool                          keepFacts             = false;
+    Foobar                        foobar;
 };
 
 // {{{1 declaration of DefaultGringoModule
@@ -121,4 +134,58 @@ public:
     bool grounded               = false;
     bool configUpdate_          = false;
 };
+
+inline std::vector<std::string> split(std::string const &source, char const *delimiter = " ", bool keepEmpty = false) {
+    std::vector<std::string> results;
+    size_t prev = 0;
+    size_t next = 0;
+    while ((next = source.find_first_of(delimiter, prev)) != std::string::npos) {
+        if (keepEmpty || (next - prev != 0)) { results.push_back(source.substr(prev, next - prev)); }
+        prev = next + 1;
+    }
+    if (prev < source.size()) { results.push_back(source.substr(prev)); }
+    return results;
+}
+
+
+static inline bool parseFoobar(const std::string& str, PlogOptions::Foobar& foobar) {
+    for (auto &x : split(str, ",")) {
+        auto y = split(x, "/");
+        if (y.size() != 2) { return false; }
+        unsigned a;
+        if (!bk_lib::string_cast<unsigned>(y[1], a)) { return false; }
+        bool sign = !y[0].empty() && y[0][0] == '-';
+        if (sign) { y[0] = y[0].substr(1); }
+        foobar.emplace_back(y[0].c_str(), a, sign);
+    }
+    return true;
+}
+
+inline void enableAll(PlogOptions& out, bool enable) {
+    out.wNoAtomUndef          = !enable;
+    out.wNoFileIncluded       = !enable;
+    out.wNoOperationUndefined = !enable;
+    out.wNoVariableUnbounded  = !enable;
+    out.wNoGlobalVariable     = !enable;
+    out.wNoOther              = !enable;
+}
+
+
+inline bool parseWarning(const std::string& str, PlogOptions& out) {
+    if (str == "none")                     { enableAll(out, false);             return true; }
+    if (str == "all")                      { enableAll(out, true);              return true; }
+    if (str == "no-atom-undefined")        { out.wNoAtomUndef          = true;  return true; }
+    if (str ==    "atom-undefined")        { out.wNoAtomUndef          = false; return true; }
+    if (str == "no-file-included")         { out.wNoFileIncluded       = true;  return true; }
+    if (str ==    "file-included")         { out.wNoFileIncluded       = false; return true; }
+    if (str == "no-operation-undefined")   { out.wNoOperationUndefined = true;  return true; }
+    if (str ==    "operation-undefined")   { out.wNoOperationUndefined = false; return true; }
+    if (str == "no-variable-unbounded")    { out.wNoVariableUnbounded  = true;  return true; }
+    if (str ==    "variable-unbounded")    { out.wNoVariableUnbounded  = false; return true; }
+    if (str == "no-global-variable")       { out.wNoGlobalVariable     = true;  return true; }
+    if (str ==    "global-variable")       { out.wNoGlobalVariable     = false; return true; }
+    if (str == "no-other")                 { out.wNoOther              = true;  return true; }
+    if (str ==    "other")                 { out.wNoOther              = false; return true; }
+    return false;
+}
 
