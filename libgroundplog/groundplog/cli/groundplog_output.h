@@ -37,7 +37,7 @@ class Output : public EventHandler {
 public:
 	virtual ~Output();
 
-
+    Output();
 	//! Shall be called once on startup.
 	virtual void run(const char* solver, const char* version, const std::string* begInput, const std::string* endInput) = 0;
 	//! Shall be called once on shutdown.
@@ -57,8 +57,9 @@ public:
 	virtual void stopStep(const GroundPlogFacade::Summary& summary);
 protected:
 private:
-	Output(const Output&);
-	Output& operator=(const Output&);
+    typedef const GroundPlogFacade::Summary* SumPtr ;
+    SumPtr    summary_ ; // summary of last step
+    Output& operator=(const Output&);
 };
 
 
@@ -99,6 +100,8 @@ public:
 	virtual void onEvent(const Event& ev);
 	//! A solving step has started.
 	virtual void startStep(const GroundPlogFacade&);
+
+    void comment(const char* fmt, ...) const;
 protected:
 private:
 };

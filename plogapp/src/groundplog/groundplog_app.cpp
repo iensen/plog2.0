@@ -13,7 +13,7 @@ namespace GroundPlog {
 
         Output *GroundPlogAppBase::createOutput() {
             SingleOwnerPtr<Output> out;
-            // all options go here
+            out.reset(new TextOutput());
             return out.release();
         }
 
@@ -68,13 +68,22 @@ namespace GroundPlog {
         }
 
         void GroundPlogAppBase::setup() {
-            clasp_         = new GroundPlogFacade();
+            groundPlog_         = new GroundPlogFacade();
             out_ = createOutput();
-            clasp_->ctx.setEventHandler(this);
+
+            groundPlog_->ctx.setEventHandler(this);
         }
 
         void GroundPlogAppBase::run() {
-            throw "not implemented yet";
+            if (out_.get()) { out_->run(getName(), getVersion(), &groundPlogAppOpts_.input[0], &groundPlogAppOpts_.input[0]
+                                                                                               + groundPlogAppOpts_.input.size()); }
+            try        { run(*groundPlog_); }
+            catch(...) {
+                try { blockSignals(); setExitCode(E_ERROR); throw; }
+                catch (const std::bad_alloc&  ) { setExitCode(E_MEMORY); error("std::bad_alloc"); }
+                catch (const std::exception& e) { error(e.what()); }
+                catch (...)                     { ; }
+            }
         }
 
         void GroundPlogAppBase::shutdown() {

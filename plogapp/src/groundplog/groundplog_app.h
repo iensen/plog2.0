@@ -103,7 +103,7 @@ namespace GroundPlog {
             typedef SingleOwnerPtr<GroundPlogFacade> ClaspPtr;
             GroundPlogCliConfig  groundPlogConfig_;
             GroundPlogAppOptions groundPlogAppOpts_;
-            ClaspPtr        clasp_;
+            ClaspPtr        groundPlog_;
             OutPtr          out_;
         };
 /////////////////////////////////////////////////////////////////////////////////////////

@@ -47,7 +47,7 @@ include_directories(/usr/include/python2.7)
 
 
 #set(SOURCE_FILES main.cpp clingo/app/plog/src/main.cpp clingo/app/plog/src/plog_app.cpp clingo/app/plog/src/plog_app.h clingo/app/plog/src/groundplog/grndplog_app.cpp clingo/app/plog/src/groundplog/grndplog_app.h)
-set(PLOG_SOURCE_FILES plogapp/src/main.cpp  libgroundplog/groundplog/program.h libgroundplog/groundplog/groundplog_facade.h libgroundplog/groundplog/solver_strategies.h libgroundplog/groundplog/shared_context.h libgroundplog/groundplog/program_types.h libgroundplog/groundplog/rule_utils.h libgroundplog/groundplog/solver_types.h libplog/plog/plog.h libgroundplog/src/shared_context.cpp libgroundplog/src/groundplog_options.cpp libgroundplog/src/groundplog_facade.cpp libgroundplog/src/solver_strategies.cpp libgroundplog/groundplog/solve_algorithms.h libgroundplog/src/solver.cpp)
+set(PLOG_SOURCE_FILES plogapp/src/main.cpp  libgroundplog/groundplog/program.h libgroundplog/groundplog/groundplog_facade.h libgroundplog/groundplog/solver_strategies.h libgroundplog/groundplog/shared_context.h libgroundplog/groundplog/program_types.h libgroundplog/groundplog/rule_utils.h libgroundplog/groundplog/solver_types.h libplog/plog/plog.h libgroundplog/src/shared_context.cpp libgroundplog/src/groundplog_options.cpp libgroundplog/src/groundplog_facade.cpp libgroundplog/src/solver_strategies.cpp libgroundplog/groundplog/solve_algorithms.h libgroundplog/src/solver.cpp  libgroundplog/src/groundplog_output.cpp)
 set(CLINGO_SOURCE_FILES clingo/app/clingo/src/main.cc libgroundplog/groundplog/solve_algorithms.h)
 
 #set(SOURCE_FILES plogapp/src/main.cpp)
