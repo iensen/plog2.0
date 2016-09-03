@@ -28,18 +28,18 @@ namespace GroundPlog {
 
 
 //! Options for the Asp-Preprocessor.
-        struct Options {
+        struct PrepOptions {
         };
 
         //! Starts the definition of a logic program.
-        Program &start(SharedContext &ctx, const Options &opts = Options()) {
+        Program &start(SharedContext &ctx, const PrepOptions &opts = PrepOptions()) {
             startProgram(ctx);
             setOptions(opts);
             return *this;
         }
 
         //! Sets preprocessing options.
-        void setOptions(const Options &opts);
+        void setOptions(const PrepOptions &opts);
 
 
         //! Finishes the definition of the logic program (or its current increment).
@@ -160,7 +160,7 @@ namespace GroundPlog {
          * know what you are doing!
          */
         //@{
-        const Options &options() const { return opts_; }
+        const PrepOptions &options() const { return opts_; }
 
         bool ok() const { return ProgramBuilder::ok(); }
 
@@ -221,7 +221,7 @@ namespace GroundPlog {
 
         bool doEndProgram();
 
-        void doGetAssumptions(std::vector<Lit_t> &out) const;
+        void doGetAssumptions(std::vector<Literal>  &out) const;
 
         Atom_t startAtom()       const { return input_.lo; }
         // ------------------------------------------------------------------------
@@ -257,7 +257,7 @@ namespace GroundPlog {
         std::vector<ShowPair> show_;        // shown atoms/conditions
         std::vector<Id_t> initialSupp_; // bodies that are (initially) supported
         std::vector<Atom_t> propQ_;       // assigned atoms
-        Options opts_;
+        PrepOptions opts_;
 
     };
 }

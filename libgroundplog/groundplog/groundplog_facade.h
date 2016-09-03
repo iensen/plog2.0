@@ -35,9 +35,18 @@ namespace GroundPlog {
     };
 
 
+    struct SolveOptions {};
+
+    struct ParserOptions{};
     class GroundPlogConfig : public BasicSatConfig {
+
     public:
         typedef BasicSatConfig UserConfig;
+        typedef Program::PrepOptions PrepOptions;
+        SolveOptions   solve; /*!< Options for solve algorithm and enumerator. */
+        PrepOptions     prep;   /*!< Options for asp preprocessing.      */
+        ParserOptions  parse; /*!< Options for input parser. */
+
     };
 
 

@@ -74,9 +74,6 @@ namespace GroundPlog {
 
         virtual void doGetAssumptions(std::vector<Literal> &out) const = 0;
 
-        virtual int doType() const = 0;
-
-
         SharedContext *ctx_;
         bool frozen_;
     };

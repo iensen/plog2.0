@@ -125,7 +125,11 @@ GroundPlog::GroundPlogFacade::~GroundPlogFacade() {
 }
 
 GroundPlog::Program &GroundPlog::GroundPlogFacade::start(GroundPlog::GroundPlogConfig &config) {
-    throw "not implemented yet";
+    init(config, true);
+    Program* p = new Program();
+    initBuilder(p);
+    p->setOptions(config.prep);
+    return *p;
 }
 
 GroundPlog::ProgramBuilder &
@@ -143,6 +147,14 @@ void GroundPlog::GroundPlogFacade::prepare() {
 
 GroundPlog::GroundPlogFacade::Result
 GroundPlog::GroundPlogFacade::solve(GroundPlog::EventHandler *eh, const std::vector<GroundPlog::Lit_t> &a) {
+    throw "not implemented yet";
+}
+
+void GroundPlog::GroundPlogFacade::init(GroundPlog::GroundPlogConfig &cfg, bool discardProblem) {
+    throw "not implemented yet";
+}
+
+void GroundPlog::GroundPlogFacade::initBuilder(GroundPlog::ProgramBuilder *in) {
     throw "not implemented yet";
 }
 
