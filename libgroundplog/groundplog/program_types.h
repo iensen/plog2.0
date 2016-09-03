@@ -9,10 +9,9 @@
 #include <groundplog/literal.h>
 #include<vector>
 
-class Program;
-
 namespace GroundPlog {
 
+    class Program;
     typedef uint64 Atom_t;
     typedef uint64 Lit_t;
     typedef uint64 Id_t;

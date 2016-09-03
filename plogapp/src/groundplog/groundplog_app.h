@@ -100,10 +100,10 @@ namespace GroundPlog {
             // -------------------------------------------------------------------------------------------
 
             typedef SingleOwnerPtr<Output>      OutPtr;
-            typedef SingleOwnerPtr<GroundPlogFacade> ClaspPtr;
+            typedef SingleOwnerPtr<GroundPlogFacade> GroundPlogPtr;
             GroundPlogCliConfig  groundPlogConfig_;
             GroundPlogAppOptions groundPlogAppOpts_;
-            ClaspPtr        groundPlog_;
+            GroundPlogPtr        groundPlog_;
             OutPtr          out_;
         };
 /////////////////////////////////////////////////////////////////////////////////////////

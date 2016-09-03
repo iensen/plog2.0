@@ -14,7 +14,7 @@ namespace GroundPlog {
 //! Interface for defining an input program.
     class ProgramBuilder {
     public:
-
+       // std::vector<int> a;
         ProgramBuilder();
 
         virtual ~ProgramBuilder();

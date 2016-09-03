@@ -124,8 +124,28 @@ void PlogApp::validateOptions(const ProgramOptions::OptionContext &root, const P
 	    }
 }
 
-void PlogApp::run(GroundPlog::GroundPlogFacade &clasp) {
-    throw "not implemented yet";
+void PlogApp::run(GroundPlog::GroundPlogFacade &groundPlog) {
+    try {
+        using namespace std::placeholders;
+        if (mode_ != mode_ground_plog) {
+            //initialize program builder
+            ProgramBuilder* prg = &groundPlog.start(groundPlogConfig_);
+            // convert program builder to a program
+            Program* lp = mode_ != mode_gringo ? static_cast<Program*>(prg) : 0;
+            // create a pointer to Plog control
+            grd = Gringo::gringo_make_unique<PlogControl>(groundPlog_.get(), groundPlogConfig_, std::bind(&PlogApp::handlePostGroundOptions, this, _1), std::bind(&PlogApp::handlePreSolveOptions, this, _1));
+            grd->parse(groundPlogAppOpts_.input, grOpts_, lp);
+            grd->main();
+        }
+        else {
+            GroundPlogAppBase::run(groundPlog);
+        }
+    }
+    catch (Gringo::GringoError const &e) {
+        std::cerr << e.what() << std::endl;
+        throw std::runtime_error("fatal error");
+    }
+    catch (...) { throw; }
 }
 
 PlogApp::Output *PlogApp::createOutput() {

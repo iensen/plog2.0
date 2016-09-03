@@ -116,7 +116,7 @@ namespace GroundPlog {
 
 
         //! Starts definition of an ASP-problem.
-        Program& startAsp(GroundPlogConfig & config);
+        Program& start(GroundPlogConfig & config);
 
         //! Starts definition of a problem given in stream.
         ProgramBuilder &start(GroundPlogConfig& config, std::istream &stream);

@@ -73,7 +73,7 @@ public:
     enum class ConfigUpdate { KEEP, REPLACE };
 
     PlogControl(GroundPlog::GroundPlogFacade *groundplog,
-                GroundPlog::Cli::GroundPlogCliConfig &groundplogConfig, PostGroundFunc pgf, PreSolveFunc psf, Gringo::Logger::Printer printer, unsigned messageLimit);
+                GroundPlog::Cli::GroundPlogCliConfig &groundplogConfig, PostGroundFunc pgf, PreSolveFunc psf);
     ~PlogControl() noexcept override;
     void parse();
     void parse(const StringSeq& files, const PlogOptions& opts, GroundPlog::Program* out, bool addStdIn = true);
@@ -85,6 +85,17 @@ public:
     virtual void prePrepare(GroundPlog::GroundPlogFacade& ) { throw "not implemented"; }
     virtual void preSolve(GroundPlog::GroundPlogFacade& groundplog) { throw "not implemented";  }
     virtual void postSolve(GroundPlog::GroundPlogFacade& ) { }
+
+    // {{{2 ConfigProxy interface
+
+    bool hasSubKey(unsigned key, char const *name, unsigned* subKey = nullptr) override;
+    unsigned getSubKey(unsigned key, char const *name) override;
+    unsigned getArrKey(unsigned key, unsigned idx) override;
+    void getKeyInfo(unsigned key, int* nSubkeys = 0, int* arrLen = 0, const char** help = 0, int* nValues = 0) const override;
+    const char* getSubKeyName(unsigned key, unsigned idx) const override;
+    bool getKeyValue(unsigned key, std::string &value) override;
+    void setKeyValue(unsigned key, const char *val) override;
+    unsigned getRootKey() override;
 
     // {{{2 SymbolicAtoms interface
 
@@ -100,7 +111,7 @@ public:
     bool fact(Gringo::SymbolicAtomIter it) const override;
     Gringo::SymbolicAtomIter next(Gringo::SymbolicAtomIter it) override;
     bool valid(Gringo::SymbolicAtomIter it) const override;
-
+    bool external(Gringo::SymbolicAtomIter it) const override;
 
     // {{{2 Control interface
 
@@ -125,8 +136,8 @@ public:
     std::unique_ptr<Gringo::Input::NongroundProgramBuilder>   pb_;
     std::unique_ptr<Gringo::Input::NonGroundParser>           parser_;
     FinishHandler                                             finishHandler_;
-    GroundPlog::GroundPlogFacade                                       *clasp_ = nullptr;
-    GroundPlog::Cli::GroundPlogCliConfig                               &claspConfig_;
+    GroundPlog::GroundPlogFacade                              *groundplog_ = nullptr;
+    GroundPlog::Cli::GroundPlogCliConfig                      &claspConfig_;
     PostGroundFunc                                            pgf_;
     PreSolveFunc                                              psf_;
     std::vector<Gringo::UProp>                                props_;

@@ -83,7 +83,7 @@ enum ConfigKey {
  *     - noLookback=no does not re-enable those options. 
  *     .
  */
-class GroundPlogCliConfig:GroundPlogConfig{
+class GroundPlogCliConfig: public GroundPlogConfig{
 public:
 
     typedef ProgramOptions::ParsedOptions ParsedOpts;

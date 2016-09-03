@@ -124,6 +124,28 @@ GroundPlog::GroundPlogFacade::~GroundPlogFacade() {
     throw "not implemented yet";
 }
 
+GroundPlog::Program &GroundPlog::GroundPlogFacade::start(GroundPlog::GroundPlogConfig &config) {
+    throw "not implemented yet";
+}
+
+GroundPlog::ProgramBuilder &
+GroundPlog::GroundPlogFacade::start(GroundPlog::GroundPlogConfig &config, std::istream &stream) {
+    throw "not implemented yet";
+}
+
+bool GroundPlog::GroundPlogFacade::read() {
+    throw "not implemented yet";
+}
+
+void GroundPlog::GroundPlogFacade::prepare() {
+    throw "not implemented yet";
+}
+
+GroundPlog::GroundPlogFacade::Result
+GroundPlog::GroundPlogFacade::solve(GroundPlog::EventHandler *eh, const std::vector<GroundPlog::Lit_t> &a) {
+    throw "not implemented yet";
+}
+
 void GroundPlog::GroundPlogFacade::Summary::init(GroundPlog::GroundPlogFacade &f) {
     std::memset(this, 0, sizeof(Summary)); facade = &f;
 }

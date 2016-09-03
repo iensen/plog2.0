@@ -7,6 +7,7 @@
 
 namespace GroundPlog {
     namespace Cli {
+
         GroundPlogAppBase::GroundPlogAppBase() {}
 
         GroundPlogAppBase::~GroundPlogAppBase() {}
@@ -141,8 +142,21 @@ namespace GroundPlog {
         GroundPlogAppOptions::GroundPlogAppOptions(){
         }
 
+
+
         bool GroundPlogAppOptions::validateOptions(const ProgramOptions::ParsedOptions &parsed) {
             return true; // no options yet
+        }
+
+        void GroundPlogAppBase::run(GroundPlogFacade& groundPlog) {
+            groundPlog.start(groundPlogConfig_, getStream());
+            handleStartOptions(groundPlog);
+            while (groundPlog.read()) {
+                if (handlePostGroundOptions(*groundPlog.program())) {
+                    groundPlog.prepare();
+                    if (handlePreSolveOptions(groundPlog)) { groundPlog.solve(); }
+                }
+            }
         }
     }
 }
