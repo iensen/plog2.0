@@ -243,6 +243,8 @@ namespace GroundPlog {
 
 
         PrgBody *assignBodyFor(const Rule &r, EdgeType x, bool strongSimp);
+        // ------------------------------------------------------------------------
+        void deleteAtoms(uint32 start);
 
 
         ValueRep litVal(const PrgAtom *a, bool pos) const;
@@ -255,7 +257,6 @@ namespace GroundPlog {
         std::vector<Atom_t> heads_;// all (head) disjunctions
         RuleList extended_;    // extended rules to be translated
         std::vector<ShowPair> show_;        // shown atoms/conditions
-        std::vector<Id_t> initialSupp_; // bodies that are (initially) supported
         std::vector<Atom_t> propQ_;       // assigned atoms
         PrepOptions opts_;
 

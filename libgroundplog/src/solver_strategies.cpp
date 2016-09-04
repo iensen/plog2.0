@@ -42,7 +42,8 @@ void GroundPlog::BasicSatConfig::setHeuristicCreator(GroundPlog::BasicSatConfig:
 }
 
 void GroundPlog::BasicSatConfig::prepare(GroundPlog::SharedContext &) {
-    throw "not implemented yet";
+   opts_.prepare();
+     // warnings go here
 }
 
 
@@ -56,4 +57,13 @@ GroundPlog::Configuration::SolverOpts &GroundPlog::BasicSatConfig::addSolver(uin
 
 GroundPlog::Configuration::~Configuration() {
 	throw "not implemented yet";
+}
+
+uint32 GroundPlog::SolverParams::prepare() {
+    SolverStrategies::prepare();
+    return 0;
+}
+
+void GroundPlog::SolverStrategies::prepare() {
+
 }

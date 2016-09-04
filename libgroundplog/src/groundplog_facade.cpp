@@ -125,7 +125,7 @@ GroundPlog::GroundPlogFacade::~GroundPlogFacade() {
 }
 
 GroundPlog::Program &GroundPlog::GroundPlogFacade::start(GroundPlog::GroundPlogConfig &config) {
-    init(config, true);
+    init(config);
     Program* p = new Program();
     initBuilder(p);
     p->setOptions(config.prep);
@@ -150,12 +150,22 @@ GroundPlog::GroundPlogFacade::solve(GroundPlog::EventHandler *eh, const std::vec
     throw "not implemented yet";
 }
 
-void GroundPlog::GroundPlogFacade::init(GroundPlog::GroundPlogConfig &cfg, bool discardProblem) {
-    throw "not implemented yet";
+void GroundPlog::GroundPlogFacade::init(GroundPlog::GroundPlogConfig &cfg) {
+    //  ctx.setConfiguration(0, Ownership_t::Retain); // force reload of configuration once done ?? not needed
+    config_ = &cfg;
+    ctx.setConfiguration(&cfg, Ownership_t::Retain); // prepare and apply config
+    Program* p = static_cast<Program*>(program());
+    p->setOptions(cfg.prep);
+    if (!solve_.get()) { solve_ = new SolveData(); }
+    SolveData::AlgoPtr a(cfg.solve.createSolveObject());
+    solve_->init(a.release());
+
 }
 
 void GroundPlog::GroundPlogFacade::initBuilder(GroundPlog::ProgramBuilder *in) {
-    throw "not implemented yet";
+    builder_ = in;
+    assume_.clear();
+    builder_->startProgram(ctx);
 }
 
 void GroundPlog::GroundPlogFacade::Summary::init(GroundPlog::GroundPlogFacade &f) {

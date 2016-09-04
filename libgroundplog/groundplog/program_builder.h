@@ -58,7 +58,7 @@ namespace GroundPlog {
 
         void setCtx(SharedContext *x) { ctx_ = x; }
 
-        void markOutputVariables() const;
+
 
     private:
 

@@ -20,11 +20,11 @@ namespace GroundPlog {
 
     class DecisionHeuristic;
     struct SolverStrategies {
-
+         void prepare();
     };
 
     struct SolverParams : SolverStrategies  {
-
+        uint32 prepare();
     };
 
     class ResultHandler {

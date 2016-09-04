@@ -265,7 +265,8 @@ namespace GroundPlog {
         bool     isSupported() const { throw ; }
         //! Returns true if this body defines any head.
         bool     hasHeads()    const { throw "not implemented"; }
-
+        //! Destroys a body node created via create().
+        void     destroy();
         //! Adds a rule edge between this body and the given head.
         /*!
          * \note

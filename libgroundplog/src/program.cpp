@@ -3,25 +3,38 @@
 //
 
 #include<groundplog/program.h>
+#include<clasp/util/misc_types.h>
+
+
 
 namespace GroundPlog{
+    using DestroyObject= Clasp::DestroyObject;
 
     void Program::doGetAssumptions(std::vector<Literal>  &out) const {throw "not implemented";}
 
-    Program::Program():input_(1,1) {
-        throw "not implemented yet";
+    Program::Program():input_(0,0) {
+
     }
 
     void Program::setOptions(const Program::PrepOptions &opts) {
-        throw "not implemented yet";
+        opts_ = opts;
     }
 
     Program::~Program() {
-        throw "not implemented yet";
+        dispose(true);
     }
 
-    void Program::dispose(bool forceFullDispose) {
-        throw "not implemented yet";
+    void Program::dispose(bool force) {
+        // remove rules
+        std::for_each(bodies_.begin(), bodies_.end(), DestroyObject());
+        std::vector<PrgBody*>().swap(bodies_);
+        std::vector<Atom_t>().swap(heads_);
+        if (force) {
+            deleteAtoms(0);
+            std::vector<PrgAtom*>().swap(atoms_);
+            std::vector<Atom_t>().swap(propQ_);
+        }
+        rule_.clear();
     }
 
     bool Program::clone(SharedContext &ctx) {
@@ -105,7 +118,9 @@ namespace GroundPlog{
     }
 
     bool Program::doStartProgram() {
-        throw "not implemented yet";
+        dispose(true);
+        input_   = AtomRange(0, -1);
+        return true;
     }
 
     bool Program::doUpdateProgram() {
@@ -114,6 +129,12 @@ namespace GroundPlog{
 
     bool Program::doEndProgram() {
         throw "not implemented yet";
+    }
+
+    void Program::deleteAtoms(uint32 start) {
+        for (auto it = atoms_.begin() + start, end = atoms_.end(); it != end; ++it) {
+              delete *it;
+        }
     }
 
 }

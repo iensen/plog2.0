@@ -35,4 +35,24 @@ namespace GroundPlog {
         solver_=s;
         return *s;
     }
+
+    void SharedContext::setConfiguration(Configuration *c, Ownership_t::Type ownership) {
+        bool own = ownership == Ownership_t::Acquire;
+        if (c == 0) { c = &config_def_s; own = false; }
+        if (config_.get() != c) {
+            config_ = c;
+            if (!own) config_.release();
+            config_->prepare(*this);
+            solver_->resetConfig();
+        }
+        else if (own != config_.is_owner()) {
+            if (own) config_.acquire();
+            else     config_.release();
+        }
+
+    }
+
+    bool SharedContext::ok() const {
+        return solver_->decisionLevel() || !solver_->hasConflict();
+    }
 }

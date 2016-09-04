@@ -6,7 +6,60 @@
 #define PLOG_SOLVE_ALGORITHM_H
 
 #include <groundplog/solver_strategies.h>
+#include "literal.h"
+#include "program_types.h"
+
 namespace GroundPlog {
+
+    ///////////////////////////////////////////////////////////////////////////////
+// Basic solving
+///////////////////////////////////////////////////////////////////////////////
+//! Basic (sequential) solving using given solving options.
+    class BasicSolve {
+    public:
+        //! Creates a new object for solving with the given solver using the given solving options.
+        /*!
+         * If an optional solve limit is given, solving stops once this limit is reached.
+         * \pre s is attached to a problem (SharedContext).
+         */
+        BasicSolve(Solver& s);
+        ~BasicSolve();
+
+
+        //! Enables solving under the given assumptions.
+        /*!
+         * The use of assumptions allows for incremental solving. Literals contained
+       * in assumptions are assumed to be true during search but can be undone afterwards.
+         *
+         * \param assumptions A list of unit assumptions to be assumed true.
+         * \return false if assumptions are conflicting.
+         */
+        bool     assume(const std::vector<Literal>& assumptions);
+
+        //! Solves the path stored in the given solver using the given solving options.
+        /*!
+         * \return
+         *    - true  if search stopped with an answer.
+         *    - false if an error was found
+         *
+         * \note
+         *   The function maintains the current solving state (number of restarts, learnt limits, ...)
+         *   between calls.
+         */
+        bool solve();
+
+        //! Replaces *this with BasicSolve(s, p).
+        void     reset(Solver& s);
+        Solver&  solver() { return *solver_; }
+    private:
+        BasicSolve(const BasicSolve&);
+        BasicSolve& operator=(const BasicSolve&);
+        struct State;
+        Solver* solver_; // active solver
+        State*  state_;  // internal solving state
+    };
+
+
 
     class SolveAlgorithm {
     public:
@@ -76,7 +129,7 @@ namespace GroundPlog {
         SolveAlgorithm &operator=(const SolveAlgorithm &);
 
         //! The actual solve algorithm.
-        virtual bool doSolve(SharedContext &ctx) = 0;
+        virtual bool doSolve(SharedContext &ctx,const std::vector<Literal>& assume) = 0;
 
         //! Shall return true if termination is supported, otherwise false.
         virtual bool doInterrupt()                                     = 0;
@@ -101,8 +154,25 @@ namespace GroundPlog {
         SharedContext *ctx_;
         ResultHandler *onResult_;
         double time_;
-        int last_;
     };
+
+    class ExactDCOSolve : public SolveAlgorithm {
+    public:
+        explicit ExactDCOSolve();
+        virtual bool interrupted() const;
+        virtual void resetSolve();
+        virtual void enableInterrupts();
+    protected:
+        virtual bool doSolve(SharedContext& ctx, const std::vector<Literal>& assume);
+        virtual bool doInterrupt();
+        virtual void doStart(SharedContext& ctx);
+        virtual int  doNext(int last);
+        virtual void doStop();
+    private:
+        typedef SingleOwnerPtr<BasicSolve> SolvePtr;
+        SolvePtr     solve_;
+    };
+
 }
 
 #endif //PLOG_SOLVE_ALGORITHM_H

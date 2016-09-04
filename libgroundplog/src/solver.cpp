@@ -9,4 +9,8 @@ namespace GroundPlog {
     {
 
     }
+
+    void Solver::resetConfig() {
+
+    }
 }

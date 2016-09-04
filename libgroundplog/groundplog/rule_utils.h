@@ -86,7 +86,6 @@ namespace GroundPlog {
          * an update function.
          */
         //@{
-        uint32_t     headSize() const;
         Atom_t      head()     const;
         uint32_t     bodySize() const;
         std::vector<Lit_t>       body()     const;

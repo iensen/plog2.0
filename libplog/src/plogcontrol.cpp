@@ -80,7 +80,7 @@ PlogControl::PlogControl(GroundPlog::GroundPlogFacade *groundplog,
 , pgf_(pgf)
 , psf_(psf)
 {
-    throw "not implemented yet";
+
 }
 
 void PlogControl::onFinish(GroundPlog::GroundPlogFacade::Result ret) {

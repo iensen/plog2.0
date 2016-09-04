@@ -5,6 +5,7 @@
 #ifndef PLOG_GROUNDPLOG_FACEDE_H
 #define PLOG_GROUNDPLOG_FACEDE_H
 #include "solver_strategies.h"
+#include "solve_algorithms.h"
 #include<groundplog/util/platform.h>
 #include<groundplog/program_builder.h>
 #include<groundplog/program.h>
@@ -35,7 +36,9 @@ namespace GroundPlog {
     };
 
 
-    struct SolveOptions {};
+    struct SolveOptions {
+            SolveAlgorithm* createSolveObject() const { return new ExactDCOSolve(); }
+    };
 
     struct ParserOptions{};
     class GroundPlogConfig : public BasicSatConfig {
@@ -222,11 +225,9 @@ namespace GroundPlog {
         typedef SingleOwnerPtr <Summary> SummaryPtr;
         typedef SingleOwnerPtr <Statistics> StatsPtr;
 
-        void init(GroundPlogConfig &cfg, bool discardProblem);
+        void init(GroundPlogConfig &cfg);
 
         void initBuilder(ProgramBuilder *in);
-
-        void discardProblem();
 
         void start();
 
