@@ -133,7 +133,7 @@ void PlogApp::run(GroundPlog::GroundPlogFacade &groundPlog) {
             // convert program builder to a program
             Program* lp = mode_ != mode_gringo ? static_cast<Program*>(prg) : 0;
             // create a pointer to Plog control
-            grd = Gringo::gringo_make_unique<PlogControl>(groundPlog_.get(), groundPlogConfig_, std::bind(&PlogApp::handlePostGroundOptions, this, _1), std::bind(&PlogApp::handlePreSolveOptions, this, _1));
+            grd = Gringo::gringo_make_unique<PlogControl>(groundPlog_.get(), groundPlogConfig_, std::bind(&PlogApp::handlePostGroundOptions, this, _1), std::bind(&PlogApp::handlePreSolveOptions, this, _1),nullptr);
             grd->parse(groundPlogAppOpts_.input, grOpts_, lp);
             grd->main();
         }

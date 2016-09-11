@@ -73,10 +73,10 @@ public:
     enum class ConfigUpdate { KEEP, REPLACE };
 
     PlogControl(GroundPlog::GroundPlogFacade *groundplog,
-                GroundPlog::Cli::GroundPlogCliConfig &groundplogConfig, PostGroundFunc pgf, PreSolveFunc psf);
+                GroundPlog::Cli::GroundPlogCliConfig &groundplogConfig, PostGroundFunc pgf, PreSolveFunc psf,Gringo::Logger::Printer printer);
     ~PlogControl() noexcept override;
     void parse();
-    void parse(const StringSeq& files, const PlogOptions& opts, GroundPlog::Program* out, bool addStdIn = true);
+    void parse(const StringSeq& files, const PlogOptions& opts);
     void main();
     void onFinish(GroundPlog::GroundPlogFacade::Result ret);
     bool update();
@@ -134,13 +134,14 @@ public:
     Gringo::Input::Program                                    prg_;
     Gringo::Defines                                           defs_;
     std::unique_ptr<Gringo::Input::NongroundProgramBuilder>   pb_;
-    std::unique_ptr<Gringo::Input::NonGroundParser>           parser_;
+    std::unique_ptr<PlogParser>                               parser_;
     FinishHandler                                             finishHandler_;
     GroundPlog::GroundPlogFacade                              *groundplog_ = nullptr;
     GroundPlog::Cli::GroundPlogCliConfig                      &claspConfig_;
     PostGroundFunc                                            pgf_;
     PreSolveFunc                                              psf_;
     std::vector<Gringo::UProp>                                props_;
+    Gringo::Logger                                            logger_;
     bool parsed                 = false;
     bool grounded               = false;
     bool configUpdate_          = false;
