@@ -155,7 +155,8 @@ void PlogGrammar::parser::error(DefaultLocation const &l, std::string const &msg
 %left DOTS
 %left AND
 %left ADD SUB
-%left MUL SLASH
+%left MUL SLASH MOD
+%right POW
 %left UMINUS UBNOT
 
 // }}}1
@@ -168,9 +169,6 @@ program
       directives atts_sec stmts_sec query |
      ;
 
-identifier
-    : IDENTIFIER
-    ;
 
 
 // {{{1
@@ -185,7 +183,8 @@ directives  : directives directive
 directive: const_decl
     ;
 
-const_decl: CONST identifier[uid] EQ constterm[rhs]
+
+const_decl: CONST IDENTIFIER[uid] EQ constterm[rhs] DOT
       ;
 
 
@@ -205,8 +204,7 @@ sort_def: SORT_NAME "=" sort_expr DOT
     ;
 
 sort_expr:
-            numericRange |
-            identifierRange |
+            range |
             concatenation |
             functional_symbol |
             SORT_NAME |
@@ -217,14 +215,11 @@ sort_expr:
             LPAREN sort_expr RPAREN
       ;
 
-numericRange: constterm DOTS constterm
-      ;
-
-identifierRange: IDENTIFIER DOTS IDENTIFIER
+range: constterm DOTS constterm
       ;
 
 concatenation: concatenation concat_elem
-       |
+       | concat_elem
        ;
 
 concat_elem: LBRACK sort_expr RBRACK
@@ -233,8 +228,8 @@ concat_elem: LBRACK sort_expr RBRACK
 functional_symbol: IDENTIFIER LPAREN sort_expr_list RPAREN
        ;
 
-sort_expr_list: sort_expr_list sort_expr
-       |
+sort_expr_list: sort_expr_list COMMA sort_expr
+       | sort_expr
        ;
 
 curly_brackets: LBRACE constargvec RBRACE
@@ -281,15 +276,15 @@ stmt : head[hd] DOT           {  }
     ;
 
 head
-    : atom            {  }
+    : head_atom            {  }
     | random_atom   {  }
     ;
 
-atom
-    : identifier[id]                                  {  }
-    | identifier[id] LPAREN termvec[tvv] RPAREN[r]     {  }
-    | identifier[id] LPAREN termvec[tvv] RPAREN[r]  EQ term { }
-    | identifier[id] EQ term                          {  }
+head_atom
+    : IDENTIFIER[id]                                  {  }
+    | IDENTIFIER[id] LPAREN termvec[tvv] RPAREN[r]     {  }
+    | IDENTIFIER[id] LPAREN termvec[tvv] RPAREN[r]  EQ term { }
+    | IDENTIFIER[id] EQ term                          {  }
     ;
 
 random_atom: RANDOM LPAREN IDENTIFIER COMMA IDENTIFIER RPAREN[r] |
@@ -298,21 +293,21 @@ random_atom: RANDOM LPAREN IDENTIFIER COMMA IDENTIFIER RPAREN[r] |
 
 body
     : body COMMA e_literal[lit]
-    |
+    | e_literal[lit]
     ;
 
 
 constterm:
-    | constterm[a] ADD constterm[b]                    {  }
+     constterm[a] ADD constterm[b]                    {  }
     | constterm[a] SUB constterm[b]                    {  }
     | constterm[a] MUL constterm[b]                    {  }
     | constterm[a] SLASH constterm[b]                  {  }
     | constterm[a] MOD constterm[b]                    {  }
     | constterm[a] POW constterm[b]                    {  }
     | SUB constterm[a] %prec UMINUS                    {  }
-    | identifier[a] LPAREN constargvec[b] RPAREN       {  }
+    | IDENTIFIER[a] LPAREN constargvec[b] RPAREN       {  }
     | VBAR[l] constterm[a] VBAR                        {  }
-    | identifier[a]                                    {  }
+    | IDENTIFIER[a]                                    {  }
     | NUMBER[a]                                        {  }
     ;
 
@@ -331,15 +326,15 @@ constargvec
 // {{{2 terms including variables
 
 term:
-    | term[a] SUB term[b]                      {  }
+      term[a] SUB term[b]                      {  }
     | term[a] MUL term[b]                      {  }
     | term[a] SLASH term[b]                    {  }
     | term[a] MOD term[b]                      {  }
     | term[a] POW term[b]                      {  }
     | SUB term[a] %prec UMINUS                 {  }
-    | identifier[a] LPAREN termvec[b] RPAREN    {  }
+    | IDENTIFIER[a] LPAREN termvec[b] RPAREN    {  }
     | VBAR term VBAR                           {  }
-    | identifier[a]                            {  }
+    | IDENTIFIER[a]                            {  }
     | NUMBER[a]                                {  }
     | VARIABLE[a]                              {  }
     ;
@@ -368,10 +363,9 @@ cmp
     | NEQ    {  }
     ;
 
-literal: atom
-    | identifier[id] LPAREN termvec[tvv] RPAREN[r]  NEQ term
-    | identifier[id] NEQ term
-    | term[l] cmp[rel] term[r] { }
+literal: IDENTIFIER[id]                                  {  }
+        | IDENTIFIER[id] LPAREN termvec[tvv] RPAREN[r]     {  }
+        | term[l] cmp[rel] term[r] { }
     ;
 
 e_literal: literal
@@ -379,7 +373,8 @@ e_literal: literal
     ;
 
 // pr-atoms
-stmt: PR LPAREN atom VBAR body RPAREN EQ probability
+stmt: PR LPAREN head_atom VBAR body RPAREN EQ probability |
+        LPAREN head_atom RPAREN EQ probability
        ;
 
 probability: NUMBER SLASH NUMBER

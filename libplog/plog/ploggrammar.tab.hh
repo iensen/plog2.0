@@ -519,8 +519,8 @@ namespace PlogGrammar {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 263,     ///< Last index in yytable_.
-      yynnts_ = 39,  ///< Number of nonterminal symbols.
+      yylast_ = 248,     ///< Last index in yytable_.
+      yynnts_ = 37,  ///< Number of nonterminal symbols.
       yyfinal_ = 3, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,

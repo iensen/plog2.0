@@ -656,296 +656,308 @@ namespace PlogGrammar {
         {
           switch (yyn)
             {
-  case 43:
-#line 276 "ploggrammar.yy" // lalr1.cc:859
+  case 40:
+#line 271 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 663 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 44:
-#line 277 "ploggrammar.yy" // lalr1.cc:859
+  case 41:
+#line 272 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 669 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 45:
-#line 278 "ploggrammar.yy" // lalr1.cc:859
+  case 42:
+#line 273 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 675 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 46:
-#line 279 "ploggrammar.yy" // lalr1.cc:859
+  case 43:
+#line 274 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 681 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 47:
-#line 280 "ploggrammar.yy" // lalr1.cc:859
+  case 44:
+#line 275 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 687 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 48:
-#line 284 "ploggrammar.yy" // lalr1.cc:859
+  case 45:
+#line 279 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 693 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 49:
-#line 285 "ploggrammar.yy" // lalr1.cc:859
+  case 46:
+#line 280 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 699 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 50:
-#line 289 "ploggrammar.yy" // lalr1.cc:859
+  case 47:
+#line 284 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 705 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 51:
-#line 290 "ploggrammar.yy" // lalr1.cc:859
+  case 48:
+#line 285 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 711 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 52:
-#line 291 "ploggrammar.yy" // lalr1.cc:859
+  case 49:
+#line 286 "ploggrammar.yy" // lalr1.cc:859
     { }
 #line 717 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 53:
-#line 292 "ploggrammar.yy" // lalr1.cc:859
+  case 50:
+#line 287 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 723 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 59:
-#line 306 "ploggrammar.yy" // lalr1.cc:859
+  case 55:
+#line 301 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 729 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 60:
-#line 307 "ploggrammar.yy" // lalr1.cc:859
+  case 56:
+#line 302 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 735 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 61:
-#line 308 "ploggrammar.yy" // lalr1.cc:859
+  case 57:
+#line 303 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 741 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 62:
-#line 309 "ploggrammar.yy" // lalr1.cc:859
+  case 58:
+#line 304 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 747 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 63:
-#line 310 "ploggrammar.yy" // lalr1.cc:859
+  case 59:
+#line 305 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 753 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 64:
-#line 311 "ploggrammar.yy" // lalr1.cc:859
+  case 60:
+#line 306 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 759 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 65:
-#line 312 "ploggrammar.yy" // lalr1.cc:859
+  case 61:
+#line 307 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 765 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 66:
-#line 313 "ploggrammar.yy" // lalr1.cc:859
+  case 62:
+#line 308 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 771 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 67:
-#line 314 "ploggrammar.yy" // lalr1.cc:859
+  case 63:
+#line 309 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 777 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 68:
-#line 315 "ploggrammar.yy" // lalr1.cc:859
+  case 64:
+#line 310 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 783 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 69:
-#line 316 "ploggrammar.yy" // lalr1.cc:859
+  case 65:
+#line 311 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 789 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 70:
-#line 322 "ploggrammar.yy" // lalr1.cc:859
+  case 66:
+#line 317 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 795 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 71:
-#line 323 "ploggrammar.yy" // lalr1.cc:859
+  case 67:
+#line 318 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 801 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 72:
-#line 327 "ploggrammar.yy" // lalr1.cc:859
+  case 68:
+#line 322 "ploggrammar.yy" // lalr1.cc:859
     {   }
 #line 807 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 73:
-#line 328 "ploggrammar.yy" // lalr1.cc:859
+  case 69:
+#line 323 "ploggrammar.yy" // lalr1.cc:859
     {   }
 #line 813 "ploggrammar.tab.cc" // lalr1.cc:859
+    break;
+
+  case 70:
+#line 329 "ploggrammar.yy" // lalr1.cc:859
+    {  }
+#line 819 "ploggrammar.tab.cc" // lalr1.cc:859
+    break;
+
+  case 71:
+#line 330 "ploggrammar.yy" // lalr1.cc:859
+    {  }
+#line 825 "ploggrammar.tab.cc" // lalr1.cc:859
+    break;
+
+  case 72:
+#line 331 "ploggrammar.yy" // lalr1.cc:859
+    {  }
+#line 831 "ploggrammar.tab.cc" // lalr1.cc:859
+    break;
+
+  case 73:
+#line 332 "ploggrammar.yy" // lalr1.cc:859
+    {  }
+#line 837 "ploggrammar.tab.cc" // lalr1.cc:859
+    break;
+
+  case 74:
+#line 333 "ploggrammar.yy" // lalr1.cc:859
+    {  }
+#line 843 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 75:
 #line 334 "ploggrammar.yy" // lalr1.cc:859
     {  }
-#line 819 "ploggrammar.tab.cc" // lalr1.cc:859
+#line 849 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 76:
 #line 335 "ploggrammar.yy" // lalr1.cc:859
     {  }
-#line 825 "ploggrammar.tab.cc" // lalr1.cc:859
+#line 855 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 77:
 #line 336 "ploggrammar.yy" // lalr1.cc:859
     {  }
-#line 831 "ploggrammar.tab.cc" // lalr1.cc:859
+#line 861 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 78:
 #line 337 "ploggrammar.yy" // lalr1.cc:859
     {  }
-#line 837 "ploggrammar.tab.cc" // lalr1.cc:859
+#line 867 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 79:
 #line 338 "ploggrammar.yy" // lalr1.cc:859
     {  }
-#line 843 "ploggrammar.tab.cc" // lalr1.cc:859
+#line 873 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 80:
 #line 339 "ploggrammar.yy" // lalr1.cc:859
     {  }
-#line 849 "ploggrammar.tab.cc" // lalr1.cc:859
-    break;
-
-  case 81:
-#line 340 "ploggrammar.yy" // lalr1.cc:859
-    {  }
-#line 855 "ploggrammar.tab.cc" // lalr1.cc:859
-    break;
-
-  case 82:
-#line 341 "ploggrammar.yy" // lalr1.cc:859
-    {  }
-#line 861 "ploggrammar.tab.cc" // lalr1.cc:859
-    break;
-
-  case 83:
-#line 342 "ploggrammar.yy" // lalr1.cc:859
-    {  }
-#line 867 "ploggrammar.tab.cc" // lalr1.cc:859
-    break;
-
-  case 84:
-#line 343 "ploggrammar.yy" // lalr1.cc:859
-    {  }
-#line 873 "ploggrammar.tab.cc" // lalr1.cc:859
-    break;
-
-  case 85:
-#line 344 "ploggrammar.yy" // lalr1.cc:859
-    {  }
 #line 879 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 86:
-#line 351 "ploggrammar.yy" // lalr1.cc:859
+  case 81:
+#line 346 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 885 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 87:
-#line 352 "ploggrammar.yy" // lalr1.cc:859
+  case 82:
+#line 347 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 891 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 88:
-#line 356 "ploggrammar.yy" // lalr1.cc:859
+  case 83:
+#line 351 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 897 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 89:
-#line 357 "ploggrammar.yy" // lalr1.cc:859
+  case 84:
+#line 352 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 903 "ploggrammar.tab.cc" // lalr1.cc:859
+    break;
+
+  case 85:
+#line 358 "ploggrammar.yy" // lalr1.cc:859
+    {  }
+#line 909 "ploggrammar.tab.cc" // lalr1.cc:859
+    break;
+
+  case 86:
+#line 359 "ploggrammar.yy" // lalr1.cc:859
+    {  }
+#line 915 "ploggrammar.tab.cc" // lalr1.cc:859
+    break;
+
+  case 87:
+#line 360 "ploggrammar.yy" // lalr1.cc:859
+    {  }
+#line 921 "ploggrammar.tab.cc" // lalr1.cc:859
+    break;
+
+  case 88:
+#line 361 "ploggrammar.yy" // lalr1.cc:859
+    {  }
+#line 927 "ploggrammar.tab.cc" // lalr1.cc:859
+    break;
+
+  case 89:
+#line 362 "ploggrammar.yy" // lalr1.cc:859
+    {  }
+#line 933 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 90:
 #line 363 "ploggrammar.yy" // lalr1.cc:859
     {  }
-#line 909 "ploggrammar.tab.cc" // lalr1.cc:859
-    break;
-
-  case 91:
-#line 364 "ploggrammar.yy" // lalr1.cc:859
-    {  }
-#line 915 "ploggrammar.tab.cc" // lalr1.cc:859
-    break;
-
-  case 92:
-#line 365 "ploggrammar.yy" // lalr1.cc:859
-    {  }
-#line 921 "ploggrammar.tab.cc" // lalr1.cc:859
-    break;
-
-  case 93:
-#line 366 "ploggrammar.yy" // lalr1.cc:859
-    {  }
-#line 927 "ploggrammar.tab.cc" // lalr1.cc:859
-    break;
-
-  case 94:
-#line 367 "ploggrammar.yy" // lalr1.cc:859
-    {  }
-#line 933 "ploggrammar.tab.cc" // lalr1.cc:859
-    break;
-
-  case 95:
-#line 368 "ploggrammar.yy" // lalr1.cc:859
-    {  }
 #line 939 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 99:
-#line 374 "ploggrammar.yy" // lalr1.cc:859
-    { }
+  case 91:
+#line 366 "ploggrammar.yy" // lalr1.cc:859
+    {  }
 #line 945 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
+  case 92:
+#line 367 "ploggrammar.yy" // lalr1.cc:859
+    {  }
+#line 951 "ploggrammar.tab.cc" // lalr1.cc:859
+    break;
 
-#line 949 "ploggrammar.tab.cc" // lalr1.cc:859
+  case 93:
+#line 368 "ploggrammar.yy" // lalr1.cc:859
+    { }
+#line 957 "ploggrammar.tab.cc" // lalr1.cc:859
+    break;
+
+
+#line 961 "ploggrammar.tab.cc" // lalr1.cc:859
             default:
               break;
             }
@@ -1200,197 +1212,191 @@ namespace PlogGrammar {
   }
 
 
-  const signed char parser::yypact_ninf_ = -120;
+  const signed char parser::yypact_ninf_ = -87;
 
-  const signed char parser::yytable_ninf_ = -59;
+  const signed char parser::yytable_ninf_ = -93;
 
   const short int
   parser::yypact_[] =
   {
-      17,    21,     6,  -120,  -120,  -120,   -33,  -120,  -120,    11,
-      23,    19,    43,  -120,    44,    23,  -120,    54,    79,  -120,
-      85,  -120,   108,    54,   133,   204,  -120,   140,    98,   108,
-     108,  -120,    90,   105,  -120,   113,    97,   114,    20,  -120,
-      65,  -120,  -120,   204,   204,  -120,  -120,   201,  -120,   170,
-     118,  -120,   108,   140,    52,     8,  -120,  -120,   101,  -120,
-    -120,    -2,    14,    26,    86,    68,   108,   108,   108,   108,
-     108,   108,   108,  -120,    40,   106,   -33,   204,   204,  -120,
-     126,   123,   222,    80,   204,   204,  -120,  -120,  -120,  -120,
-    -120,   204,  -120,   204,   204,   204,   204,   204,  -120,   105,
-     147,   130,    91,   121,  -120,   189,  -120,   189,   189,   140,
-    -120,   108,   152,   155,  -120,   139,   107,    68,   105,   105,
-      68,   107,   196,  -120,   109,   162,   224,   224,   172,   150,
-    -120,    64,   204,  -120,   154,   224,    80,   224,   224,    80,
-     161,   224,   108,  -120,  -120,  -120,   181,   166,  -120,   166,
-      39,   105,  -120,  -120,  -120,   204,  -120,  -120,   184,   164,
-    -120,   204,   205,  -120,   182,   145,   105,  -120,     7,  -120,
-    -120,   177,   186,    15,   224,   204,  -120,   204,   214,  -120,
-     220,   224,   224,   190,   192,   211,   206,  -120,   198,   208,
-     221,  -120,   226,   223,  -120
+       6,    24,    82,   -87,   -87,   -87,   -32,   -87,   -87,    27,
+      43,    86,    -2,   109,    43,   -87,    67,   124,   -87,    98,
+     -87,   137,    67,   152,   165,   -87,   142,   121,   137,   137,
+     -87,   111,     1,   -87,    33,   102,   126,   127,    25,   -87,
+     112,   -87,   -87,   173,   173,   -87,     8,   -87,   131,   138,
+     -87,   137,   142,   142,   129,    72,   -87,   151,   -87,   -87,
+     -87,    76,    34,    68,    -1,   -87,   137,   137,   -87,   137,
+     137,   137,   137,   137,   -87,   165,    90,   -87,   -87,   130,
+     140,   102,   173,   173,   -87,    78,   164,   183,   -87,   173,
+     -87,   -87,   -87,   -87,   -87,   173,   -87,   173,   173,   173,
+     173,   173,   -87,    99,   178,   159,    85,   104,   142,   142,
+     -87,   142,   142,   -87,   137,   179,   187,   -87,   156,   144,
+     171,   171,   171,   171,   144,   -87,   155,   -87,   195,     7,
+     180,    52,    52,   199,   182,   -87,   134,   173,   -87,   189,
+     188,   188,   188,   188,   193,    52,   137,   -87,   -87,   -87,
+      89,     0,    76,   200,   -87,   200,    99,   -87,   -87,   -87,
+     -87,   184,   207,   186,   155,   173,   220,   -87,   196,   132,
+      99,   142,   -87,   197,   -87,   190,   201,     9,    52,   173,
+     -87,    89,   191,   225,   -87,   228,    52,   -87,   198,   184,
+     214,   -87,   202,   204,   210,   208,   -87
   };
 
   const unsigned char
   parser::yydefact_[] =
   {
-       7,     0,     0,     1,    12,    35,     0,     6,     8,     0,
-       0,    10,    33,     5,     0,     0,    42,     0,     0,    11,
-       0,    34,    58,     0,    40,    74,     3,    27,     0,    58,
-      58,    69,    68,     9,     2,    57,     0,     0,    50,    41,
-       0,    48,    49,    74,    74,    84,    85,    83,    96,     0,
-       0,    18,    58,    27,     5,     0,    14,    15,    16,    17,
-      19,     0,    37,     0,     0,    65,    58,    58,    58,    58,
-      58,    58,    58,    47,     0,     0,     0,    74,    74,    43,
-      57,    83,     0,    80,    74,    74,    94,    92,    90,    93,
-      91,    74,    95,    74,    74,    74,    74,    74,   104,    70,
-      72,     0,     0,     0,    31,    27,    13,    27,    27,    27,
-      26,    58,     0,     0,    67,     0,    59,    61,    63,    64,
-      62,    60,    74,    46,     0,     0,    53,    86,    88,     0,
-      44,     0,    74,    82,     0,    98,    76,    78,    79,    77,
-      75,    99,    58,    32,    23,    25,    27,    20,    21,    22,
-       0,    24,    39,    36,    66,    74,   100,    56,     0,     0,
-      57,    74,    51,    45,     0,    81,    71,    29,    30,    28,
-     101,     0,     0,     0,    87,    74,    81,    74,     0,    54,
-       0,    52,    97,     0,     0,     0,     0,   102,     0,     0,
-       0,   103,     0,     0,    55
+       6,     0,     0,     1,    11,    32,     0,     5,     7,     0,
+       0,     9,    30,     0,     0,    39,     0,     0,    10,     0,
+      31,     0,     0,    37,     0,     3,     0,     0,     0,     0,
+      65,    64,     0,     2,     0,     0,     0,     0,    47,    38,
+       0,    45,    46,     0,     0,    79,    78,    80,     0,     0,
+      16,    69,     0,     0,    64,     0,    13,    14,    24,    15,
+      17,     0,    34,     0,     0,    61,    69,     0,     8,     0,
+       0,     0,     0,     0,    44,     0,     0,    94,    54,     0,
+       0,     0,     0,    84,    40,     0,    78,     0,    75,    84,
+      89,    87,    85,    88,    86,     0,    90,     0,     0,     0,
+       0,     0,    99,    66,    68,     0,     0,     0,    69,     0,
+      12,     0,     0,    23,     0,     0,     0,    63,     0,    55,
+      57,    59,    60,    58,    56,    95,     0,    43,     0,     0,
+       0,    50,    81,    83,     0,    41,     0,    84,    77,     0,
+      71,    73,    74,    72,    70,    93,     0,    29,    25,    21,
+      28,     0,    66,    18,    19,    20,    22,    36,    33,    62,
+      53,     0,     0,     0,     0,     0,    48,    42,     0,    76,
+      67,     0,    26,     0,    97,     0,     0,     0,    82,     0,
+      76,    27,     0,     0,    51,     0,    49,    98,     0,     0,
+       0,    96,     0,     0,     0,     0,    52
   };
 
   const short int
   parser::yypgoto_[] =
   {
-    -120,  -120,    -6,  -120,  -120,  -120,  -120,  -120,  -120,   -41,
-    -120,  -120,  -120,  -120,  -120,  -120,  -120,   244,  -120,  -120,
-    -120,   246,  -120,  -120,  -120,   -16,  -120,   -79,    32,  -120,
-     197,   -38,  -120,   -82,  -120,  -119,  -120,  -120,   239
+     -87,   -87,   -87,   -87,   -87,   -87,   -87,   -87,   -41,   -87,
+     -87,   185,   -87,   -87,   -87,   231,   -87,   -87,   -87,   230,
+     -87,   -87,   -87,   -31,   -87,   -83,    -7,   -87,   194,   -43,
+     -87,   -86,   -87,   -14,   120,    58,   226
   };
 
   const short int
   parser::yydefgoto_[] =
   {
-      -1,     1,    32,     2,     7,     8,     9,    11,    19,    55,
-      56,    57,    58,   110,    59,   146,    60,    10,    12,    21,
-      63,    17,    24,    39,    40,    48,    42,    74,    61,   100,
-     101,    49,   128,   129,    97,    50,   157,   187,    26
+      -1,     1,     2,     7,     8,     9,    11,    18,    55,    56,
+      57,    58,    59,   151,    60,    10,    12,    20,    63,    16,
+      23,    39,    40,    41,    42,    76,    61,   104,   118,    48,
+     133,   134,   101,    77,    78,   174,    25
   };
 
   const short int
   parser::yytable_[] =
   {
-      14,   131,   134,   156,    67,    82,    83,    13,    41,     4,
-       5,   111,   102,   105,   105,     5,     6,    -4,    38,    47,
-     106,     3,    68,   -38,   122,    69,    70,    77,    16,   -38,
-      18,   107,   107,    71,    72,   112,   170,    81,    81,   126,
-     127,   113,    78,   108,   108,   105,   127,   135,   180,   122,
-     164,    22,   123,   136,    33,   137,   138,   139,   140,   141,
-     125,    64,    65,   107,   147,   103,   148,   149,   150,   169,
-      38,    81,    81,   122,   104,   108,   163,    79,    81,    81,
-      25,   173,    80,    20,    99,    81,    27,    81,    81,    81,
-      81,    81,    67,    28,   127,    69,    70,   105,    99,   116,
-     117,   118,   119,   120,   121,   168,   114,    93,    94,    62,
-      68,    67,    66,    69,    70,   107,    47,   158,   159,    75,
-     109,    71,    72,   174,   144,    73,    81,   108,    29,    68,
-      98,    68,    69,    70,    69,    70,    76,   181,   130,   182,
-      71,    72,    71,   151,    30,   132,   124,    31,    13,    47,
-      35,    51,   175,   -58,   -51,    81,   142,   -51,    52,   143,
-      29,   145,    53,   152,    36,    37,   153,   -58,   -58,    81,
-     177,    81,   154,    13,   166,   -58,    30,    86,   -51,    31,
-      54,   161,   160,   162,    87,    91,    88,   165,    93,    94,
-     107,    89,    51,    90,    91,    92,    95,    93,    94,    52,
-      51,    29,   171,    53,   172,    95,    96,    52,    77,    29,
-     -50,    53,   175,   -50,   167,   176,    43,    30,   178,   179,
-      31,    54,   183,    84,    43,    30,    85,   184,    31,    54,
-     185,   186,    44,   188,   -50,    45,    13,    46,   155,   190,
-      44,   189,   133,    45,    13,    46,    91,   191,    91,    93,
-      94,    93,    94,    15,   192,   193,   194,    95,    96,    95,
-      96,    23,    34,   115
+      87,    88,   136,   139,    79,    67,    -4,    67,    13,   171,
+      49,   106,   107,    68,    32,   162,   163,   -91,   126,   117,
+     -91,    64,    65,    69,     3,    69,    70,    71,    70,    71,
+      89,     5,    82,   172,    72,    73,    72,    73,    19,   131,
+     132,   -91,   185,   -35,   103,    74,   132,    83,    15,   -35,
+     130,   168,   140,    43,   141,   142,   143,   144,   145,   103,
+     119,   125,   120,   121,   122,   123,   124,   150,   153,    44,
+     154,   155,    45,    46,    47,    75,    95,   115,   109,    97,
+      98,   177,    67,   116,   110,     4,     5,    99,   100,   114,
+     135,   109,     6,    24,   132,   109,   111,    17,    43,   126,
+      69,   152,   127,    70,    71,    67,    27,   156,   112,   111,
+     109,    72,    73,   111,    44,   148,    21,    45,    46,    47,
+      75,   112,   178,    69,    84,   112,    70,    71,   111,    85,
+     181,    26,    62,    66,    72,    73,   186,   149,    90,   170,
+     112,   -92,    38,   126,   -92,    91,   167,    92,    80,    81,
+     102,   108,    93,    50,    94,    95,    96,    28,    97,    98,
+      51,    52,    28,   128,    53,   -92,    99,   100,    69,    34,
+      52,    70,    71,    29,    35,    43,    30,    31,    29,    72,
+     129,    30,    54,    36,    37,    43,   137,   146,   147,   159,
+     157,    44,    38,    43,    45,    46,    47,    75,   158,    71,
+     164,    44,   161,   138,    45,    46,    47,    95,   165,    44,
+      97,    98,    45,    86,    47,   166,    98,    95,    99,   100,
+      97,    98,   169,   173,   111,   175,   176,   179,    99,   180,
+     187,   183,   182,   188,   184,   189,   192,   194,   190,   195,
+      14,   196,   113,   193,    22,   105,   160,   191,    33
   };
 
   const unsigned char
   parser::yycheck_[] =
   {
-       6,    80,    84,   122,     6,    43,    44,    40,    24,     3,
-       4,    13,    53,     6,     6,     4,    10,     0,    24,    25,
-      12,     0,    24,     9,     9,    27,    28,     7,     5,    15,
-      11,    24,    24,    35,    36,     9,   155,    43,    44,    77,
-      78,    15,    22,    36,    36,     6,    84,    85,    33,     9,
-     132,     7,    12,    91,    22,    93,    94,    95,    96,    97,
-      76,    29,    30,    24,   105,    13,   107,   108,   109,    30,
-      76,    77,    78,     9,    22,    36,    12,    12,    84,    85,
-      26,   160,    17,    40,    52,    91,     7,    93,    94,    95,
-      96,    97,     6,     8,   132,    27,    28,     6,    66,    67,
-      68,    69,    70,    71,    72,   146,    20,    27,    28,    11,
-      24,     6,    22,    27,    28,    24,   122,     8,     9,    22,
-      19,    35,    36,   161,    33,    12,   132,    36,    20,    24,
-      12,    24,    27,    28,    27,    28,    22,   175,    12,   177,
-      35,    36,    35,   111,    36,    22,    40,    39,    40,   155,
-      17,    11,     7,    13,     9,   161,     9,    12,    18,    29,
-      20,    40,    22,    11,    31,    32,    11,    27,    28,   175,
-      25,   177,    33,    40,   142,    35,    36,     7,    33,    39,
-      40,     9,    20,    33,    14,    24,    16,    33,    27,    28,
-      24,    21,    11,    23,    24,    25,    35,    27,    28,    18,
-      11,    20,    18,    22,    40,    35,    36,    18,     7,    20,
-       9,    22,     7,    12,    33,    33,    20,    36,    41,    33,
-      39,    40,     8,    22,    20,    36,    25,     7,    39,    40,
-      40,    39,    36,    22,    33,    39,    40,    41,    42,    41,
-      36,    35,    20,    39,    40,    41,    24,    39,    24,    27,
-      28,    27,    28,     9,    33,    29,    33,    35,    36,    35,
-      36,    15,    23,    66
+      43,    44,    85,    89,    35,     6,     0,     6,    40,     9,
+      24,    52,    53,    12,    21,     8,     9,     9,     9,    20,
+      12,    28,    29,    24,     0,    24,    27,    28,    27,    28,
+      22,     4,     7,    33,    35,    36,    35,    36,    40,    82,
+      83,    33,    33,     9,    51,    12,    89,    22,     5,    15,
+      81,   137,    95,    20,    97,    98,    99,   100,   101,    66,
+      67,    75,    69,    70,    71,    72,    73,   108,   109,    36,
+     111,   112,    39,    40,    41,    42,    24,     9,     6,    27,
+      28,   164,     6,    15,    12,     3,     4,    35,    36,    13,
+      12,     6,    10,    26,   137,     6,    24,    11,    20,     9,
+      24,   108,    12,    27,    28,     6,     8,   114,    36,    24,
+       6,    35,    36,    24,    36,    30,     7,    39,    40,    41,
+      42,    36,   165,    24,    12,    36,    27,    28,    24,    17,
+     171,     7,    11,    22,    35,    36,   179,    33,     7,   146,
+      36,     9,    40,     9,    12,    14,    12,    16,    22,    22,
+      12,    22,    21,    11,    23,    24,    25,    20,    27,    28,
+      18,    19,    20,    33,    22,    33,    35,    36,    24,    17,
+      19,    27,    28,    36,    22,    20,    39,    40,    36,    35,
+      40,    39,    40,    31,    32,    20,    22,     9,    29,    33,
+      11,    36,    40,    20,    39,    40,    41,    42,    11,    28,
+      20,    36,     7,    20,    39,    40,    41,    24,     9,    36,
+      27,    28,    39,    40,    41,    33,    28,    24,    35,    36,
+      27,    28,    33,    39,    24,    18,    40,     7,    35,    33,
+      39,    41,    35,     8,    33,     7,    22,    33,    40,    29,
+       9,    33,    57,    41,    14,    51,   126,   189,    22
   };
 
   const unsigned char
   parser::yystos_[] =
   {
-       0,    45,    47,     0,     3,     4,    10,    48,    49,    50,
-      61,    51,    62,    40,    46,    61,     5,    65,    11,    52,
-      40,    63,     7,    65,    66,    26,    82,     7,     8,    20,
-      36,    39,    46,    72,    82,    17,    31,    32,    46,    67,
-      68,    69,    70,    20,    36,    39,    41,    46,    69,    75,
-      79,    11,    18,    22,    40,    53,    54,    55,    56,    58,
-      60,    72,    11,    64,    72,    72,    22,     6,    24,    27,
-      28,    35,    36,    12,    71,    22,    22,     7,    22,    12,
-      17,    46,    75,    75,    22,    25,     7,    14,    16,    21,
-      23,    24,    25,    27,    28,    35,    36,    78,    12,    72,
-      73,    74,    53,    13,    22,     6,    12,    24,    36,    19,
-      57,    13,     9,    15,    20,    74,    72,    72,    72,    72,
-      72,    72,     9,    12,    40,    69,    75,    75,    76,    77,
-      12,    71,    22,    20,    77,    75,    75,    75,    75,    75,
-      75,    75,     9,    29,    33,    40,    59,    53,    53,    53,
-      53,    72,    11,    11,    33,    42,    79,    80,     8,     9,
-      20,     9,    33,    12,    77,    33,    72,    33,    53,    30,
-      79,    18,    40,    71,    75,     7,    33,    25,    41,    33,
-      33,    75,    75,     8,     7,    40,    39,    81,    22,    35,
-      41,    39,    33,    29,    33
+       0,    45,    46,     0,     3,     4,    10,    47,    48,    49,
+      59,    50,    60,    40,    59,     5,    63,    11,    51,    40,
+      61,     7,    63,    64,    26,    80,     7,     8,    20,    36,
+      39,    40,    70,    80,    17,    22,    31,    32,    40,    65,
+      66,    67,    68,    20,    36,    39,    40,    41,    73,    77,
+      11,    18,    19,    22,    40,    52,    53,    54,    55,    56,
+      58,    70,    11,    62,    70,    70,    22,     6,    12,    24,
+      27,    28,    35,    36,    12,    42,    69,    77,    78,    67,
+      22,    22,     7,    22,    12,    17,    40,    73,    73,    22,
+       7,    14,    16,    21,    23,    24,    25,    27,    28,    35,
+      36,    76,    12,    70,    71,    72,    52,    52,    22,     6,
+      12,    24,    36,    55,    13,     9,    15,    20,    72,    70,
+      70,    70,    70,    70,    70,    77,     9,    12,    33,    40,
+      67,    73,    73,    74,    75,    12,    69,    22,    20,    75,
+      73,    73,    73,    73,    73,    73,     9,    29,    30,    33,
+      52,    57,    70,    52,    52,    52,    70,    11,    11,    33,
+      78,     7,     8,     9,    20,     9,    33,    12,    75,    33,
+      70,     9,    33,    39,    79,    18,    40,    69,    73,     7,
+      33,    52,    35,    41,    33,    33,    73,    39,     8,     7,
+      40,    79,    22,    41,    33,    29,    33
   };
 
   const unsigned char
   parser::yyr1_[] =
   {
-       0,    44,    45,    45,    45,    46,    47,    47,    48,    49,
-      50,    51,    51,    52,    53,    53,    53,    53,    53,    53,
-      53,    53,    53,    53,    54,    55,    56,    56,    57,    58,
-      59,    59,    60,    61,    62,    62,    63,    63,    64,    64,
-      65,    66,    66,    67,    67,    67,    67,    67,    68,    68,
-      69,    69,    69,    69,    70,    70,    71,    71,    72,    72,
-      72,    72,    72,    72,    72,    72,    72,    72,    72,    72,
-      73,    73,    74,    74,    75,    75,    75,    75,    75,    75,
-      75,    75,    75,    75,    75,    75,    76,    76,    77,    77,
-      78,    78,    78,    78,    78,    78,    79,    79,    79,    79,
-      80,    80,    67,    81,    82
+       0,    44,    45,    45,    45,    46,    46,    47,    48,    49,
+      50,    50,    51,    52,    52,    52,    52,    52,    52,    52,
+      52,    52,    53,    54,    54,    55,    56,    57,    57,    58,
+      59,    60,    60,    61,    61,    62,    62,    63,    64,    64,
+      65,    65,    65,    65,    65,    66,    66,    67,    67,    67,
+      67,    68,    68,    69,    69,    70,    70,    70,    70,    70,
+      70,    70,    70,    70,    70,    70,    71,    71,    72,    72,
+      73,    73,    73,    73,    73,    73,    73,    73,    73,    73,
+      73,    74,    74,    75,    75,    76,    76,    76,    76,    76,
+      76,    77,    77,    77,    78,    78,    65,    65,    79,    80
   };
 
   const unsigned char
   parser::yyr2_[] =
   {
-       0,     2,     5,     4,     0,     1,     2,     0,     1,     4,
-       2,     2,     0,     4,     1,     1,     1,     1,     1,     1,
-       3,     3,     3,     3,     3,     3,     2,     0,     3,     4,
-       2,     0,     3,     2,     2,     0,     5,     3,     1,     3,
-       2,     2,     0,     2,     3,     4,     3,     2,     1,     1,
-       1,     4,     6,     3,     6,    13,     3,     0,     0,     3,
+       0,     2,     5,     4,     0,     2,     0,     1,     5,     2,
+       2,     0,     4,     1,     1,     1,     1,     1,     3,     3,
+       3,     3,     3,     2,     1,     3,     4,     3,     1,     3,
+       2,     2,     0,     5,     3,     1,     3,     2,     2,     0,
+       2,     3,     4,     3,     2,     1,     1,     1,     4,     6,
+       3,     6,    13,     3,     1,     3,     3,     3,     3,     3,
+       3,     2,     4,     3,     1,     1,     1,     3,     1,     0,
        3,     3,     3,     3,     3,     2,     4,     3,     1,     1,
-       1,     3,     1,     0,     0,     3,     3,     3,     3,     3,
-       2,     4,     3,     1,     1,     1,     1,     3,     1,     0,
-       1,     1,     1,     1,     1,     1,     1,     6,     3,     3,
-       1,     2,     8,     3,     3
+       1,     1,     3,     1,     0,     1,     1,     1,     1,     1,
+       1,     1,     4,     3,     1,     2,     8,     5,     3,     3
   };
 
 
@@ -1407,31 +1413,29 @@ namespace PlogGrammar {
   "\"?\"", "\"\\\\\"", "\"^\"", "\"}\"", "\"]\"", "\"random\"", "\"pr\"",
   "\")\"", "\";\"", "\"/\"", "\"-\"", "UBNOT", "UMINUS", "\"<NUMBER>\"",
   "\"<IDENTIFIER>\"", "\"<VARIABLE>\"", "\"not\"", "AND", "$accept",
-  "program", "identifier", "directives", "directive", "const_decl",
-  "sorts_sec", "sort_defs", "sort_def", "sort_expr", "numericRange",
-  "identifierRange", "concatenation", "concat_elem", "functional_symbol",
-  "sort_expr_list", "curly_brackets", "atts_sec", "att_defs", "att_def",
-  "sort_name_list", "stmts_sec", "stmts", "stmt", "head", "atom",
-  "random_atom", "body", "constterm", "consttermvec", "constargvec",
-  "term", "ntermvec", "termvec", "cmp", "literal", "e_literal",
-  "probability", "query", YY_NULLPTR
+  "program", "directives", "directive", "const_decl", "sorts_sec",
+  "sort_defs", "sort_def", "sort_expr", "range", "concatenation",
+  "concat_elem", "functional_symbol", "sort_expr_list", "curly_brackets",
+  "atts_sec", "att_defs", "att_def", "sort_name_list", "stmts_sec",
+  "stmts", "stmt", "head", "head_atom", "random_atom", "body", "constterm",
+  "consttermvec", "constargvec", "term", "ntermvec", "termvec", "cmp",
+  "literal", "e_literal", "probability", "query", YY_NULLPTR
   };
 
 #if PLOGGRAMMAR_DEBUG
   const unsigned short int
   parser::yyrline_[] =
   {
-       0,   167,   167,   168,   168,   172,   181,   182,   185,   188,
-     197,   200,   201,   204,   208,   209,   210,   211,   212,   213,
-     214,   215,   216,   217,   220,   223,   226,   227,   230,   233,
-     236,   237,   240,   247,   249,   250,   253,   254,   257,   258,
-     265,   268,   269,   276,   277,   278,   279,   280,   284,   285,
-     289,   290,   291,   292,   295,   296,   300,   301,   305,   306,
-     307,   308,   309,   310,   311,   312,   313,   314,   315,   316,
-     322,   323,   327,   328,   333,   334,   335,   336,   337,   338,
-     339,   340,   341,   342,   343,   344,   351,   352,   356,   357,
-     363,   364,   365,   366,   367,   368,   371,   372,   373,   374,
-     377,   378,   382,   385,   388
+       0,   168,   168,   169,   169,   179,   180,   183,   187,   196,
+     199,   200,   203,   207,   208,   209,   210,   211,   212,   213,
+     214,   215,   218,   221,   222,   225,   228,   231,   232,   235,
+     242,   244,   245,   248,   249,   252,   253,   260,   263,   264,
+     271,   272,   273,   274,   275,   279,   280,   284,   285,   286,
+     287,   290,   291,   295,   296,   301,   302,   303,   304,   305,
+     306,   307,   308,   309,   310,   311,   317,   318,   322,   323,
+     329,   330,   331,   332,   333,   334,   335,   336,   337,   338,
+     339,   346,   347,   351,   352,   358,   359,   360,   361,   362,
+     363,   366,   367,   368,   371,   372,   376,   377,   380,   383
   };
 
   // Print the state stack on the debug stream.
@@ -1516,4 +1520,4 @@ namespace PlogGrammar {
 
 #line 19 "ploggrammar.yy" // lalr1.cc:1167
 } // PlogGrammar
-#line 1520 "ploggrammar.tab.cc" // lalr1.cc:1167
+#line 1524 "ploggrammar.tab.cc" // lalr1.cc:1167
