@@ -1,6 +1,6 @@
 
+#include <plog/plogoutput.h>
 #include "plog/plogcontrol.hh"
-
 
 bool PlogControl::hasSubKey(unsigned key, char const *name, unsigned* subKey) {
     //*subKey = claspConfig_.getKey(key, name);
@@ -63,28 +63,23 @@ bool PlogControl::external(Gringo::SymbolicAtomIter it) const {
     throw "not implemented yet";
 }
 
-void PlogControl::parse(const PlogControl::StringSeq &files, const PlogOptions &opts, bool addStdIn) {
+void PlogControl::parse(const PlogControl::StringSeq &files, const PlogOptions &opts) {
     using namespace Gringo;
-
-    if (claspOut) {
-        out_ = gringo_make_unique<Output::OutputBase>(claspOut->theoryData(), std::move(outPreds), gringo_make_unique<ClaspAPIBackend>(*this), opts.outputOptions);
+    // make empty theory data
+    std::unique_ptr<Potassco::TheoryData> data = gringo_make_unique<Potassco::TheoryData>();
+    Output::OutputPredicates outPreds;
+    for (auto &x : opts.foobar) {
+        outPreds.emplace_back(Location("<cmd>",1,1,"<cmd>", 1,1), x, false);
     }
-    else {
-        data_ = gringo_make_unique<Potassco::TheoryData>();
-        out_ = gringo_make_unique<Output::OutputBase>(*data_, std::move(outPreds), std::cout, opts.outputFormat, opts.outputOptions);
-    }
+    out_ = gringo_make_unique<Gringo::Output::OutputBase>(*data, std::move(outPreds), gringo_make_unique<PlogOutput>(*this));
     out_->keepFacts = opts.keepFacts;
-    pb_ = gringo_make_unique<Input::NongroundProgramBuilder>(scripts_, prg_, *out_, defs_, opts.rewriteMinimize);
-    parser_ = gringo_make_unique<Input::NonGroundParser>(*pb_);
+    pb_ = gringo_make_unique<NonGroundProgramBuilder>( prg_, defs_);
+    parser_ = Gringo::gringo_make_unique<PlogParser>(*pb_);
     for (auto &x : opts.defines) {
-        LOG << "define: " << x << std::endl;
         parser_->parseDefine(x, logger_);
     }
     for (auto x : files) {
         parser_->pushFile(std::move(x), logger_);
-    }
-    if (files.empty() && addStdIn) {
-        parser_->pushFile("-", logger_);
     }
     parse();
 

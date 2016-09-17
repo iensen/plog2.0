@@ -29,17 +29,25 @@
 #include <memory>
 #include <iosfwd>
 #include <set>
+#include<gringo/lexerstate.hh>
+#include<gringo/logger.hh>
+#include <plog/programbuilder.h>
+using Logger = Gringo::Logger;
+using Location = Gringo::Location;
+
+template<class T>
+using LexerState = Gringo::LexerState<T>;
 
 // {{{ declaration of NonGroundParser
 
         using StringVec   = std::vector<std::string>;
-        using ProgramVec  = std::vector<std::tuple<String, IdVec, std::string>>;
+        using ProgramVec  = std::vector<std::tuple<std::string, IdVec, std::string>>;
 
-        class PlogParser : private LexerState<std::pair<String, std::pair<String, IdVec>>> {
+        class PlogParser : private LexerState<std::pair<std::string, std::pair<std::string, IdVec>>> {
         private:
-            enum Condition { yyccomment, yycblockcomment, yycpython, yyclua, yycnormal, yyctheory, yycdefinition };
+            enum Condition { yyccomment, yycnormal, yycdefinition };
         public:
-            PlogParser(INongroundProgramBuilder &pb);
+            PlogParser(NonGroundProgramBuilder &pb);
             void parseError(Location const &loc, std::string const &token);
             void pushFile(std::string &&filename, Logger &log);
             void pushStream(std::string &&name, std::unique_ptr<std::istream>, Logger &log);
@@ -47,51 +55,33 @@
             int lex(void *pValue, Location &loc);
             bool parseDefine(std::string const &define, Logger &log);
             bool parse(Logger &log);
-            bool empty() { return LexerState::empty(); }
-            void include(String file, Location const &loc, bool include, Logger &log);
-            void theoryLexing(TheoryLexing mode);
-            INongroundProgramBuilder &builder();
+            bool empty();
+            void include(std::string file, Location const &loc, bool include, Logger &log);
+            NonGroundProgramBuilder &builder();
             // Note: only to be used during parsing
-            Logger &logger() { assert(log_); return *log_; }
-            // {{{ aggregate helper functions
-            BoundVecUid boundvec(Relation ra, TermUid ta, Relation rb, TermUid tb);
-            unsigned aggregate(AggregateFunction fun, bool choice, unsigned elems, BoundVecUid bounds);
-            unsigned aggregate(TheoryAtomUid atom);
-            HdLitUid headaggregate(Location const &loc, unsigned hdaggr);
-            BdLitVecUid bodyaggregate(BdLitVecUid body, Location const &loc, NAF naf, unsigned bdaggr);
-            // }}}
-            ~NonGroundParser();
+            Logger &logger() { assert(log_); return *log_; };
+            ~PlogParser();
 
         private:
             int lex_impl(void *pValue, Location &loc);
-            void lexerError(StringSpan token);
+            void lexerError(std::string token);
             bool push(std::string const &filename, bool include = false);
             bool push(std::string const &file, std::unique_ptr<std::istream> in);
             void pop();
             void _init();
             void condition(Condition cond);
-            using LexerState<std::pair<String, std::pair<String, IdVec>>>::start;
+            using LexerState<std::pair<std::string, std::pair<std::string, IdVec>>>::start;
             void start(Location &loc);
             Condition condition() const;
-            String filename() const;
+            std::string filename() const;
 
         private:
             std::set<std::string> filenames_;
-            bool incmodeIncluded_ = false;
-            TheoryLexing theoryLexing_ = TheoryLexing::Disabled;
-            String not_;
-            INongroundProgramBuilder &pb_;
-            struct Aggr
-            {
-                AggregateFunction fun;
-                unsigned choice;
-                unsigned elems;
-                BoundVecUid bounds;
-            };
-            Indexed<Aggr> _aggregates;
+             std::string not_;
+            NonGroundProgramBuilder &pb_;
             int           _startSymbol;
             Condition     condition_ = yycnormal;
-            String        _filename;
+            std::string        _filename;
             Logger *log_ = nullptr;
         };
 

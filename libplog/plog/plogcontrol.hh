@@ -1,6 +1,6 @@
 #include <gringo/output/output.hh>
 #include <gringo/input/program.hh>
-#include <gringo/input/programbuilder.hh>
+#include <plog/programbuilder.h>
 #include <gringo/input/nongroundparser.hh>
 #include <gringo/input/groundtermparser.hh>
 #include <gringo/control.hh>
@@ -13,6 +13,14 @@
 #include <program_opts/string_convert.h>
 #include <mutex>
 #include<plog/plog.h>
+#include <plog/input/program.h>
+#include "plogparser.h"
+#include<plog/programbuilder.h>
+
+
+#ifndef PLOGCONTROL_H
+#define PLOGCONTROL_H
+
 
 
 struct plog_control {
@@ -131,9 +139,9 @@ public:
     // }}}2
 
     std::unique_ptr<Gringo::Output::OutputBase>               out_;
-    Gringo::Input::Program                                    prg_;
+    Program                                                   prg_;
     Gringo::Defines                                           defs_;
-    std::unique_ptr<Gringo::Input::NongroundProgramBuilder>   pb_;
+    std::unique_ptr<NonGroundProgramBuilder>   pb_;
     std::unique_ptr<PlogParser>                               parser_;
     FinishHandler                                             finishHandler_;
     GroundPlog::GroundPlogFacade                              *groundplog_ = nullptr;
@@ -201,3 +209,4 @@ inline bool parseWarning(const std::string& str, PlogOptions& out) {
     return false;
 }
 
+#endif
