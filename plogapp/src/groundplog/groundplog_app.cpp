@@ -46,10 +46,12 @@ namespace GroundPlog {
         }
 
         void GroundPlogAppBase::initOptions(ProgramOptions::OptionContext &root) {
-            using namespace ProgramOptions;
-            OptionGroup basic("Basic Options");
-            // add options here
-            root.add(basic);        }
+
+            groundPlogConfig_.addOptions(root);
+            groundPlogAppOpts_.initOptions(root);
+            root.find("verbose")->get()->value()->defaultsTo("1");
+
+        }
 
         void GroundPlogAppBase::validateOptions(const ProgramOptions::OptionContext &root,
                                                 const ProgramOptions::ParsedOptions &parsed,
@@ -104,7 +106,10 @@ namespace GroundPlog {
         }
 
         bool GroundPlogAppBase::parsePositional(const std::string &s, std::string &out) {
-            throw "not implemented yet";
+            int num;
+            if   (bk_lib::string_cast(s, num)) { out = "number"; }
+            else                               { out = "file";   }
+            return true;
         }
 
         void GroundPlogAppBase::onEvent(const Event &ev) {
@@ -140,12 +145,23 @@ namespace GroundPlog {
         }
 
         GroundPlogAppOptions::GroundPlogAppOptions(){
+
         }
 
 
 
         bool GroundPlogAppOptions::validateOptions(const ProgramOptions::ParsedOptions &parsed) {
             return true; // no options yet
+        }
+
+        void GroundPlogAppOptions::initOptions(ProgramOptions::OptionContext &root) {
+            using namespace ProgramOptions;
+            OptionGroup basic("Basic Options");
+            // add other options
+            basic.addOptions()
+                    ("file,f,@2" , storeTo(input)->composing(), "Input files")
+                    ;
+            root.add(basic);
         }
 
         void GroundPlogAppBase::run(GroundPlogFacade& groundPlog) {

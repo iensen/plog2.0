@@ -45,6 +45,8 @@ namespace GroundPlog {
 /////////////////////////////////////////////////////////////////////////////////////////
         struct GroundPlogAppOptions {
             GroundPlogAppOptions();
+            void initOptions(ProgramOptions::OptionContext& root);
+
             bool validateOptions(const ProgramOptions::ParsedOptions& parsed);
             typedef std::vector<std::string>  StringSeq;
             StringSeq   input;     // list of input files - only first used!

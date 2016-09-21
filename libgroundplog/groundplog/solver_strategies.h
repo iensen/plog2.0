@@ -39,7 +39,7 @@ namespace GroundPlog {
     struct ContextParams {
         bool hasConfig;
         uint8        cliConfig;     /*!< Reserved for command-line interface.      */
-
+        uint8        cliMode;       /*!< Reserved for command-line interface.      */
     };
 
     //! Interface for configuring a SharedContext object and its associated solvers.

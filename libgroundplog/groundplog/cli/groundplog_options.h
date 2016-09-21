@@ -87,12 +87,36 @@ class GroundPlogCliConfig: public GroundPlogConfig{
 public:
 
     typedef ProgramOptions::ParsedOptions ParsedOpts;
+    typedef ProgramOptions::OptionGroup   Options;
+    typedef SingleOwnerPtr<Options>       OptionsPtr;
 	uint32             numSolver()const {return 0;};
     bool validate();
+
+    // Operations on active config and solver
+    int  setActive(int o, const char* value);
+
+    //@{
+	//! Adds all available options to root.
+	/*!
+	 * Once options are added, root can be used with an option source (e.g. the command-line)
+	 * to populate this object.
+	 */
+	void addOptions(ProgramOptions::OptionContext& root);
 	bool finalize(const ProgramOptions::ParsedOptions& parsed, bool applyDefaults);
     bool finalizeAppConfig(UserConfig* active, const ParsedOpts& exclude, bool defs);
     bool setAppDefaults(UserConfig* active, const ParsedOpts& exclude);
+    bool             isGenerator() const { return (cliMode & mode_tester) == 0; }
+    int  applyActive(int o, const char* setValue, std::string* getValue, const char** getDesc, const char** name);
 
+
+private:
+    static const uint8 mode_solver = 1u;
+    static const uint8 mode_tester = 2u;
+
+    class  ProgOption;
+    OptionsPtr       opts_;
+    ProgOption*       createOption(int o);
+    void              createOptions();
 
 };
 

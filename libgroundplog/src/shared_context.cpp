@@ -17,7 +17,7 @@ namespace GroundPlog {
     static BasicSatConfig config_def_s;
 
     GroundPlog::SharedContext::SharedContext()
-            : progress_(0) { // minimize statements
+            : progress_(0),solver_(0) { // minimize statements
         config_ = &config_def_s;
         config_.release();
         pushSolver();
