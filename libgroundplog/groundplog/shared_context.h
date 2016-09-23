@@ -206,8 +206,9 @@ namespace GroundPlog {
         typedef std::vector<VarInfo>       VarVec;
         VarVec       varInfo_;       // varInfo[v] stores info about variable v
         Config       config_;        // active configuration
-        Solver*    solver_;       // solvers associated with this context
         LogPtr       progress_;      // event handler or 0 if not used
+        Solver*    solver_;       // solvers associated with this context
+
     };
 
 

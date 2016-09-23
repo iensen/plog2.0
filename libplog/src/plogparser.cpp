@@ -61,6 +61,7 @@ namespace {
         return "";
     }
 
+    /*
     std::pair<std::string, std::string> check_file(std::string const &filename, std::string const &source) {
         struct stat sb;
         if (stat(filename.c_str(), &sb) != -1) {
@@ -86,6 +87,7 @@ namespace {
         }
         return {"", ""};
     }
+     */
 
 #else
 
