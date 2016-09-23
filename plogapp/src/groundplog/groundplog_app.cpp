@@ -63,7 +63,8 @@ namespace GroundPlog {
             GroundPlogAppOptions& app = groundPlogAppOpts_;
             for (std::size_t i = 1; i < app.input.size(); ++i) {
                 if (!isStdIn(app.input[i]) && !std::ifstream(app.input[i].c_str()).is_open()) {
-                    throw Error(ClaspErrorString("'%s': could not open input file!", app.input[i].c_str()).c_str());
+                    throw Error(ClaspStringBuffer().appendFormat("'%s': could not open input file!", app.input[i].c_str()).c_str());
+
                 }
             }
             setExitCode(0);
