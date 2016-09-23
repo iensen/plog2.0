@@ -157,7 +157,9 @@ bool PlogParser::parse(Logger &log) {
     throw "not implemented yet";
 }
 
-bool PlogParser::empty() {  throw "not implemented yet";}
+bool PlogParser::empty() {
+    return LexerState::empty();
+}
 
 void PlogParser::include(std::string file, Location const &loc, bool include, Logger &log) {
     throw "not implemented yet";
@@ -176,7 +178,9 @@ void PlogParser::lexerError(std::string token) {
 }
 
 bool PlogParser::push(std::string const &filename, bool include) {
-    throw "not implemented yet";
+    return (include && !empty()) ?
+           LexerState::push(filename.c_str(), {filename.c_str(), LexerState::data().second}) :
+           LexerState::push(filename.c_str(), {filename.c_str(), {"base", {}}});
 }
 
 bool PlogParser::push(std::string const &file, std::unique_ptr<std::istream> in) {
