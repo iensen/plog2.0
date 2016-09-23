@@ -16,7 +16,7 @@
 #include <plog/input/program.h>
 #include "plogparser.h"
 #include<plog/programbuilder.h>
-
+#include<plog/term.h>
 
 #ifndef PLOGCONTROL_H
 #define PLOGCONTROL_H
@@ -140,7 +140,7 @@ public:
 
     std::unique_ptr<Gringo::Output::OutputBase>               out_;
     Program                                                   prg_;
-    Gringo::Defines                                           defs_;
+    Defines                                                   defs_;
     std::unique_ptr<NonGroundProgramBuilder>   pb_;
     std::unique_ptr<PlogParser>                               parser_;
     FinishHandler                                             finishHandler_;
@@ -149,7 +149,7 @@ public:
     PostGroundFunc                                            pgf_;
     PreSolveFunc                                              psf_;
     std::vector<Gringo::UProp>                                props_;
-    Gringo::Logger                                            logger_;
+    Plog::Logger                                            logger_;
     bool parsed                 = false;
     bool grounded               = false;
     bool configUpdate_          = false;

@@ -30,10 +30,14 @@
 #include <iosfwd>
 #include <set>
 #include<gringo/lexerstate.hh>
-#include<gringo/logger.hh>
+
 #include <plog/programbuilder.h>
-using Logger = Gringo::Logger;
+#include <groundplog/logger.h>
+
+class NonGroundProgramBuilder;
+using Logger = Plog::Logger;
 using Location = Gringo::Location;
+using IdVec = std::vector<std::pair<Location, std::string>>;
 
 template<class T>
 using LexerState = Gringo::LexerState<T>;

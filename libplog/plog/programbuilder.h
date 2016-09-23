@@ -8,14 +8,14 @@
 #include <string>
 #include <gringo/locatable.hh>
 #include <gringo/output/output.hh>
-
-
+#include <plog/term.h>
 
 
 using Location = Gringo::Location;
 using IdVec = std::vector<std::pair<Location, std::string>>;
-using Defines = Gringo::Defines;
+
 class Program;
+class Defines;
 
 class NonGroundProgramBuilder {
 public:

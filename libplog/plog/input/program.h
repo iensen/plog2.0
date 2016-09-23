@@ -10,7 +10,7 @@
 #include <gringo/ground/program.hh>
 #include "statement.h"
 
-using Defines = Gringo::Defines;
+
 
     class Program {
     public:
