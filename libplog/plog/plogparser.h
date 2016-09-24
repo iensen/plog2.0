@@ -30,14 +30,16 @@
 #include <iosfwd>
 #include <set>
 #include<gringo/lexerstate.hh>
-
+#include<gringo/symbol.hh>
 #include <plog/programbuilder.h>
 #include <groundplog/logger.h>
 
 class NonGroundProgramBuilder;
 using Logger = Plog::Logger;
 using Location = Gringo::Location;
-using IdVec = std::vector<std::pair<Location, std::string>>;
+using String = Gringo::String;
+using IdVec = std::vector<std::pair<Location, String>>;
+
 
 template<class T>
 using LexerState = Gringo::LexerState<T>;
@@ -47,9 +49,10 @@ using LexerState = Gringo::LexerState<T>;
         using StringVec   = std::vector<std::string>;
         using ProgramVec  = std::vector<std::tuple<std::string, IdVec, std::string>>;
 
-        class PlogParser : private LexerState<std::pair<std::string, std::pair<std::string, IdVec>>> {
+        class PlogParser : private LexerState<std::pair<String, std::pair<String, IdVec>>> {
+            // the first String in the tempalte a file name!
         private:
-            enum Condition { yyccomment, yycnormal, yycdefinition };
+            enum Condition { yyccomment, yycnormal, yycblockcomment };
         public:
             PlogParser(NonGroundProgramBuilder &pb);
             void parseError(Location const &loc, std::string const &token);
@@ -74,18 +77,17 @@ using LexerState = Gringo::LexerState<T>;
             void pop();
             void _init();
             void condition(Condition cond);
-            using LexerState<std::pair<std::string, std::pair<std::string, IdVec>>>::start;
+            using LexerState<std::pair<String, std::pair<String, IdVec>>>::start;
             void start(Location &loc);
             Condition condition() const;
-            std::string filename() const;
+            String filename() const;
 
         private:
             std::set<std::string> filenames_;
-             std::string not_;
+            String not_;
             NonGroundProgramBuilder &pb_;
-            int           _startSymbol;
             Condition     condition_ = yycnormal;
-            std::string        _filename;
+            String        _filename;
             Logger *log_ = nullptr;
         };
 

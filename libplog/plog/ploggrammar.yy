@@ -26,14 +26,14 @@
 %parse-param { PlogParser *lexer }
 %lex-param { PlogParser *lexer }
 %skeleton "lalr1.cc"
-//%define parse.trace
-//%debug
+%define parse.trace
+%debug
 
 // {{{1 auxiliary code
 
 %code requires
 {
-    #include "plog/programbuilder.hh"
+    #include "plog/programbuilder.h"
     #include "groundplog/program_types.h"
 
     class PlogParser;
@@ -46,8 +46,8 @@
 
 %{
 
-#include "plogparser.hh"
-#include "programbuilder.hh"
+#include "plogparser.h"
+#include "programbuilder.h"
 #include <climits>
 
 #define BUILDER (lexer->builder())
@@ -93,7 +93,8 @@ void PlogGrammar::parser::error(DefaultLocation const &l, std::string const &msg
 // {{{2 union type for stack elements
 %union
 {
-   // declare the semantic types here
+      uintptr_t str;
+      int num;
 }
 
 // }}}2
@@ -136,7 +137,6 @@ void PlogGrammar::parser::error(DefaultLocation const &l, std::string const &msg
     RANDOM      "random"
     PR          "pr"
     RPAREN      ")"
-    SEM         ";"
     SLASH       "/"
     SUB         "-"
     UBNOT
@@ -245,8 +245,8 @@ att_defs: att_defs att_def
        |
        ;
 
-att_def: IDENTIFIER COLON sort_name_list ARROW SORT_NAME
-       | IDENTIFIER COLON SORT_NAME
+att_def: IDENTIFIER COLON sort_name_list ARROW SORT_NAME DOT
+       | IDENTIFIER COLON SORT_NAME DOT
        ;
 
 sort_name_list: SORT_NAME

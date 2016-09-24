@@ -42,7 +42,7 @@
 // //                    "%code requires" blocks.
 #line 35 "ploggrammar.yy" // lalr1.cc:377
 
-    #include "plog/programbuilder.hh"
+    #include "plog/programbuilder.h"
     #include "groundplog/program_types.h"
 
     class PlogParser;
@@ -126,7 +126,7 @@
 #   define PLOGGRAMMAR_DEBUG 0
 #  endif
 # else /* ! defined YYDEBUG */
-#  define PLOGGRAMMAR_DEBUG 0
+#  define PLOGGRAMMAR_DEBUG 1
 # endif /* ! defined YYDEBUG */
 #endif  /* ! defined PLOGGRAMMAR_DEBUG */
 
@@ -148,9 +148,10 @@ namespace PlogGrammar {
     {
     #line 95 "ploggrammar.yy" // lalr1.cc:377
 
-   // declare the semantic types here
+      uintptr_t str;
+      int num;
 
-#line 154 "ploggrammar.tab.hh" // lalr1.cc:377
+#line 155 "ploggrammar.tab.hh" // lalr1.cc:377
     };
 #else
     typedef PLOGGRAMMAR_STYPE semantic_type;
@@ -202,16 +203,15 @@ namespace PlogGrammar {
         RANDOM = 286,
         PR = 287,
         RPAREN = 288,
-        SEM = 289,
-        SLASH = 290,
-        SUB = 291,
-        UBNOT = 292,
-        UMINUS = 293,
-        NUMBER = 294,
-        IDENTIFIER = 295,
-        VARIABLE = 296,
-        NOT = 297,
-        AND = 298
+        SLASH = 289,
+        SUB = 290,
+        UBNOT = 291,
+        UMINUS = 292,
+        NUMBER = 293,
+        IDENTIFIER = 294,
+        VARIABLE = 295,
+        NOT = 296,
+        AND = 297
       };
     };
 
@@ -524,7 +524,7 @@ namespace PlogGrammar {
       yyfinal_ = 3, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
-      yyntokens_ = 44  ///< Number of tokens.
+      yyntokens_ = 43  ///< Number of tokens.
     };
 
 

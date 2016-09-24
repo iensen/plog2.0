@@ -7,15 +7,15 @@
 #include <sys/stat.h>
 #include <plog/plog.h>
 #include <groundplog/logger.h>
+#include <plog/ploggrammar.tab.hh>
 
 
 PlogParser::PlogParser(NonGroundProgramBuilder &pb)   : not_("not")
         , pb_(pb)
-        , _startSymbol(0)
         , _filename("") { }
 
-void PlogParser::parseError(Location const &loc, std::string const &token) {
-    throw "not implemented yet";
+void PlogParser::parseError(Location const &loc, std::string const &msg) {
+    PLOG_REPORT(*log_, plog_error_runtime) << loc << ": error: " << msg << "\n";
 }
 namespace {
 
@@ -146,7 +146,19 @@ void PlogParser::pushBlock(std::string const &name, IdVec const &vec, std::strin
 }
 
 int PlogParser::lex(void *pValue, Location &loc) {
-    throw "not implemented yet";
+
+    while (!empty()) {
+        int minor = lex_impl(pValue, loc);
+        loc.endFilename = filename();
+        loc.endLine     = line();
+        loc.endColumn   = column();
+        if (minor) { return minor; }
+        else       {
+            pop();
+            _init();
+        }
+    }
+    return 0;
 }
 
 bool PlogParser::parseDefine(std::string const &define, Logger &log) {
@@ -154,7 +166,14 @@ bool PlogParser::parseDefine(std::string const &define, Logger &log) {
 }
 
 bool PlogParser::parse(Logger &log) {
-    throw "not implemented yet";
+    log_ = &log;
+    condition(yycnormal);
+    if (empty()) { return true; }
+    PlogGrammar::parser parser(this);
+    _init();
+    auto ret = parser.parse();
+    filenames_.clear();
+    return ret == 0;
 }
 
 bool PlogParser::empty() {
@@ -174,7 +193,8 @@ PlogParser::~PlogParser() {
 }
 
 void PlogParser::lexerError(std::string token) {
-    throw "not implemented yet";
+    PLOG_REPORT(*log_, plog_error_runtime) << filename() << ":" << line() << ":" << column() << ": error: lexer error, unexpected " << token << "\n";
+
 }
 
 bool PlogParser::push(std::string const &filename, bool include) {
@@ -192,25 +212,32 @@ void PlogParser::pop() {
 }
 
 void PlogParser::_init() {
-    throw "not implemented yet";
+    if (!empty()) {
+        Location loc(filename().c_str(), 1, 1, filename().c_str(), 1, 1);
+        IdVecUid params = pb_.idvec();
+        for (auto &x : data().second.second) { params = pb_.idvec(params, x.first, x.second); }
+//        pb_.block(loc, data().second.first, params);
+    }
 }
 
 void PlogParser::condition(PlogParser::Condition cond) {
-    throw "not implemented yet";
+   condition_= cond;
+
 }
 
 void PlogParser::start(Location &loc) {
-    throw "not implemented yet";
+    start();
+    loc.beginFilename = filename();
+    loc.beginLine     = line();
+    loc.beginColumn   = column();
 }
 
 PlogParser::Condition PlogParser::condition() const {
-    throw "not implemented yet";
+    return condition_;
 }
 
-std::string PlogParser::filename() const {
-    throw "not implemented yet";
+String PlogParser::filename() const {
+    return LexerState::data().first;
 };
 
-int PlogParser::lex_impl(void *pValue, Location &loc) {
-    throw "not implemented yet";
-}
+#include <plog/lexer.hh>

@@ -15,6 +15,7 @@ file(GLOB_RECURSE PLOG_SOURCES
         libgroundplog/src/*.cpp
         plogapp/src/*.cpp
         libplog/*.cpp
+        libplog/*.cc
         )
 
 

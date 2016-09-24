@@ -14,9 +14,6 @@ Program::Program(Program &&x) {
     throw "not implemented yet";
 }
 
-void Program::begin(Location const &loc, std::string name, IdVec &&params) {
-    throw "not implemented yet";
-}
 
 void Program::add(UStm &&stm) {
     throw "not implemented yet";
@@ -53,4 +50,5 @@ void Program::rewriteArithmetics() {
 void Program::unpool() {
     throw "not implemented yet";
 }
+
 

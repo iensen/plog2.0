@@ -18,7 +18,7 @@
 
         Program(Program &&x);
 
-        void begin(Location const &loc, std::string name, IdVec &&params);
+
 
         void add(UStm &&stm);
 

@@ -1,7 +1,7 @@
-
-attributes
-a: boolean.
-rules
+$$attributes
+a: #boolean.
+statements 
 random(a).
 pr(a) = 3/10.
 ?a.
+
