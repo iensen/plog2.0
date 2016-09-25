@@ -47,9 +47,9 @@
     VARIABLE   = [A-Z]['A-Za-z0-9_]*;
     WSNL       = [\t\r\n ]*;
     CONSTDIRECTIVE = "#const";
-    SORTDEFKEYWORD = "sorts"[\t\r\n ]+;
-    ATTDEFKEYWORD = "attributes"[\t\r\n ]+;
-    STMTDEFKEYWORD = "statements"[\t\r\n ]+;
+    SORTDEFKEYWORD = "sorts";
+    ATTDEFKEYWORD = "attributes";
+    STMTDEFKEYWORD = "statements";
     IDENTIFIER = [a-z]['A-Za-z0-9_]*;
     ANY        = [\000-\377];
 
@@ -69,7 +69,7 @@ int PlogParser::lex_impl(void *pValue, Location &loc) {
         <normal> "#const"                     { return PlogGrammar::parser::token::CONST; }
         <normal> "#"IDENTIFIER                { return PlogGrammar::parser::token::SORT_NAME; }
         <normal> "not"                        { value.str = String::toRep(not_); return PlogGrammar::parser::token::NOT; }
-        <normal> SORTDEFKEYWORD { return PlogGrammar::parser::token::SORTDEFKEYWORD; }
+        <normal> SORTDEFKEYWORD {return PlogGrammar::parser::token::SORTDEFKEYWORD; }
         <normal> ATTDEFKEYWORD { return PlogGrammar::parser::token:: ATTDEFKEYWORD; }
         <normal> STMTDEFKEYWORD { return PlogGrammar::parser::token:: STMTDEFKEYWORD; }
         <normal> IDENTIFIER { value.str = String::toRep(string()); return PlogGrammar::parser::token::IDENTIFIER; }
@@ -90,6 +90,8 @@ int PlogParser::lex_impl(void *pValue, Location &loc) {
         <normal> "+"                          { return PlogGrammar::parser::token::ADD; }
         <normal> "-"                          { return PlogGrammar::parser::token::SUB; }
         <normal> "**"                         { return PlogGrammar::parser::token::POW; }
+        <normal> "&"                         { return PlogGrammar::parser::token::AND; }
+        <normal> "|"                         { return PlogGrammar::parser::token::OR; }
         <normal> "\\"                         { return PlogGrammar::parser::token::MOD; }
         <normal> "*"                          { return PlogGrammar::parser::token::MUL; }
         <normal> ">"                          { return PlogGrammar::parser::token::GT; }

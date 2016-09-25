@@ -1,4 +1,8 @@
-$$attributes
+sorts
+#a = {a,b,c}.
+#f = 
+f(#a(X),#a(Y),#a(Z)):X< Y & X>Z | Z>Y.
+attributes
 a: #boolean.
 statements 
 random(a).

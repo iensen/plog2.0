@@ -108,6 +108,7 @@ void PlogGrammar::parser::error(DefaultLocation const &l, std::string const &msg
     SORTDEFKEYWORD
     ATTDEFKEYWORD
     STMTDEFKEYWORD
+    AND         "&"
     ADD         "+"
     EQ          "="
     COLON       ":"
@@ -153,6 +154,7 @@ void PlogGrammar::parser::error(DefaultLocation const &l, std::string const &msg
 // {{{2 operator precedence and associativity
 
 %left DOTS
+%left VBAR
 %left AND
 %left ADD SUB
 %left MUL SLASH MOD
@@ -215,7 +217,7 @@ sort_expr:
             LPAREN sort_expr RPAREN
       ;
 
-range: constterm DOTS constterm
+range: comparable_constterm DOTS comparable_constterm
       ;
 
 concatenation: concatenation concat_elem
@@ -225,12 +227,26 @@ concatenation: concatenation concat_elem
 concat_elem: LBRACK sort_expr RBRACK
        ;
 
-functional_symbol: IDENTIFIER LPAREN sort_expr_list RPAREN
+functional_symbol: IDENTIFIER LPAREN sort_expr_list RPAREN |
+        IDENTIFIER LPAREN sort_expr_list RPAREN COLON cond
        ;
 
-sort_expr_list: sort_expr_list COMMA sort_expr
-       | sort_expr
+cond: VARIABLE cmp VARIABLE |
+       cond VBAR cond |
+       cond AND cond |
+       LPAREN cond RPAREN
        ;
+
+
+
+
+sort_expr_list: sort_expr_list COMMA var_sort_expr
+       | var_sort_expr
+       ;
+
+var_sort_expr: sort_expr |
+               sort_expr LPAREN VARIABLE RPAREN
+
 
 curly_brackets: LBRACE constargvec RBRACE
         ;
@@ -298,15 +314,19 @@ body
 
 
 constterm:
-     constterm[a] ADD constterm[b]                    {  }
-    | constterm[a] SUB constterm[b]                    {  }
-    | constterm[a] MUL constterm[b]                    {  }
-    | constterm[a] SLASH constterm[b]                  {  }
-    | constterm[a] MOD constterm[b]                    {  }
-    | constterm[a] POW constterm[b]                    {  }
-    | SUB constterm[a] %prec UMINUS                    {  }
+      comparable_constterm {}
     | IDENTIFIER[a] LPAREN constargvec[b] RPAREN       {  }
-    | VBAR[l] constterm[a] VBAR                        {  }
+    ;
+
+comparable_constterm:
+     comparable_constterm[a] ADD comparable_constterm[b]                    {  }
+    | comparable_constterm[a] SUB comparable_constterm[b]                    {  }
+    | comparable_constterm[a] MUL comparable_constterm[b]                    {  }
+    | comparable_constterm[a] SLASH comparable_constterm[b]                  {  }
+    | comparable_constterm[a] MOD comparable_constterm[b]                    {  }
+    | comparable_constterm[a] POW comparable_constterm[b]                    {  }
+    | SUB comparable_constterm[a] %prec UMINUS                    {  }
+    | VBAR[l] comparable_constterm[a] VBAR                        {  }
     | IDENTIFIER[a]                                    {  }
     | NUMBER[a]                                        {  }
     ;
