@@ -16,8 +16,7 @@ using Location = Gringo::Location;
 using Gringo::String;
 using Logger = Plog::Logger;
 using Term = Gringo::Term;
-using UTerm = std::unique_ptr<Term>;
-
+using UTerm = Gringo::UTerm ;
 
 class Defines:public Gringo::Defines {
 public:

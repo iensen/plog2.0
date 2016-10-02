@@ -185,7 +185,7 @@ void PlogParser::include(std::string file, Location const &loc, bool include, Lo
 }
 
 NonGroundProgramBuilder &PlogParser::builder() {
-    throw "not implemented yet";
+    return pb_;
 }
 
 PlogParser::~PlogParser() {

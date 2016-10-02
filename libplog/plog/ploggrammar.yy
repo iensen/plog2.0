@@ -29,6 +29,7 @@
 %define parse.trace
 %debug
 
+
 // {{{1 auxiliary code
 
 %code requires
@@ -95,12 +96,15 @@ void PlogGrammar::parser::error(DefaultLocation const &l, std::string const &msg
 {
       uintptr_t str;
       int num;
+      TermUid term;
+      TermVecUid termvec;
 }
 
 // }}}2
 
 // declare types here:
-//%type <term>            constterm term tuple theory_atom_name atom
+%type <term>            constterm comparable_constterm term
+%type <termvec>         ntermvec consttermvec
 
 // {{{1 terminals
 
@@ -186,7 +190,7 @@ directive: const_decl
     ;
 
 
-const_decl: CONST IDENTIFIER[uid] EQ constterm[rhs] DOT
+const_decl: CONST IDENTIFIER[uid] EQ constterm[rhs] DOT{ BUILDER.define(@$, String::fromRep($uid), $rhs, true, LOGGER);}
       ;
 
 
@@ -248,7 +252,7 @@ var_sort_expr: sort_expr |
                sort_expr LPAREN VARIABLE RPAREN
 
 
-curly_brackets: LBRACE constargvec RBRACE
+curly_brackets: LBRACE consttermvec RBRACE
         ;
 
 
@@ -298,8 +302,8 @@ head
 
 head_atom
     : IDENTIFIER[id]                                  {  }
-    | IDENTIFIER[id] LPAREN termvec[tvv] RPAREN[r]     {  }
-    | IDENTIFIER[id] LPAREN termvec[tvv] RPAREN[r]  EQ term { }
+    | IDENTIFIER[id] LPAREN ntermvec[tvv] RPAREN[r]     {  }
+    | IDENTIFIER[id] LPAREN ntermvec[tvv] RPAREN[r]  EQ term { }
     | IDENTIFIER[id] EQ term                          {  }
     ;
 
@@ -314,49 +318,48 @@ body
 
 
 constterm:
-      comparable_constterm {}
-    | IDENTIFIER[a] LPAREN constargvec[b] RPAREN       {  }
+      comparable_constterm[a] {$$ = $a; }
+    | IDENTIFIER[a] LPAREN consttermvec[b] RPAREN       {  $$ = BUILDER.term(@$, String::fromRep($a), $b);}
     ;
 
 comparable_constterm:
-     comparable_constterm[a] ADD comparable_constterm[b]                    {  }
-    | comparable_constterm[a] SUB comparable_constterm[b]                    {  }
-    | comparable_constterm[a] MUL comparable_constterm[b]                    {  }
-    | comparable_constterm[a] SLASH comparable_constterm[b]                  {  }
-    | comparable_constterm[a] MOD comparable_constterm[b]                    {  }
-    | comparable_constterm[a] POW comparable_constterm[b]                    {  }
-    | SUB comparable_constterm[a] %prec UMINUS                    {  }
-    | VBAR[l] comparable_constterm[a] VBAR                        {  }
-    | IDENTIFIER[a]                                    {  }
-    | NUMBER[a]                                        {  }
+     comparable_constterm[a] ADD comparable_constterm[b]                     {$$ = BUILDER.term(@$, BinOp::ADD, $a, $b);  }
+    | comparable_constterm[a] SUB comparable_constterm[b]                    {$$ = BUILDER.term(@$, BinOp::SUB, $a, $b); }
+    | comparable_constterm[a] MUL comparable_constterm[b]                    {$$ = BUILDER.term(@$, BinOp::MUL, $a, $b);  }
+    | comparable_constterm[a] SLASH comparable_constterm[b]                  {$$ = BUILDER.term(@$, BinOp::DIV, $a, $b);  }
+    | comparable_constterm[a] MOD comparable_constterm[b]                    {$$ = BUILDER.term(@$, BinOp::MOD, $a, $b);  }
+    | comparable_constterm[a] POW comparable_constterm[b]                    {$$ = BUILDER.term(@$, BinOp::POW, $a, $b);  }
+    | SUB comparable_constterm[a] %prec UMINUS                    { $$ = BUILDER.term(@$, UnOp::NEG, $a); }
+    | VBAR[l] comparable_constterm[a] VBAR                        { $$ = BUILDER.term(@$, UnOp::ABS, $a); }
+    | IDENTIFIER[a]                                    { $$ = BUILDER.term(@$, Symbol::createId(String::fromRep($a))); }
+    | NUMBER[a]                                        { $$ = BUILDER.term(@$, Symbol::createNum($a)); }
+    | LPAREN comparable_constterm[a] RPAREN               { $$ = $a;}
     ;
 
 // {{{2 arguments lists for functions in constant terms
 
 consttermvec
-    : constterm[a]                       {  }
-    | consttermvec[a] COMMA constterm[b] {  }
+    : constterm[a]                       { $$ = BUILDER.termvec(BUILDER.termvec(), $a);}
+    | consttermvec[a] COMMA constterm[b] { $$ = BUILDER.termvec($a, $b); }
     ;
 
-constargvec
-    : consttermvec[a] {   }
-    |                 {   }
-    ;
 
 // {{{2 terms including variables
 
 term:
-      term[a] SUB term[b]                      {  }
-    | term[a] MUL term[b]                      {  }
-    | term[a] SLASH term[b]                    {  }
-    | term[a] MOD term[b]                      {  }
-    | term[a] POW term[b]                      {  }
-    | SUB term[a] %prec UMINUS                 {  }
-    | IDENTIFIER[a] LPAREN termvec[b] RPAREN    {  }
-    | VBAR term VBAR                           {  }
-    | IDENTIFIER[a]                            {  }
-    | NUMBER[a]                                {  }
-    | VARIABLE[a]                              {  }
+      term[a] ADD term[b]                      { $$ = BUILDER.term(@$, BinOp::ADD, $a, $b);  }
+    | term[a] SUB term[b]                      { $$ = BUILDER.term(@$, BinOp::SUB, $a, $b);  }
+    | term[a] MUL term[b]                      { $$ = BUILDER.term(@$, BinOp::MUL, $a, $b);  }
+    | term[a] SLASH term[b]                    { $$ = BUILDER.term(@$, BinOp::DIV, $a, $b);  }
+    | term[a] MOD term[b]                      { $$ = BUILDER.term(@$, BinOp::MOD, $a, $b);  }
+    | term[a] POW term[b]                      { $$ = BUILDER.term(@$, BinOp::POW, $a, $b); }
+    | SUB term[a] %prec UMINUS                 { $$ = BUILDER.term(@$, UnOp::NEG, $a);  }
+    | IDENTIFIER[a] LPAREN ntermvec[b] RPAREN   { $$ = BUILDER.term(@$, String::fromRep($a), $b); }
+    | VBAR term[a] VBAR                           { $$ = BUILDER.term(@$, UnOp::ABS, $a); }
+    | IDENTIFIER[a]                            { $$ = BUILDER.term(@$, Symbol::createId(String::fromRep($a)));}
+    | NUMBER[a]                                { $$ = BUILDER.term(@$, Symbol::createNum($a)); }
+    | VARIABLE[a]                              { $$ = BUILDER.term(@$, String::fromRep($a));  }
+    | LPAREN term[a] RPAREN                    { $$ = $a; }
     ;
 
 // {{{2 argument lists for unary operations
@@ -367,10 +370,7 @@ ntermvec
     | ntermvec[a] COMMA term[b] {  }
     ;
 
-termvec
-    : ntermvec[a] {  }
-    |             {  }
-    ;
+
 
 
 
@@ -384,7 +384,7 @@ cmp
     ;
 
 literal: IDENTIFIER[id]                                  {  }
-        | IDENTIFIER[id] LPAREN termvec[tvv] RPAREN[r]     {  }
+        | IDENTIFIER[id] LPAREN ntermvec[tvv] RPAREN[r]     {  }
         | term[l] cmp[rel] term[r] { }
     ;
 

@@ -34,7 +34,7 @@
 #define yylex   PlogGrammar_lex
 
 // First part of user declarations.
-#line 47 "ploggrammar.yy" // lalr1.cc:404
+#line 48 "ploggrammar.yy" // lalr1.cc:404
 
 
 #include "plog/plogparser.h"
@@ -85,7 +85,7 @@ int PlogGrammar_lex(void *value, Gringo::Location* loc, PlogParser *lexer) {
 
 #line 87 "ploggrammar.tab.cc" // lalr1.cc:412
 // Unqualified %code blocks.
-#line 82 "ploggrammar.yy" // lalr1.cc:413
+#line 83 "ploggrammar.yy" // lalr1.cc:413
 
 
 void PlogGrammar::parser::error(DefaultLocation const &l, std::string const &msg) {
@@ -656,307 +656,307 @@ namespace PlogGrammar {
         {
           switch (yyn)
             {
-  case 47:
-#line 287 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 8:
+#line 193 "ploggrammar.yy" // lalr1.cc:859
+    { BUILDER.define(yylhs.location, String::fromRep((yystack_[3].value.str)), (yystack_[1].value.term), true, LOGGER);}
 #line 663 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 48:
-#line 288 "ploggrammar.yy" // lalr1.cc:859
+  case 47:
+#line 291 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 669 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 49:
-#line 289 "ploggrammar.yy" // lalr1.cc:859
+  case 48:
+#line 292 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 675 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 50:
-#line 290 "ploggrammar.yy" // lalr1.cc:859
+  case 49:
+#line 293 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 681 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 51:
-#line 291 "ploggrammar.yy" // lalr1.cc:859
+  case 50:
+#line 294 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 687 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 52:
+  case 51:
 #line 295 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 693 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 53:
-#line 296 "ploggrammar.yy" // lalr1.cc:859
+  case 52:
+#line 299 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 699 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 54:
+  case 53:
 #line 300 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 705 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 55:
-#line 301 "ploggrammar.yy" // lalr1.cc:859
+  case 54:
+#line 304 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 711 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 56:
-#line 302 "ploggrammar.yy" // lalr1.cc:859
-    { }
+  case 55:
+#line 305 "ploggrammar.yy" // lalr1.cc:859
+    {  }
 #line 717 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 57:
-#line 303 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 56:
+#line 306 "ploggrammar.yy" // lalr1.cc:859
+    { }
 #line 723 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 62:
-#line 317 "ploggrammar.yy" // lalr1.cc:859
-    {}
+  case 57:
+#line 307 "ploggrammar.yy" // lalr1.cc:859
+    {  }
 #line 729 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 63:
-#line 318 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 62:
+#line 321 "ploggrammar.yy" // lalr1.cc:859
+    {(yylhs.value.term) = (yystack_[0].value.term); }
 #line 735 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 64:
+  case 63:
 #line 322 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+    {  (yylhs.value.term) = BUILDER.term(yylhs.location, String::fromRep((yystack_[3].value.str)), (yystack_[1].value.termvec));}
 #line 741 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 65:
-#line 323 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 64:
+#line 326 "ploggrammar.yy" // lalr1.cc:859
+    {(yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::ADD, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 747 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 66:
-#line 324 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 65:
+#line 327 "ploggrammar.yy" // lalr1.cc:859
+    {(yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::SUB, (yystack_[2].value.term), (yystack_[0].value.term)); }
 #line 753 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 67:
-#line 325 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 66:
+#line 328 "ploggrammar.yy" // lalr1.cc:859
+    {(yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::MUL, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 759 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 68:
-#line 326 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 67:
+#line 329 "ploggrammar.yy" // lalr1.cc:859
+    {(yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::DIV, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 765 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 69:
-#line 327 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 68:
+#line 330 "ploggrammar.yy" // lalr1.cc:859
+    {(yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::MOD, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 771 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 70:
-#line 328 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 69:
+#line 331 "ploggrammar.yy" // lalr1.cc:859
+    {(yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::POW, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 777 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 71:
-#line 329 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 70:
+#line 332 "ploggrammar.yy" // lalr1.cc:859
+    { (yylhs.value.term) = BUILDER.term(yylhs.location, UnOp::NEG, (yystack_[0].value.term)); }
 #line 783 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 72:
-#line 330 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 71:
+#line 333 "ploggrammar.yy" // lalr1.cc:859
+    { (yylhs.value.term) = BUILDER.term(yylhs.location, UnOp::ABS, (yystack_[1].value.term)); }
 #line 789 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 73:
-#line 331 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 72:
+#line 334 "ploggrammar.yy" // lalr1.cc:859
+    { (yylhs.value.term) = BUILDER.term(yylhs.location, Symbol::createId(String::fromRep((yystack_[0].value.str)))); }
 #line 795 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 74:
-#line 337 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 73:
+#line 335 "ploggrammar.yy" // lalr1.cc:859
+    { (yylhs.value.term) = BUILDER.term(yylhs.location, Symbol::createNum((yystack_[0].value.num))); }
 #line 801 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 75:
-#line 338 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 74:
+#line 336 "ploggrammar.yy" // lalr1.cc:859
+    { (yylhs.value.term) = (yystack_[1].value.term);}
 #line 807 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 76:
+  case 75:
 #line 342 "ploggrammar.yy" // lalr1.cc:859
-    {   }
+    { (yylhs.value.termvec) = BUILDER.termvec(BUILDER.termvec(), (yystack_[0].value.term));}
 #line 813 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 77:
+  case 76:
 #line 343 "ploggrammar.yy" // lalr1.cc:859
-    {   }
+    { (yylhs.value.termvec) = BUILDER.termvec((yystack_[2].value.termvec), (yystack_[0].value.term)); }
 #line 819 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 78:
-#line 349 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 77:
+#line 350 "ploggrammar.yy" // lalr1.cc:859
+    { (yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::ADD, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 825 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 79:
-#line 350 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 78:
+#line 351 "ploggrammar.yy" // lalr1.cc:859
+    { (yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::SUB, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 831 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 80:
-#line 351 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 79:
+#line 352 "ploggrammar.yy" // lalr1.cc:859
+    { (yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::MUL, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 837 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 81:
-#line 352 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 80:
+#line 353 "ploggrammar.yy" // lalr1.cc:859
+    { (yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::DIV, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 843 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 82:
-#line 353 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 81:
+#line 354 "ploggrammar.yy" // lalr1.cc:859
+    { (yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::MOD, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 849 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 83:
-#line 354 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 82:
+#line 355 "ploggrammar.yy" // lalr1.cc:859
+    { (yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::POW, (yystack_[2].value.term), (yystack_[0].value.term)); }
 #line 855 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 84:
-#line 355 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 83:
+#line 356 "ploggrammar.yy" // lalr1.cc:859
+    { (yylhs.value.term) = BUILDER.term(yylhs.location, UnOp::NEG, (yystack_[0].value.term));  }
 #line 861 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 85:
-#line 356 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 84:
+#line 357 "ploggrammar.yy" // lalr1.cc:859
+    { (yylhs.value.term) = BUILDER.term(yylhs.location, String::fromRep((yystack_[3].value.str)), (yystack_[1].value.termvec)); }
 #line 867 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 86:
-#line 357 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 85:
+#line 358 "ploggrammar.yy" // lalr1.cc:859
+    { (yylhs.value.term) = BUILDER.term(yylhs.location, UnOp::ABS, (yystack_[1].value.term)); }
 #line 873 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 87:
-#line 358 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 86:
+#line 359 "ploggrammar.yy" // lalr1.cc:859
+    { (yylhs.value.term) = BUILDER.term(yylhs.location, Symbol::createId(String::fromRep((yystack_[0].value.str))));}
 #line 879 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 88:
-#line 359 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 87:
+#line 360 "ploggrammar.yy" // lalr1.cc:859
+    { (yylhs.value.term) = BUILDER.term(yylhs.location, Symbol::createNum((yystack_[0].value.num))); }
 #line 885 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 89:
-#line 366 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 88:
+#line 361 "ploggrammar.yy" // lalr1.cc:859
+    { (yylhs.value.term) = BUILDER.term(yylhs.location, String::fromRep((yystack_[0].value.str)));  }
 #line 891 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 90:
-#line 367 "ploggrammar.yy" // lalr1.cc:859
-    {  }
+  case 89:
+#line 362 "ploggrammar.yy" // lalr1.cc:859
+    { (yylhs.value.term) = (yystack_[1].value.term); }
 #line 897 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 91:
-#line 371 "ploggrammar.yy" // lalr1.cc:859
+  case 90:
+#line 369 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 903 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 92:
-#line 372 "ploggrammar.yy" // lalr1.cc:859
+  case 91:
+#line 370 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 909 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 93:
+  case 92:
 #line 378 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 915 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 94:
+  case 93:
 #line 379 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 921 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 95:
+  case 94:
 #line 380 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 927 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 96:
+  case 95:
 #line 381 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 933 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 97:
+  case 96:
 #line 382 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 939 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 98:
+  case 97:
 #line 383 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 945 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 99:
+  case 98:
 #line 386 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 951 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 100:
+  case 99:
 #line 387 "ploggrammar.yy" // lalr1.cc:859
     {  }
 #line 957 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
-  case 101:
+  case 100:
 #line 388 "ploggrammar.yy" // lalr1.cc:859
     { }
 #line 963 "ploggrammar.tab.cc" // lalr1.cc:859
@@ -1218,35 +1218,36 @@ namespace PlogGrammar {
   }
 
 
-  const signed char parser::yypact_ninf_ = -87;
+  const signed char parser::yypact_ninf_ = -90;
 
-  const signed char parser::yytable_ninf_ = -101;
+  const signed char parser::yytable_ninf_ = -100;
 
   const short int
   parser::yypact_[] =
   {
-     107,   119,    13,   -87,   -87,   -87,   -28,   -87,   -87,    68,
-      40,   136,    46,   125,    40,   -87,    49,   151,   -87,   153,
-     -87,   156,    49,   140,   135,   -87,   130,   155,   164,   164,
-     -87,   142,   165,    45,   -87,    -7,   141,   163,   166,    86,
-     -87,    85,   -87,   -87,   143,   143,   -87,   134,   -87,   110,
-     175,   -87,   156,   130,   130,   170,     2,   -87,   174,   -87,
-     -87,   -87,    64,   186,   121,   -87,    76,   -87,   156,   -87,
-     164,   164,   164,   164,   164,   164,   -87,   135,    36,   -87,
-     -87,   167,   168,   141,   143,   143,   -87,    74,   179,   192,
-     -87,   143,   -87,   -87,   -87,   -87,   -87,   143,   -87,   143,
-     143,   143,   143,   143,   -87,   -87,   196,   180,    12,    43,
-     130,   130,   -87,   130,   130,   -87,   164,   -87,   197,   199,
-     -87,   181,   162,   189,   189,   189,   189,   162,   -87,    81,
-     -87,   216,   145,   204,   194,   194,   222,   202,   -87,   116,
-     143,   -87,   203,   209,   209,   209,   209,   206,   194,   156,
-     -87,   -87,   -87,     0,     8,   -87,   201,   -87,   201,    45,
-     -87,   220,   -87,   -87,   200,   221,   205,    81,   143,   234,
-     -87,   210,    72,   -87,   207,   130,   237,   -87,   208,   -87,
-     211,   213,    41,   194,   143,   -87,   215,   -87,   -13,   212,
-     241,   -87,   245,   194,   -87,   -13,   190,   122,   -87,   214,
-     200,     5,   217,   -13,   -13,   232,   -87,   -87,   -87,   -87,
-     250,   218,   223,   230,   227,   -87
+      15,    17,    41,   -90,   -90,   -90,     8,   -90,   -90,    42,
+      50,    79,    34,   110,    50,   -90,    66,   151,   -90,   107,
+     -90,   184,    66,   185,   205,   -90,   176,   169,   226,   226,
+     226,   -90,   179,   191,   155,   -90,    62,   170,   190,   204,
+     150,   -90,   111,   -90,   -90,   212,   212,   212,   -90,   188,
+     -90,     3,   201,   -90,   184,   176,   176,   206,   138,   -90,
+     210,   -90,   -90,   -90,   108,   218,    -3,   -90,    51,   106,
+     -90,   184,   -90,   226,   226,   226,   226,   226,   226,   -90,
+     205,    71,   -90,   -90,   202,   192,   170,   212,   212,   -90,
+      69,   219,   132,   141,   -90,   212,   212,   -90,   -90,   -90,
+     -90,   -90,   212,   -90,   212,   212,   212,   212,   212,   -90,
+     -90,   142,     5,     1,    92,   176,   176,   -90,   176,   176,
+     -90,   226,   -90,   231,   243,   -90,   -90,    43,   248,   227,
+     227,   227,   227,   248,   -90,   198,   -90,   249,   145,   239,
+     157,   157,    44,   -90,   196,   212,   -90,   -90,    78,   250,
+     235,   235,   235,   235,   250,   157,   184,   -90,   -90,   -90,
+     164,    85,   -90,   242,   -90,   242,   155,   -90,   256,   -90,
+     -90,   232,   255,   240,   198,   212,   273,   -90,   113,     6,
+     -90,   241,   176,   275,   -90,   251,   -90,   247,   253,   122,
+     157,   212,   -90,   257,   -90,    84,   254,   280,   -90,   282,
+     157,   -90,    84,   246,   173,   -90,   252,   232,   144,   258,
+      84,    84,   271,   -90,   -90,   -90,   -90,   289,   259,   262,
+     267,   264,   -90
   };
 
   const unsigned char
@@ -1255,109 +1256,116 @@ namespace PlogGrammar {
        6,     0,     0,     1,    11,    39,     0,     5,     7,     0,
        0,     9,    37,     0,     0,    46,     0,     0,    10,     0,
       38,     0,     0,    44,     0,     3,     0,     0,     0,     0,
-      73,    72,     0,    62,     2,     0,     0,     0,     0,    54,
-      45,     0,    52,    53,     0,     0,    87,    86,    88,     0,
-       0,    16,    77,     0,     0,    72,     0,    13,    14,    24,
-      15,    17,     0,    42,     0,    72,     0,    70,    77,     8,
-       0,     0,     0,     0,     0,     0,    51,     0,     0,   102,
-      61,     0,     0,     0,     0,    92,    47,     0,    86,     0,
-      83,    92,    97,    95,    93,    96,    94,     0,    98,     0,
-       0,     0,     0,     0,   107,    74,    76,     0,     0,     0,
-       0,     0,    12,     0,     0,    23,     0,    41,     0,     0,
-      71,     0,    64,    66,    68,    69,    67,    65,   103,     0,
-      50,     0,     0,     0,    57,    89,    91,     0,    48,     0,
-      92,    85,     0,    79,    81,    82,    80,    78,   101,     0,
-      36,    25,    21,    34,     0,    33,    18,    19,    20,    22,
-      43,     0,    63,    60,     0,     0,     0,     0,     0,    55,
-      49,     0,    84,    75,     0,     0,    26,    40,     0,   105,
-       0,     0,     0,    90,     0,    84,     0,    32,     0,     0,
-       0,    58,     0,    56,    35,     0,     0,    27,   106,     0,
-       0,     0,     0,     0,     0,     0,   104,    31,    28,    30,
-      29,     0,     0,     0,     0,    59
+       0,    73,    72,     0,    62,     2,     0,     0,     0,     0,
+      54,    45,     0,    52,    53,     0,     0,     0,    87,    86,
+      88,     0,     0,    16,     0,     0,     0,    72,     0,    13,
+      14,    24,    15,    17,     0,    42,     0,    72,     0,     0,
+      70,     0,     8,     0,     0,     0,     0,     0,     0,    51,
+       0,     0,   101,    61,     0,     0,     0,     0,     0,    47,
+       0,    86,     0,     0,    83,     0,     0,    96,    94,    92,
+      95,    93,     0,    97,     0,     0,     0,     0,     0,   106,
+      75,     0,     0,     0,     0,     0,     0,    12,     0,     0,
+      23,     0,    41,     0,     0,    71,    74,     0,    64,    66,
+      68,    69,    67,    65,   102,     0,    50,     0,     0,     0,
+      57,    90,     0,    48,     0,     0,    85,    89,     0,    77,
+      79,    81,    82,    80,    78,   100,     0,    36,    25,    21,
+      34,     0,    33,    18,    19,    20,    22,    43,     0,    63,
+      60,     0,     0,     0,     0,     0,    55,    49,     0,    84,
+      76,     0,     0,    26,    40,     0,   104,     0,     0,     0,
+      91,     0,    84,     0,    32,     0,     0,     0,    58,     0,
+      56,    35,     0,     0,    27,   105,     0,     0,     0,     0,
+       0,     0,     0,   103,    31,    28,    30,    29,     0,     0,
+       0,     0,    59
   };
 
   const short int
   parser::yypgoto_[] =
   {
-     -87,   -87,   -87,   -87,   -87,   -87,   -87,   -87,   -23,   -87,
-     -87,   219,   -87,   -43,   -87,    87,   -87,   254,   -87,   -87,
-     -87,   251,   -87,   -87,   -87,   -14,   -87,   -83,   -19,    -8,
-     -87,   198,   -44,   -87,   -86,    71,   -16,   139,    69,   242
+     -90,   -90,   -90,   -90,   -90,   -90,   -90,   -90,   -22,   -90,
+     -90,   244,   -90,    48,   -90,   119,   -90,   293,   -90,   -90,
+     -90,   291,   -90,   -90,   -90,   -13,   -90,   -85,   -18,    -7,
+     236,   -45,   -89,   100,   -15,   171,   101,   287
   };
 
   const short int
   parser::yydefgoto_[] =
   {
-      -1,     1,     2,     7,     8,     9,    11,    18,   153,    57,
-      58,    59,    60,   197,   154,   155,    61,    10,    12,    20,
-      64,    16,    23,    40,    41,    42,    43,    78,   105,    62,
-     106,   107,    49,   136,   137,   103,    79,    80,   179,    25
+      -1,     1,     2,     7,     8,     9,    11,    18,   160,    59,
+      60,    61,    62,   204,   161,   162,    63,    10,    12,    20,
+      66,    16,    23,    41,    42,    43,    44,    81,   110,    64,
+     111,    51,   142,   108,    82,    83,   186,    25
   };
 
   const short int
   parser::yytable_[] =
   {
-      89,    90,    32,    56,   139,   142,    76,   111,    50,   111,
-     195,   203,    13,    33,    44,   112,     4,     5,   175,   111,
-      66,    67,    81,   174,     6,   113,   204,   113,   196,    45,
-     108,   109,    46,    47,    48,    77,   114,   113,   114,   207,
-     134,   135,   176,   151,    33,    15,   129,   135,   114,   130,
-     111,   129,    70,   143,   171,   144,   145,   146,   147,   148,
-      33,   128,   122,   123,   124,   125,   126,   127,   113,   133,
-      71,    70,     5,    72,    73,   192,    24,   152,   116,   114,
-      74,    75,  -100,    70,   182,  -100,    19,   138,   156,    71,
-     157,   158,    72,    73,    84,    44,   135,   120,    86,    74,
-      75,    71,    44,    87,    72,    73,  -100,    -4,   159,    85,
-      45,    74,    75,    46,    47,    48,    77,    45,    92,     3,
-      46,    47,    48,    77,   183,    93,   129,    94,   203,   170,
-     173,   118,    95,    21,    96,    97,    98,   119,    99,   100,
-     193,    33,    51,   204,   -99,   101,   102,   -99,    17,    52,
-      53,    28,   201,    54,   165,   166,    44,    91,    35,    26,
-     209,   210,    27,    36,    44,    68,    29,    63,   -99,    30,
-      55,    45,    37,    38,    46,    47,    48,    28,    69,    45,
-      39,    39,    46,    88,    48,    28,    82,    71,   104,    83,
-      72,    73,    29,   110,    53,    30,    31,    74,    92,   117,
-      29,   131,   140,    30,    65,    93,   149,    94,   132,   160,
-     150,   161,    95,   141,    96,   162,    98,    97,    73,    97,
-      99,   100,    99,   100,   164,   167,   113,   101,   102,   101,
-     102,    97,   168,   177,    99,   100,   169,   172,   100,   178,
-     180,   101,   184,   189,   185,   181,   188,   191,   186,   194,
-     199,   198,   190,   200,   205,   211,   203,   213,   208,   212,
-     214,   215,   187,    14,    34,    22,   121,   202,   163,   206,
-       0,     0,     0,     0,     0,     0,     0,   115
+      92,    93,    94,    33,    58,   144,   148,   123,   116,    52,
+      96,    97,   116,   124,    34,    -4,   -99,     3,    98,   -99,
+      99,    68,    69,    70,    84,   100,   118,   101,   102,   103,
+     118,   104,   105,   112,   113,   159,   158,   119,   106,   107,
+     -99,   119,   140,   141,     4,     5,     5,    34,    13,   114,
+     141,   149,     6,   156,   175,    15,   178,   150,    73,   151,
+     152,   153,   154,   155,    34,   134,   128,   129,   130,   131,
+     132,   133,   125,   139,    19,    79,    74,   169,   176,    75,
+      76,   135,   143,    45,   136,    46,    77,    78,   175,   189,
+      45,    17,    46,    24,   163,   182,   164,   165,    47,    73,
+     141,    48,    49,    50,    80,    47,   121,   202,    48,    49,
+      50,    80,   179,    73,   166,    73,    27,    74,    21,   183,
+      75,    76,   121,   175,    89,   203,   126,    77,    78,    90,
+     190,    74,   135,    74,    75,    76,    75,    76,   180,    96,
+     126,    77,    78,    77,    78,   116,   200,   192,    96,    34,
+     210,   117,   156,   146,   172,   173,   199,   102,    87,    26,
+     104,   105,    73,   118,    96,   211,   102,   106,   107,   104,
+     105,   116,   157,    88,   119,   147,   106,   107,   214,   210,
+      74,    65,   102,    75,    76,   104,   105,   181,    53,   118,
+      77,    78,   106,   107,   211,    54,    55,    28,   -98,    56,
+     119,   -98,    71,    36,    72,    28,   135,    29,    37,   177,
+      40,    95,    30,    85,   109,    31,    57,    38,    39,    45,
+      30,    46,   -98,    31,    32,    40,    45,    86,    46,   115,
+      55,   122,   138,    45,    47,    46,   137,    48,    49,    50,
+      80,    47,   145,   167,    48,    49,    50,    28,    47,    29,
+     208,    48,    91,    50,    97,   168,    76,   171,   216,   217,
+     174,    98,    30,    99,   105,    31,    67,   118,   100,   184,
+     101,   185,   103,    74,   187,   102,    75,    76,   104,   105,
+     188,   191,   193,    77,   195,   106,   196,   198,   197,   206,
+     207,   201,   212,   205,   218,   210,   220,   221,   222,   215,
+     219,   194,    14,   209,   120,    22,   170,   127,   213,    35
   };
 
-  const short int
+  const unsigned char
   parser::yycheck_[] =
   {
-      44,    45,    21,    26,    87,    91,    13,     7,    24,     7,
-      23,     6,    40,    21,    21,    13,     3,     4,    10,     7,
-      28,    29,    36,    23,    11,    25,    21,    25,    41,    36,
-      53,    54,    39,    40,    41,    42,    36,    25,    36,    34,
-      84,    85,    34,    31,    52,     5,    10,    91,    36,    13,
-       7,    10,     7,    97,   140,    99,   100,   101,   102,   103,
-      68,    77,    70,    71,    72,    73,    74,    75,    25,    83,
-      25,     7,     4,    28,    29,    34,    27,    34,    14,    36,
-      35,    36,    10,     7,   167,    13,    40,    13,   111,    25,
-     113,   114,    28,    29,     8,    21,   140,    21,    13,    35,
-      36,    25,    21,    18,    28,    29,    34,     0,   116,    23,
-      36,    35,    36,    39,    40,    41,    42,    36,     8,     0,
-      39,    40,    41,    42,   168,    15,    10,    17,     6,    13,
-     149,    10,    22,     8,    24,    25,    26,    16,    28,    29,
-     184,   149,    12,    21,    10,    35,    36,    13,    12,    19,
-      20,    21,   195,    23,     9,    10,    21,    23,    18,     8,
-     203,   204,     9,    23,    21,    23,    36,    12,    34,    39,
-      40,    36,    32,    33,    39,    40,    41,    21,    13,    36,
-      40,    40,    39,    40,    41,    21,    23,    25,    13,    23,
-      28,    29,    36,    23,    20,    39,    40,    35,     8,    13,
-      36,    34,    23,    39,    40,    15,    10,    17,    40,    12,
-      30,    12,    22,    21,    24,    34,    26,    25,    29,    25,
-      28,    29,    28,    29,     8,    21,    25,    35,    36,    35,
-      36,    25,    10,    13,    28,    29,    34,    34,    29,    39,
-      19,    35,     8,    35,    34,    40,     9,    34,    41,    34,
-       9,    39,    41,     8,    40,    23,     6,    34,    41,    41,
-      30,    34,   175,     9,    22,    14,    68,   196,   129,   200,
-      -1,    -1,    -1,    -1,    -1,    -1,    -1,    58
+      45,    46,    47,    21,    26,    90,    95,    10,     7,    24,
+       7,     8,     7,    16,    21,     0,    10,     0,    15,    13,
+      17,    28,    29,    30,    37,    22,    25,    24,    25,    26,
+      25,    28,    29,    55,    56,    34,    31,    36,    35,    36,
+      34,    36,    87,    88,     3,     4,     4,    54,    40,    56,
+      95,    96,    11,    10,    10,     5,   145,   102,     7,   104,
+     105,   106,   107,   108,    71,    80,    73,    74,    75,    76,
+      77,    78,    21,    86,    40,    13,    25,    34,    34,    28,
+      29,    10,    13,    21,    13,    23,    35,    36,    10,   174,
+      21,    12,    23,    27,   116,    10,   118,   119,    36,     7,
+     145,    39,    40,    41,    42,    36,    14,    23,    39,    40,
+      41,    42,    34,     7,   121,     7,     9,    25,     8,    34,
+      28,    29,    14,    10,    13,    41,    34,    35,    36,    18,
+     175,    25,    10,    25,    28,    29,    28,    29,   156,     7,
+      34,    35,    36,    35,    36,     7,   191,    34,     7,   156,
+       6,    13,    10,    21,     9,    10,    34,    25,     8,     8,
+      28,    29,     7,    25,     7,    21,    25,    35,    36,    28,
+      29,     7,    30,    23,    36,    34,    35,    36,    34,     6,
+      25,    12,    25,    28,    29,    28,    29,    23,    12,    25,
+      35,    36,    35,    36,    21,    19,    20,    21,    10,    23,
+      36,    13,    23,    18,    13,    21,    10,    23,    23,    13,
+      40,    23,    36,    23,    13,    39,    40,    32,    33,    21,
+      36,    23,    34,    39,    40,    40,    21,    23,    23,    23,
+      20,    13,    40,    21,    36,    23,    34,    39,    40,    41,
+      42,    36,    23,    12,    39,    40,    41,    21,    36,    23,
+     202,    39,    40,    41,     8,    12,    29,     8,   210,   211,
+      21,    15,    36,    17,    29,    39,    40,    25,    22,    13,
+      24,    39,    26,    25,    19,    25,    28,    29,    28,    29,
+      40,     8,    41,    35,     9,    35,    35,    34,    41,     9,
+       8,    34,    40,    39,    23,     6,    34,    30,    34,    41,
+      41,   182,     9,   203,    60,    14,   135,    71,   207,    22
   };
 
   const unsigned char
@@ -1365,26 +1373,27 @@ namespace PlogGrammar {
   {
        0,    44,    45,     0,     3,     4,    11,    46,    47,    48,
       60,    49,    61,    40,    60,     5,    64,    12,    50,    40,
-      62,     8,    64,    65,    27,    82,     8,     9,    21,    36,
-      39,    40,    71,    72,    82,    18,    23,    32,    33,    40,
-      66,    67,    68,    69,    21,    36,    39,    40,    41,    75,
-      79,    12,    19,    20,    23,    40,    51,    52,    53,    54,
-      55,    59,    72,    12,    63,    40,    72,    72,    23,    13,
-       7,    25,    28,    29,    35,    36,    13,    42,    70,    79,
-      80,    68,    23,    23,     8,    23,    13,    18,    40,    75,
-      75,    23,     8,    15,    17,    22,    24,    25,    26,    28,
-      29,    35,    36,    78,    13,    71,    73,    74,    51,    51,
-      23,     7,    13,    25,    36,    54,    14,    13,    10,    16,
-      21,    74,    72,    72,    72,    72,    72,    72,    79,    10,
-      13,    34,    40,    68,    75,    75,    76,    77,    13,    70,
-      23,    21,    77,    75,    75,    75,    75,    75,    75,    10,
-      30,    31,    34,    51,    57,    58,    51,    51,    51,    72,
-      12,    12,    34,    80,     8,     9,    10,    21,    10,    34,
-      13,    77,    34,    71,    23,    10,    34,    13,    39,    81,
-      19,    40,    70,    75,     8,    34,    41,    58,     9,    35,
-      41,    34,    34,    75,    34,    23,    41,    56,    39,     9,
-       8,    56,    78,     6,    21,    40,    81,    34,    41,    56,
-      56,    23,    41,    34,    30,    34
+      62,     8,    64,    65,    27,    80,     8,     9,    21,    23,
+      36,    39,    40,    71,    72,    80,    18,    23,    32,    33,
+      40,    66,    67,    68,    69,    21,    23,    36,    39,    40,
+      41,    74,    77,    12,    19,    20,    23,    40,    51,    52,
+      53,    54,    55,    59,    72,    12,    63,    40,    72,    72,
+      72,    23,    13,     7,    25,    28,    29,    35,    36,    13,
+      42,    70,    77,    78,    68,    23,    23,     8,    23,    13,
+      18,    40,    74,    74,    74,    23,     7,     8,    15,    17,
+      22,    24,    25,    26,    28,    29,    35,    36,    76,    13,
+      71,    73,    51,    51,    72,    23,     7,    13,    25,    36,
+      54,    14,    13,    10,    16,    21,    34,    73,    72,    72,
+      72,    72,    72,    72,    77,    10,    13,    34,    40,    68,
+      74,    74,    75,    13,    70,    23,    21,    34,    75,    74,
+      74,    74,    74,    74,    74,    74,    10,    30,    31,    34,
+      51,    57,    58,    51,    51,    51,    72,    12,    12,    34,
+      78,     8,     9,    10,    21,    10,    34,    13,    75,    34,
+      71,    23,    10,    34,    13,    39,    79,    19,    40,    70,
+      74,     8,    34,    41,    58,     9,    35,    41,    34,    34,
+      74,    34,    23,    41,    56,    39,     9,     8,    56,    76,
+       6,    21,    40,    79,    34,    41,    56,    56,    23,    41,
+      34,    30,    34
   };
 
   const unsigned char
@@ -1397,10 +1406,10 @@ namespace PlogGrammar {
       62,    62,    63,    63,    64,    65,    65,    66,    66,    66,
       66,    66,    67,    67,    68,    68,    68,    68,    69,    69,
       70,    70,    71,    71,    72,    72,    72,    72,    72,    72,
-      72,    72,    72,    72,    73,    73,    74,    74,    75,    75,
-      75,    75,    75,    75,    75,    75,    75,    75,    75,    76,
-      76,    77,    77,    78,    78,    78,    78,    78,    78,    79,
-      79,    79,    80,    80,    66,    66,    81,    82
+      72,    72,    72,    72,    72,    73,    73,    74,    74,    74,
+      74,    74,    74,    74,    74,    74,    74,    74,    74,    74,
+      75,    75,    76,    76,    76,    76,    76,    76,    77,    77,
+      77,    78,    78,    66,    66,    79,    80
   };
 
   const unsigned char
@@ -1413,10 +1422,10 @@ namespace PlogGrammar {
        6,     4,     1,     3,     2,     2,     0,     2,     3,     4,
        3,     2,     1,     1,     1,     4,     6,     3,     6,    13,
        3,     1,     1,     4,     3,     3,     3,     3,     3,     3,
-       2,     3,     1,     1,     1,     3,     1,     0,     3,     3,
-       3,     3,     3,     2,     4,     3,     1,     1,     1,     1,
-       3,     1,     0,     1,     1,     1,     1,     1,     1,     1,
-       4,     3,     1,     2,     8,     5,     3,     3
+       2,     3,     1,     1,     3,     1,     3,     3,     3,     3,
+       3,     3,     3,     2,     4,     3,     1,     1,     1,     3,
+       1,     3,     1,     1,     1,     1,     1,     1,     1,     4,
+       3,     1,     2,     8,     5,     3,     3
   };
 
 
@@ -1439,26 +1448,25 @@ namespace PlogGrammar {
   "sort_expr_list", "var_sort_expr", "curly_brackets", "atts_sec",
   "att_defs", "att_def", "sort_name_list", "stmts_sec", "stmts", "stmt",
   "head", "head_atom", "random_atom", "body", "constterm",
-  "comparable_constterm", "consttermvec", "constargvec", "term",
-  "ntermvec", "termvec", "cmp", "literal", "e_literal", "probability",
-  "query", YY_NULLPTR
+  "comparable_constterm", "consttermvec", "term", "ntermvec", "cmp",
+  "literal", "e_literal", "probability", "query", YY_NULLPTR
   };
 
 #if PLOGGRAMMAR_DEBUG
   const unsigned short int
   parser::yyrline_[] =
   {
-       0,   170,   170,   171,   171,   181,   182,   185,   189,   198,
-     201,   202,   205,   209,   210,   211,   212,   213,   214,   215,
-     216,   217,   220,   223,   224,   227,   230,   231,   234,   235,
-     236,   237,   243,   244,   247,   248,   251,   258,   260,   261,
-     264,   265,   268,   269,   276,   279,   280,   287,   288,   289,
-     290,   291,   295,   296,   300,   301,   302,   303,   306,   307,
-     311,   312,   317,   318,   322,   323,   324,   325,   326,   327,
-     328,   329,   330,   331,   337,   338,   342,   343,   349,   350,
-     351,   352,   353,   354,   355,   356,   357,   358,   359,   366,
-     367,   371,   372,   378,   379,   380,   381,   382,   383,   386,
-     387,   388,   391,   392,   396,   397,   400,   403
+       0,   174,   174,   175,   175,   185,   186,   189,   193,   202,
+     205,   206,   209,   213,   214,   215,   216,   217,   218,   219,
+     220,   221,   224,   227,   228,   231,   234,   235,   238,   239,
+     240,   241,   247,   248,   251,   252,   255,   262,   264,   265,
+     268,   269,   272,   273,   280,   283,   284,   291,   292,   293,
+     294,   295,   299,   300,   304,   305,   306,   307,   310,   311,
+     315,   316,   321,   322,   326,   327,   328,   329,   330,   331,
+     332,   333,   334,   335,   336,   342,   343,   350,   351,   352,
+     353,   354,   355,   356,   357,   358,   359,   360,   361,   362,
+     369,   370,   378,   379,   380,   381,   382,   383,   386,   387,
+     388,   391,   392,   396,   397,   400,   403
   };
 
   // Print the state stack on the debug stream.
@@ -1543,4 +1551,4 @@ namespace PlogGrammar {
 
 #line 19 "ploggrammar.yy" // lalr1.cc:1167
 } // PlogGrammar
-#line 1547 "ploggrammar.tab.cc" // lalr1.cc:1167
+#line 1555 "ploggrammar.tab.cc" // lalr1.cc:1167

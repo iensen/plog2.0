@@ -11,7 +11,15 @@ using Graph = Gringo::Graph<T>;
 using Term = Gringo::Term;
 
 void Defines::add(Location const &loc, String name, UTerm &&value, bool defaultDef, Logger &log) {
-throw "not implemented yet";
+    auto it = defs_.find(name);
+    if (it == defs_.end())                           { defs_.emplace(name, make_tuple(defaultDef, loc, std::move(value))); }
+    else if (std::get<0>(it->second) && !defaultDef) { it->second = make_tuple(defaultDef, loc, std::move(value)); }
+    else if (std::get<0>(it->second) || !defaultDef) {
+        PLOG_REPORT(log, plog_error_runtime)
+            << loc << ": error: redefinition of constant:\n"
+            << "  #const " << name << "=" << *value << ".\n"
+            << std::get<1>(it->second) << ": note: constant also defined here\n";
+    }
 }
 
 void Defines::init(Logger &log) {

@@ -40,7 +40,7 @@
 #ifndef YY_PLOGGRAMMAR_PLOGGRAMMAR_TAB_HH_INCLUDED
 # define YY_PLOGGRAMMAR_PLOGGRAMMAR_TAB_HH_INCLUDED
 // //                    "%code requires" blocks.
-#line 35 "ploggrammar.yy" // lalr1.cc:377
+#line 36 "ploggrammar.yy" // lalr1.cc:377
 
     #include "plog/programbuilder.h"
     #include "groundplog/program_types.h"
@@ -146,12 +146,14 @@ namespace PlogGrammar {
     /// Symbol semantic values.
     union semantic_type
     {
-    #line 95 "ploggrammar.yy" // lalr1.cc:377
+    #line 96 "ploggrammar.yy" // lalr1.cc:377
 
       uintptr_t str;
       int num;
+      TermUid term;
+      TermVecUid termvec;
 
-#line 155 "ploggrammar.tab.hh" // lalr1.cc:377
+#line 157 "ploggrammar.tab.hh" // lalr1.cc:377
     };
 #else
     typedef PLOGGRAMMAR_STYPE semantic_type;
@@ -399,7 +401,7 @@ namespace PlogGrammar {
   // number is the opposite.  If YYTABLE_NINF, syntax error.
   static const short int yytable_[];
 
-  static const short int yycheck_[];
+  static const unsigned char yycheck_[];
 
   // YYSTOS[STATE-NUM] -- The (internal number of the) accessing
   // symbol of state STATE-NUM.
@@ -519,8 +521,8 @@ namespace PlogGrammar {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 277,     ///< Last index in yytable_.
-      yynnts_ = 40,  ///< Number of nonterminal symbols.
+      yylast_ = 309,     ///< Last index in yytable_.
+      yynnts_ = 38,  ///< Number of nonterminal symbols.
       yyfinal_ = 3, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
@@ -535,7 +537,7 @@ namespace PlogGrammar {
 
 #line 19 "ploggrammar.yy" // lalr1.cc:377
 } // PlogGrammar
-#line 539 "ploggrammar.tab.hh" // lalr1.cc:377
+#line 541 "ploggrammar.tab.hh" // lalr1.cc:377
 
 
 
