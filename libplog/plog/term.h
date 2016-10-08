@@ -7,7 +7,6 @@
 
 #include <bits/unique_ptr.h>
 #include <gringo/term.hh>
-#include "plogparser.h"
 #include<gringo/symbol.hh>
 #include<gringo/locatable.hh>
 #include<groundplog/logger.h>

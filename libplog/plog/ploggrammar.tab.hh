@@ -146,14 +146,20 @@ namespace PlogGrammar {
     /// Symbol semantic values.
     union semantic_type
     {
-    #line 96 "ploggrammar.yy" // lalr1.cc:377
+    #line 97 "ploggrammar.yy" // lalr1.cc:377
 
       uintptr_t str;
       int num;
       TermUid term;
       TermVecUid termvec;
+      SortExprVecUid sortexprvec;
+      VarSortExprVecUid varsortexprvec;
+      SortExprUid sortexpr;
+      VarSortExprUid varsortexpr;
+      CondUid cond;
+      Gringo::Relation rel;
 
-#line 157 "ploggrammar.tab.hh" // lalr1.cc:377
+#line 163 "ploggrammar.tab.hh" // lalr1.cc:377
     };
 #else
     typedef PLOGGRAMMAR_STYPE semantic_type;
@@ -183,37 +189,37 @@ namespace PlogGrammar {
         COLON = 264,
         COMMA = 265,
         CONST = 266,
-        SORT_NAME = 267,
-        DOT = 268,
-        DOTS = 269,
-        GEQ = 270,
-        ARROW = 271,
-        GT = 272,
-        IF = 273,
-        LBRACE = 274,
-        LBRACK = 275,
-        VBAR = 276,
-        LEQ = 277,
-        LPAREN = 278,
-        LT = 279,
-        MUL = 280,
-        NEQ = 281,
-        QUESTION = 282,
-        MOD = 283,
-        POW = 284,
-        RBRACE = 285,
-        RBRACK = 286,
-        RANDOM = 287,
-        PR = 288,
-        RPAREN = 289,
-        SLASH = 290,
-        SUB = 291,
-        UBNOT = 292,
-        UMINUS = 293,
-        NUMBER = 294,
-        IDENTIFIER = 295,
-        VARIABLE = 296,
-        NOT = 297
+        DOT = 267,
+        DOTS = 268,
+        GEQ = 269,
+        ARROW = 270,
+        GT = 271,
+        IF = 272,
+        LBRACE = 273,
+        LBRACK = 274,
+        VBAR = 275,
+        LEQ = 276,
+        LPAREN = 277,
+        LT = 278,
+        MUL = 279,
+        NEQ = 280,
+        QUESTION = 281,
+        MOD = 282,
+        POW = 283,
+        RBRACE = 284,
+        RBRACK = 285,
+        RANDOM = 286,
+        PR = 287,
+        RPAREN = 288,
+        SLASH = 289,
+        SUB = 290,
+        UBNOT = 291,
+        UMINUS = 292,
+        NUMBER = 293,
+        IDENTIFIER = 294,
+        VARIABLE = 295,
+        NOT = 296,
+        SORT_NAME = 297
       };
     };
 
@@ -374,7 +380,7 @@ namespace PlogGrammar {
     /// \param yyvalue   the value to check
     static bool yy_table_value_is_error_ (int yyvalue);
 
-    static const signed char yypact_ninf_;
+    static const short int yypact_ninf_;
     static const signed char yytable_ninf_;
 
     /// Convert a scanner token number \a t to a symbol number.
@@ -401,7 +407,7 @@ namespace PlogGrammar {
   // number is the opposite.  If YYTABLE_NINF, syntax error.
   static const short int yytable_[];
 
-  static const unsigned char yycheck_[];
+  static const short int yycheck_[];
 
   // YYSTOS[STATE-NUM] -- The (internal number of the) accessing
   // symbol of state STATE-NUM.
@@ -521,7 +527,7 @@ namespace PlogGrammar {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 309,     ///< Last index in yytable_.
+      yylast_ = 327,     ///< Last index in yytable_.
       yynnts_ = 38,  ///< Number of nonterminal symbols.
       yyfinal_ = 3, ///< Termination state number.
       yyterror_ = 1,
@@ -537,7 +543,7 @@ namespace PlogGrammar {
 
 #line 19 "ploggrammar.yy" // lalr1.cc:377
 } // PlogGrammar
-#line 541 "ploggrammar.tab.hh" // lalr1.cc:377
+#line 547 "ploggrammar.tab.hh" // lalr1.cc:377
 
 
 

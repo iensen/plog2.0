@@ -49,8 +49,9 @@
 
 #include "plogparser.h"
 #include "programbuilder.h"
+#include <gringo/base.hh>
 #include <climits>
-
+using Relation = Gringo::Relation;
 #define BUILDER (lexer->builder())
 #define LOGGER (lexer->logger())
 #define YYLLOC_DEFAULT(Current, Rhs, N)                                \
@@ -98,13 +99,25 @@ void PlogGrammar::parser::error(DefaultLocation const &l, std::string const &msg
       int num;
       TermUid term;
       TermVecUid termvec;
+      SortExprVecUid sortexprvec;
+      VarSortExprVecUid varsortexprvec;
+      SortExprUid sortexpr;
+      VarSortExprUid varsortexpr;
+      CondUid cond;
+      Gringo::Relation rel;
 }
 
 // }}}2
 
 // declare types here:
+%type <sortexpr>        range sort_expr functional_symbol curly_brackets concat_elem
+%type <varsortexpr>     var_sort_expr
+%type <sortexprvec>     sort_expr_vec concatenation
+%type <varsortexprvec>  var_sort_expr_list
 %type <term>            constterm comparable_constterm term
 %type <termvec>         ntermvec consttermvec
+%type <cond>            cond
+%type <rel>             cmp
 
 // {{{1 terminals
 
@@ -118,7 +131,6 @@ void PlogGrammar::parser::error(DefaultLocation const &l, std::string const &msg
     COLON       ":"
     COMMA       ","
     CONST       "#const"
-    SORT_NAME
     DOT         "."
     DOTS        ".."
     END         0 "<EOF>"
@@ -154,6 +166,7 @@ void PlogGrammar::parser::error(DefaultLocation const &l, std::string const &msg
     IDENTIFIER "<IDENTIFIER>"
     VARIABLE   "<VARIABLE>"
     NOT        "not"
+    SORT_NAME  "<SORT_NAME>"
 
 // {{{2 operator precedence and associativity
 
@@ -211,48 +224,51 @@ sort_def: SORT_NAME "=" sort_expr DOT
 
 sort_expr:
             range |
-            concatenation |
+            concatenation[c] {$$ = BUILDER.sortexpr(@$,$c); } |
             functional_symbol |
-            SORT_NAME |
+            SORT_NAME[s] {$$ = BUILDER.sortexpr(@$,Symbol::createId(String::fromRep($s)));} |
             curly_brackets |
-            sort_expr ADD sort_expr |
-            sort_expr MUL sort_expr |
-            sort_expr SUB sort_expr |
-            LPAREN sort_expr RPAREN
+            sort_expr[a] ADD sort_expr[b] {$$ = BUILDER.sortexpr(@$,SEBinOp::UNION,$a,$b);}  |
+            sort_expr[a] MUL sort_expr[b] {$$ = BUILDER.sortexpr(@$,SEBinOp::INTERSECT,$a,$b);} |
+            sort_expr[a] SUB sort_expr[b] {$$ = BUILDER.sortexpr(@$,SEBinOp::SUBTRACT,$a,$b);}|
+            LPAREN sort_expr[a] RPAREN {$$ = $a;}
       ;
 
-range: comparable_constterm DOTS comparable_constterm
+range: comparable_constterm[a] DOTS comparable_constterm[b] { $$=BUILDER.sortexpr(@$, $a, $b); }
       ;
 
-concatenation: concatenation concat_elem
-       | concat_elem
+concatenation: concatenation[a] concat_elem[b] { $$ = BUILDER.sortexprvec( $a,$b);}
+       | concat_elem[b] { $$ = BUILDER.sortexprvec(BUILDER.sortexprvec(), $b);}
        ;
 
-concat_elem: LBRACK sort_expr RBRACK
+concat_elem: LBRACK sort_expr[a] RBRACK {$$ = $a;}
        ;
 
-functional_symbol: IDENTIFIER LPAREN sort_expr_list RPAREN |
-        IDENTIFIER LPAREN sort_expr_list RPAREN COLON cond
+functional_symbol: IDENTIFIER[a] LPAREN var_sort_expr_list[b] RPAREN
+             {$$ = BUILDER.sortexpr(@$, Symbol::createId(String::fromRep($a)), $b);} |
+        IDENTIFIER[a] LPAREN var_sort_expr_list[b] RPAREN COLON cond[c]
+             {$$ = BUILDER.sortexpr(@$, Symbol::createId(String::fromRep($a)), $b, $c);}
        ;
 
-cond: VARIABLE cmp VARIABLE |
-       cond VBAR cond |
-       cond AND cond |
-       LPAREN cond RPAREN
+cond: VARIABLE[a] cmp[rel] VARIABLE[b]{$$ = BUILDER.cond($rel, String::fromRep($a),String::fromRep($b));} |
+       cond[a] VBAR cond[b] { $$ = BUILDER.cond( LogicBinOp::OR, $a,$b); }|
+       cond[a] AND  cond [b] { $$ = BUILDER.cond( LogicBinOp::AND, $a,$b); }|
+       LPAREN cond[a] RPAREN {$$ = $a;}
        ;
 
 
 
 
-sort_expr_list: sort_expr_list COMMA var_sort_expr
-       | var_sort_expr
+var_sort_expr_list: var_sort_expr_list[a] COMMA var_sort_expr[b] {$$ = BUILDER.varsortexprvec($a,$b); }
+       | var_sort_expr[a] {$$ = BUILDER.varsortexprvec(BUILDER.varsortexprvec(),$a); }
        ;
 
-var_sort_expr: sort_expr |
-               sort_expr LPAREN VARIABLE RPAREN
+var_sort_expr: sort_expr[a] {$$ = BUILDER.varsortexpr($a, nullptr);}|
+               sort_expr[a] LPAREN VARIABLE[v] RPAREN {$$ = BUILDER.varsortexpr($a, String::fromRep($v));}
 
 
-curly_brackets: LBRACE consttermvec RBRACE
+curly_brackets: LBRACE consttermvec[a] RBRACE {$$=BUILDER.sortexpr(@$, $a);}|
+                LBRACE RBRACE {$$=BUILDER.sortexpr(@$, BUILDER.termvec());}
         ;
 
 
@@ -265,12 +281,13 @@ att_defs: att_defs att_def
        |
        ;
 
-att_def: IDENTIFIER COLON sort_name_list ARROW SORT_NAME DOT
+att_def: IDENTIFIER COLON sort_expr_vec ARROW SORT_NAME DOT
        | IDENTIFIER COLON SORT_NAME DOT
        ;
 
-sort_name_list: SORT_NAME
-              | sort_name_list COMMA SORT_NAME
+sort_expr_vec: sort_expr[a] {$$= BUILDER.sortexprvec( BUILDER.sortexprvec(), $a);}
+              | sort_expr_vec[a] COMMA sort_expr[b]
+                                               {$$= BUILDER.sortexprvec($a,$b);}
               ;
 
 //}}}
@@ -324,7 +341,7 @@ constterm:
 
 comparable_constterm:
      comparable_constterm[a] ADD comparable_constterm[b]                     {$$ = BUILDER.term(@$, BinOp::ADD, $a, $b);  }
-    | comparable_constterm[a] SUB comparable_constterm[b]                    {$$ = BUILDER.term(@$, BinOp::SUB, $a, $b); }
+    | comparable_constterm[a] SUB comparable_constterm[b]                    {$$ = BUILDER.term(@$, BinOp::SUB, $a, $b);  }
     | comparable_constterm[a] MUL comparable_constterm[b]                    {$$ = BUILDER.term(@$, BinOp::MUL, $a, $b);  }
     | comparable_constterm[a] SLASH comparable_constterm[b]                  {$$ = BUILDER.term(@$, BinOp::DIV, $a, $b);  }
     | comparable_constterm[a] MOD comparable_constterm[b]                    {$$ = BUILDER.term(@$, BinOp::MOD, $a, $b);  }
@@ -354,8 +371,8 @@ term:
     | term[a] MOD term[b]                      { $$ = BUILDER.term(@$, BinOp::MOD, $a, $b);  }
     | term[a] POW term[b]                      { $$ = BUILDER.term(@$, BinOp::POW, $a, $b); }
     | SUB term[a] %prec UMINUS                 { $$ = BUILDER.term(@$, UnOp::NEG, $a);  }
-    | IDENTIFIER[a] LPAREN ntermvec[b] RPAREN   { $$ = BUILDER.term(@$, String::fromRep($a), $b); }
-    | VBAR term[a] VBAR                           { $$ = BUILDER.term(@$, UnOp::ABS, $a); }
+    | IDENTIFIER[a] LPAREN ntermvec[b] RPAREN  { $$ = BUILDER.term(@$, String::fromRep($a), $b); }
+    | VBAR term[a] VBAR                        { $$ = BUILDER.term(@$, UnOp::ABS, $a); }
     | IDENTIFIER[a]                            { $$ = BUILDER.term(@$, Symbol::createId(String::fromRep($a)));}
     | NUMBER[a]                                { $$ = BUILDER.term(@$, Symbol::createNum($a)); }
     | VARIABLE[a]                              { $$ = BUILDER.term(@$, String::fromRep($a));  }
@@ -366,8 +383,8 @@ term:
 
 
 ntermvec
-    : term[a]                   {  }
-    | ntermvec[a] COMMA term[b] {  }
+    : term[a]                   { $$ = BUILDER.termvec(BUILDER.termvec(), $a); }
+    | ntermvec[a] COMMA term[b] { $$ = BUILDER.termvec($a, $b); }
     ;
 
 
@@ -375,12 +392,12 @@ ntermvec
 
 
 cmp
-    : GT     {  }
-    | LT     {  }
-    | GEQ    {  }
-    | LEQ    {  }
-    | EQ     {  }
-    | NEQ    {  }
+    : GT     { $$ = Relation::GT;  }
+    | LT     { $$ = Relation::LT;  }
+    | GEQ    { $$ = Relation::GEQ; }
+    | LEQ    { $$ = Relation::LEQ; }
+    | EQ     { $$ = Relation::EQ;  }
+    | NEQ    { $$ = Relation::NEQ; }
     ;
 
 literal: IDENTIFIER[id]                                  {  }

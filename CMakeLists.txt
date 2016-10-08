@@ -71,7 +71,7 @@ add_definitions(-DWITH_PYTHON)
 add_executable(clingo ${CLINGO_SOURCE_FILES} ${CLINGO_SOURCES})
 TARGET_LINK_LIBRARIES(clingo lua python2.7 tbb pthread dl)
 
-add_executable(plog1 ${PLOG_SOURCE_FILES} ${PLOG_SOURCES})
+add_executable(plog1 ${PLOG_SOURCE_FILES} ${PLOG_SOURCES} libplog/src/sortexpression.cpp libplog/plog/sortexpression.h)
 TARGET_LINK_LIBRARIES(plog1 lua python2.7 tbb pthread dl)
 
 add_executable(ex ${EXAMPLE} ${CLINGO_SOURCES})
