@@ -5,8 +5,6 @@
 #ifndef FOO_H
 #define FOO_H
 
-#include <plog/programbuilder.h>
-#include <plog/plogparser.h>
 #include <gringo/ground/program.hh>
 #include "statement.h"
 
@@ -19,6 +17,9 @@
         Program(Program &&x);
 
 
+        void add(USortDef sDef);
+
+        void add(UAttDecl sDef);
 
         void add(UStm &&stm);
 

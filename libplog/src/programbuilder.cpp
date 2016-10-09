@@ -5,6 +5,7 @@
 #include<plog/programbuilder.h>
 #include<gringo/term.hh>
 #include<gringo/locatable.hh>
+#include <plog/input/attributedeclaration.h>
 
 
 using Gringo::make_locatable;
@@ -127,6 +128,10 @@ VarSortExprVecUid NonGroundProgramBuilder::varsortexprvec() {
 VarSortExprVecUid NonGroundProgramBuilder::varsortexprvec(VarSortExprVecUid vec, VarSortExprUid exp) {
     varsortexprvecs_[vec].emplace_back(varsortexprs_.erase(exp));
     return vec;
+}
+
+void NonGroundProgramBuilder::attdecl(Location const &loc, String name, SortExprVecUid svec, SortExprUid sExpr) {
+    prg_.add(make_locatable<AttributeDeclaration>(loc, name, sortexprvecs_.erase(svec),sortexprs_.erase(sExpr)));
 }
 
 

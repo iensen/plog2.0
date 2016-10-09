@@ -15,7 +15,7 @@
 #include <gringo/term.hh>
 #include <gringo/base.hh>
 #include <plog/sortexpression.h>
-
+#include <plog/input/program.h>
 using BinOp = Gringo::BinOp ;
 using UnOp = Gringo::UnOp ;
 using String = Gringo::String;
@@ -90,6 +90,16 @@ public:
     // conditions:
     CondUid  cond(Relation rel, String leftvar, String rightvar);
     CondUid  cond(LogicBinOp rel, CondUid leftcond, CondUid rightcond);
+
+    // attribute declarations:
+    void attdecl(Location const &loc, String name, SortExprVecUid svec, SortExprUid sExpr);
+
+    // sort definitions:
+
+    // statements:
+
+
+
 
 private:
     Program             &prg_;

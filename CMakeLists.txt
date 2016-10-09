@@ -47,8 +47,8 @@ include_directories(/usr/include/python2.7)
 
 
 #set(SOURCE_FILES main.cpp clingo/app/plog/src/main.cpp clingo/app/plog/src/plog_app.cpp clingo/app/plog/src/plog_app.h clingo/app/plog/src/groundplog/grndplog_app.cpp clingo/app/plog/src/groundplog/grndplog_app.h)
-set(PLOG_SOURCE_FILES plogapp/src/main.cpp  libgroundplog/groundplog/program.h libgroundplog/groundplog/groundplog_facade.h libgroundplog/groundplog/solver_strategies.h libgroundplog/groundplog/shared_context.h libgroundplog/groundplog/program_types.h libgroundplog/groundplog/rule_utils.h libgroundplog/groundplog/solver_types.h libplog/plog/plog.h libgroundplog/src/shared_context.cpp libgroundplog/src/groundplog_options.cpp libgroundplog/src/groundplog_facade.cpp libgroundplog/src/solver_strategies.cpp libgroundplog/groundplog/solve_algorithms.h libgroundplog/src/solver.cpp  libgroundplog/src/groundplog_output.cpp libgroundplog/src/program.cpp libgroundplog/src/program_builder.cpp libgroundplog/src/rule_utils.cpp libgroundplog/src/solve_algorithms.cpp libgroundplog/src/program_types.cpp libplog/src/plogparser.cpp libplog/src/program.cpp libplog/src/plogoutput.cpp libplog/src/programbuilder.cpp libplog/src/term.cpp)
-set(CLINGO_SOURCE_FILES    clingo/app/clingo/src/main.cc  clingo/app/clingo/src/clingo_app.cc)
+set(PLOG_SOURCE_FILES plogapp/src/main.cpp  libgroundplog/groundplog/program.h libgroundplog/groundplog/groundplog_facade.h libgroundplog/groundplog/solver_strategies.h libgroundplog/groundplog/shared_context.h libgroundplog/groundplog/program_types.h libgroundplog/groundplog/rule_utils.h libgroundplog/groundplog/solver_types.h libplog/plog/plog.h libgroundplog/src/shared_context.cpp libgroundplog/src/groundplog_options.cpp libgroundplog/src/groundplog_facade.cpp libgroundplog/src/solver_strategies.cpp libgroundplog/groundplog/solve_algorithms.h libgroundplog/src/solver.cpp  libgroundplog/src/groundplog_output.cpp libgroundplog/src/program.cpp libgroundplog/src/program_builder.cpp libgroundplog/src/rule_utils.cpp libgroundplog/src/solve_algorithms.cpp libgroundplog/src/program_types.cpp libplog/src/plogparser.cpp libplog/src/program.cpp libplog/src/plogoutput.cpp libplog/src/programbuilder.cpp libplog/src/term.cpp libplog/src/attributedeclaration.cpp)
+set(CLINGO_SOURCE_FILES    clingo/app/clingo/src/main.cc  clingo/app/clingo/src/clingo_app.cc libplog/plog/input/sortdefinition.h libplog/plog/input/attributedeclaration.h)
 set(EXAMPLE clingo/examples/c/backend.c)
 
 #set(SOURCE_FILES plogapp/src/main.cpp)
@@ -71,7 +71,7 @@ add_definitions(-DWITH_PYTHON)
 add_executable(clingo ${CLINGO_SOURCE_FILES} ${CLINGO_SOURCES})
 TARGET_LINK_LIBRARIES(clingo lua python2.7 tbb pthread dl)
 
-add_executable(plog1 ${PLOG_SOURCE_FILES} ${PLOG_SOURCES} libplog/src/sortexpression.cpp libplog/plog/sortexpression.h)
+add_executable(plog1 ${PLOG_SOURCE_FILES} ${PLOG_SOURCES} libplog/src/sortdefinition.cpp libplog/plog/sortexpression.h)
 TARGET_LINK_LIBRARIES(plog1 lua python2.7 tbb pthread dl)
 
 add_executable(ex ${EXAMPLE} ${CLINGO_SOURCES})

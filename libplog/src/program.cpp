@@ -51,4 +51,12 @@ void Program::unpool() {
     throw "not implemented yet";
 }
 
+void Program::add(USortDef sDef) {
+    throw "not implemented yet";
+}
+
+void Program::add(UAttDecl sDef) {
+    throw "not implemented yet";
+}
+
 

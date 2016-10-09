@@ -281,11 +281,11 @@ att_defs: att_defs att_def
        |
        ;
 
-att_def: IDENTIFIER COLON sort_expr_vec ARROW SORT_NAME DOT
-       | IDENTIFIER COLON SORT_NAME DOT
+att_def: IDENTIFIER[a] COLON sort_expr_vec[v] ARROW sort_expr[r] DOT {BUILDER.attdecl(@$, String::fromRep($a),$v,$r);}
+       | IDENTIFIER[a] COLON sort_expr[r] DOT {BUILDER.attdecl(@$, String::fromRep($a), BUILDER.sortexprvec(), $r);}
        ;
 
-sort_expr_vec: sort_expr[a] {$$= BUILDER.sortexprvec( BUILDER.sortexprvec(), $a);}
+sort_expr_vec: sort_expr[a] {$$= BUILDER.sortexprvec($$= BUILDER.sortexprvec(), $a);}
               | sort_expr_vec[a] COMMA sort_expr[b]
                                                {$$= BUILDER.sortexprvec($a,$b);}
               ;

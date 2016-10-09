@@ -407,7 +407,7 @@ namespace PlogGrammar {
   // number is the opposite.  If YYTABLE_NINF, syntax error.
   static const short int yytable_[];
 
-  static const short int yycheck_[];
+  static const unsigned char yycheck_[];
 
   // YYSTOS[STATE-NUM] -- The (internal number of the) accessing
   // symbol of state STATE-NUM.
@@ -527,7 +527,7 @@ namespace PlogGrammar {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 327,     ///< Last index in yytable_.
+      yylast_ = 324,     ///< Last index in yytable_.
       yynnts_ = 38,  ///< Number of nonterminal symbols.
       yyfinal_ = 3, ///< Termination state number.
       yyterror_ = 1,

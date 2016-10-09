@@ -8,11 +8,15 @@
 #include "body.h"
 #include "head.h"
 #include "probability.h"
+#include "attributedeclaration.h"
+#include "sortdefinition.h"
 #include<vector>
 #include <memory>
 
 struct Statement;
 using UStm = std::unique_ptr<Statement>;
+using USortDef = std::unique_ptr<SortDefinition>;
+using UAttDecl = std::unique_ptr<AttributeDeclaration>;
 using UStmVec = std::vector<UStm>;
 
 using UProb =  std::unique_ptr<Probability>;
