@@ -49,6 +49,9 @@
         //Block                *current_;
         //Projections           project_;
         UStmVec stms_;
+        USortDefVec sortdefs_;
+        UAttDeclVec attdecls_;
+
     };
 
 

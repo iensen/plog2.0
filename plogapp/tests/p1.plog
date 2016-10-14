@@ -1,9 +1,10 @@
 #const n = 1.
-#const n = 2.
+
 
 sorts
 #a = {a,b,c}.
 #f =  f(#a(X),#a(Y),#a(Z)):   X< Y & X>Z | Z>Y.
+#boolean = {true,false}.
 
 attributes
 a: #boolean.

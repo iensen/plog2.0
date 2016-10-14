@@ -14,9 +14,17 @@ Program::Program(Program &&x) {
     throw "not implemented yet";
 }
 
+void Program::add(USortDef sDef) {
+    sortdefs_.emplace_back(std::move(sDef));
+}
+
+void Program::add(UAttDecl sDef) {
+    attdecls_.emplace_back(std::move(sDef));
+}
+
 
 void Program::add(UStm &&stm) {
-    throw "not implemented yet";
+    stms_.emplace_back(std::move(stm));
 }
 
 void Program::rewrite(Defines &defs, Logger &log) {
@@ -51,12 +59,5 @@ void Program::unpool() {
     throw "not implemented yet";
 }
 
-void Program::add(USortDef sDef) {
-    throw "not implemented yet";
-}
-
-void Program::add(UAttDecl sDef) {
-    throw "not implemented yet";
-}
 
 

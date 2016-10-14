@@ -16,6 +16,8 @@ using UStm = std::unique_ptr<Statement>;
 using USortDef = std::unique_ptr<SortDefinition>;
 using UAttDecl = std::unique_ptr<AttributeDeclaration>;
 using UStmVec = std::vector<UStm>;
+using USortDefVec = std::vector<USortDef>;
+using UAttDeclVec = std::vector<UAttDecl>;
 
 using UProb =  std::unique_ptr<Probability>;
 #endif //PLOG_TYPES_H
