@@ -35,7 +35,6 @@
 %code requires
 {
     #include "plog/programbuilder.h"
-    #include "groundplog/program_types.h"
 
     class PlogParser;
 
@@ -104,7 +103,10 @@ void PlogGrammar::parser::error(DefaultLocation const &l, std::string const &msg
       SortExprUid sortexpr;
       VarSortExprUid varsortexpr;
       CondUid cond;
+      LitUid lit;
       Gringo::Relation rel;
+      BdLitVecUid body;
+      ProbUid prob;
 }
 
 // }}}2
@@ -118,6 +120,9 @@ void PlogGrammar::parser::error(DefaultLocation const &l, std::string const &msg
 %type <termvec>         ntermvec consttermvec
 %type <cond>            cond
 %type <rel>             cmp
+%type <lit>             literal e_literal head_atom random_atom head
+%type <body>            body
+%type <prob>            probability
 
 // {{{1 terminals
 
@@ -219,7 +224,7 @@ sort_defs: sort_defs sort_def
     |
     ;
 
-sort_def: SORT_NAME "=" sort_expr DOT
+sort_def: SORT_NAME[sn] "=" sort_expr[se] DOT {BUILDER.sortdef(@$, String::fromRep($sn),$se);}
     ;
 
 sort_expr:
@@ -305,32 +310,34 @@ stmts: stmts stmt
 
 // rules:
 
-stmt : head[hd] DOT           {  }
-    | head[hd] IF DOT         {  }
-    | head[hd] IF body DOT    {  }
-    | IF body  DOT            {  }
-    | IF DOT                  {  }
+stmt : head[hd] DOT           {  BUILDER.rule(@$, $hd); }
+    | head[hd] IF DOT         {  BUILDER.rule(@$, $hd); }
+    | head[hd] IF body[bd] DOT{  BUILDER.rule(@$, $hd, $bd); }
+    | IF body[bd]  DOT        {  BUILDER.rule(@$, BUILDER.lit(false), $bd); }
+    | IF DOT                  {  BUILDER.rule(@$, BUILDER.lit(false)); }
     ;
 
 head
-    : head_atom            {  }
-    | random_atom   {  }
+    : head_atom
+    | random_atom
     ;
 
 head_atom
-    : IDENTIFIER[id]                                  {  }
-    | IDENTIFIER[id] LPAREN ntermvec[tvv] RPAREN[r]     {  }
-    | IDENTIFIER[id] LPAREN ntermvec[tvv] RPAREN[r]  EQ term { }
-    | IDENTIFIER[id] EQ term                          {  }
+    : IDENTIFIER[id]                                  { $$ = BUILDER.lit(@$, String::fromRep($id),BUILDER.termvec()); }
+    | IDENTIFIER[id] LPAREN ntermvec[tvv] RPAREN[r]     {$$ = BUILDER.lit(@$, String::fromRep($id), $tvv);  }
+    | IDENTIFIER[id] LPAREN ntermvec[tvv] RPAREN[r]  EQ term[t] {$$ = BUILDER.lit(@$, String::fromRep($id), $tvv, $t); }
+    | IDENTIFIER[id] EQ term[t]                          {$$ = BUILDER.lit(@$, String::fromRep($id), $t); }
     ;
 
-random_atom: RANDOM LPAREN IDENTIFIER COMMA IDENTIFIER RPAREN[r] |
-             RANDOM LPAREN IDENTIFIER COLON LBRACE VARIABLE COLON IDENTIFIER LPAREN VARIABLE RPAREN RBRACE RPAREN
+random_atom: RANDOM[r] LPAREN IDENTIFIER[id1] COMMA IDENTIFIER[id2] RPAREN[r] {$$ = BUILDER.lit(@$, String::fromRep($id1),String::fromRep($id2));}|
+             RANDOM LPAREN IDENTIFIER[id1] COLON LBRACE VARIABLE COLON IDENTIFIER[id2] LPAREN VARIABLE RPAREN RBRACE RPAREN{
+             $$ = BUILDER.lit(@$, String::fromRep($id1),String::fromRep($id2));}
+
              ;
 
 body
-    : body COMMA e_literal[lit]
-    | e_literal[lit]
+    : body[bd] COMMA e_literal[lit]  {$$ = BUILDER.body($bd, $lit);}
+    | e_literal[lit] {$$ = BUILDER.body(BUILDER.body(), $lit);}
     ;
 
 
@@ -400,22 +407,21 @@ cmp
     | NEQ    { $$ = Relation::NEQ; }
     ;
 
-literal: IDENTIFIER[id]                                  {  }
-        | IDENTIFIER[id] LPAREN ntermvec[tvv] RPAREN[r]     {  }
-        | term[l] cmp[rel] term[r] { }
+literal: term[l]  {  $$ = BUILDER.lit(@$,$l); }
+        | term[l] cmp[rel] term[r] {$$ = BUILDER.lit(@$,$l, $rel, $r); }
     ;
 
-e_literal: literal
-    |  NOT literal
+e_literal: literal[l] { $$ = BUILDER.elit(@$,  $l, false);}
+    |  NOT literal[l] { $$ = BUILDER.elit(@$,  $l, true); }
     ;
 
 // pr-atoms
-stmt: PR LPAREN head_atom VBAR body RPAREN EQ probability |
-        LPAREN head_atom RPAREN EQ probability
+stmt: PR LPAREN head_atom[a] VBAR body[b] RPAREN EQ probability[p] {BUILDER.pratom(@$,$a,$b,$p);}
+        | LPAREN head_atom[a] RPAREN EQ probability[p] {BUILDER.pratom(@$,$a,BUILDER.body(),$p);}
        ;
 
-probability: NUMBER SLASH NUMBER
+probability: NUMBER[n1] SLASH NUMBER[n2] {$$ = BUILDER.prob(@$,$n1,$n2);}
            ;
 
-query: QUESTION literal DOT
+query: QUESTION literal[l] DOT {BUILDER.query(@$, $l);}
 

@@ -4,7 +4,10 @@
 
 #ifndef PLOG_PROBABILITY_H
 #define PLOG_PROBABILITY_H
-class Probability {
+struct Probability {
+    Probability(int num, int denum);
+    double getDoubleVal();
+    int num, denum;
 
 };
 #endif //PLOG_PROBABILITY_H

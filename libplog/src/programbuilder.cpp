@@ -6,7 +6,7 @@
 #include<gringo/term.hh>
 #include<gringo/locatable.hh>
 #include <plog/input/attributedeclaration.h>
-
+#include<plog/ploggrammar.tab.hh>
 
 using Gringo::make_locatable;
 using Gringo::gringo_make_unique;
@@ -133,6 +133,99 @@ VarSortExprVecUid NonGroundProgramBuilder::varsortexprvec(VarSortExprVecUid vec,
 void NonGroundProgramBuilder::attdecl(Location const &loc, String name, SortExprVecUid svec, SortExprUid sExpr) {
     prg_.add(make_locatable<AttributeDeclaration>(loc, name, sortexprvecs_.erase(svec),sortexprs_.erase(sExpr)));
 }
+
+void NonGroundProgramBuilder::sortdef(Location const &loc, String name, SortExprUid se) {
+    prg_.add(make_locatable<SortDefinition>(loc, name, sortexprs_.erase(se)));
+
+}
+
+TermUid NonGroundProgramBuilder::boolterm(bool val) {
+    String sval = val?String("true"):String("false");
+    return term(DefaultLocation(), sval);
+}
+
+LitUid NonGroundProgramBuilder::lit(Location const &loc, String id, TermVecUid tvec) {
+    TermUid lt  = term(DefaultLocation(),id,tvec);
+    TermUid rt = boolterm(true);
+    return lits_.insert(make_locatable<Literal>(loc, Relation::EQ, terms_.erase(lt),terms_.erase(rt)));
+}
+
+LitUid NonGroundProgramBuilder::lit(Location const &loc, String id, TermVecUid tvec, TermUid tid) {
+    TermUid lt  = term(DefaultLocation(),id,tvec);
+    return lits_.insert(make_locatable<Literal>(loc, Relation::EQ, terms_.erase(lt),terms_.erase(tid)));
+
+}
+
+LitUid NonGroundProgramBuilder::lit(Location const &loc, String id, TermUid tid) {
+    TermUid lt  = term(DefaultLocation(),id);
+    return lits_.insert(make_locatable<Literal>(loc, Relation::EQ, terms_.erase(lt),terms_.erase(tid)));
+
+}
+
+LitUid NonGroundProgramBuilder::lit(Location const &loc, String att_name, String range_name) {
+    TermUid lt  = term(DefaultLocation(),String("random"),termvec(att_name,range_name));
+    return lits_.insert(make_locatable<Literal>(loc, Relation::EQ, terms_.erase(lt),terms_.erase(boolterm(true))));
+
+}
+
+LitUid NonGroundProgramBuilder::lit(Location const &loc, TermUid t) {
+    return lits_.insert(make_locatable<Literal>(loc, Relation::EQ, terms_.erase(t),terms_.erase(boolterm(true))));
+
+}
+
+LitUid NonGroundProgramBuilder::lit(Location const &loc, TermUid t1, Relation rel, TermUid t2) {
+    return lits_.insert(make_locatable<Literal>(loc, rel, terms_.erase(t1),terms_.erase(t2)));
+}
+
+
+LitUid NonGroundProgramBuilder::lit(bool type) {
+     return lit(DefaultLocation(), term(DefaultLocation(), Symbol::createNum(0)),
+                type ? Relation::EQ : Relation::NEQ, term(DefaultLocation(), Symbol::createNum(0)));
+}
+
+
+
+LitUid NonGroundProgramBuilder::elit(Location const &loc, LitUid lit, bool negative) {
+    return lits_.insert(make_locatable<ELiteral>(loc, lits_.erase(lit),negative));
+}
+
+TermVecUid NonGroundProgramBuilder::termvec(String el1, String el2) {
+    TermVecUid  tvec = termvec();
+    termvec(tvec,term(DefaultLocation(),el1));
+    termvec(tvec,term(DefaultLocation(),el2));
+    return tvec;
+}
+
+BdLitVecUid NonGroundProgramBuilder::body() {
+    return bodies_.emplace();
+}
+
+BdLitVecUid NonGroundProgramBuilder::body(BdLitVecUid bid, LitUid elit) {
+    bodies_[bid].emplace_back(lits_.erase(elit));
+    return bid;
+}
+
+void NonGroundProgramBuilder::rule(Location const &loc, LitUid head, BdLitVecUid body) {
+    prg_.add(make_locatable<Statement>(loc, lits_.erase(head), bodies_.erase(body)));
+}
+
+void NonGroundProgramBuilder::rule(Location const &loc, LitUid head) {
+    rule(loc, head, body());
+}
+
+void NonGroundProgramBuilder::pratom(Location const &loc, LitUid head, BdLitVecUid body, ProbUid prob) {
+    prg_.add(make_locatable<Statement>(loc, lits_.erase(head), bodies_.erase(body),probs_.erase(prob)));
+}
+
+ProbUid NonGroundProgramBuilder::prob(Location const &loc, int num, int denum) {
+    return probs_.insert(make_locatable<Probability>(loc, num,denum));
+}
+
+void NonGroundProgramBuilder::query(const Location &loc, LitUid query) {
+    prg_.add(make_locatable<Statement>(loc, lits_.erase(query)));
+
+}
+
 
 
 

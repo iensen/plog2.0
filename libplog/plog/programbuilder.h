@@ -16,6 +16,7 @@
 #include <gringo/base.hh>
 #include <plog/sortexpression.h>
 #include <plog/input/program.h>
+#include<plog/literal.h>
 using BinOp = Gringo::BinOp ;
 using UnOp = Gringo::UnOp ;
 using String = Gringo::String;
@@ -40,6 +41,10 @@ enum SortExprVecUid     : unsigned { };
 enum VarSortExprVecUid  : unsigned { };
 enum VarSortExprUid     : unsigned { };
 enum CondUid            : unsigned { };
+enum LitUid             : unsigned { };
+enum BdLitVecUid        : unsigned { };
+enum ProbUid            : unsigned { };
+
 using UTerm = Gringo::UTerm ;
 
 using IdVecs           = Indexed<IdVec, IdVecUid>;
@@ -49,7 +54,10 @@ using SortExprs        = Indexed<USortExpr, SortExprUid>;
 using SortExprVecs     = Indexed<USortExprVec, SortExprVecUid>;
 using VarSortExprs     = Indexed<UVarSortExpr, VarSortExprUid>;
 using VarSortExprVecs  = Indexed<UVarSortExprVec, VarSortExprVecUid >;
-using Conditions  = Indexed<UCond, CondUid>;
+using Conditions       = Indexed<UCond, CondUid>;
+using Literals         = Indexed<ULit, LitUid >;
+using Bodies           = Indexed<ULitVec, BdLitVecUid >;
+using Probabilities    = Indexed<UProb, ProbUid>;
 
 class NonGroundProgramBuilder {
 
@@ -58,16 +66,21 @@ public:
     IdVecUid idvec(IdVecUid uid, Location const &loc, String id);
     IdVecUid idvec();
 
-
+    // constant declarations
     virtual void define(Location const &loc, String name, TermUid value, bool deafaultDef, Logger &log);
-  //  void block(Location const &loc, String name, IdVecUid args);
+
+    // terms
     TermUid term(Location const &loc, BinOp op, TermUid a, TermUid b);
     TermUid term(Location const &loc, UnOp op, TermUid a);
     TermUid term(Location const &loc, Symbol val);
     TermUid term(Location const &loc, String name, TermVecUid a);
     TermUid term(Location const &loc, String name);
     TermVecUid termvec(TermVecUid uid, TermUid termUid);
+    TermVecUid termvec(String el1, String el2);
     TermVecUid termvec();
+
+    // constant terms:
+    TermUid boolterm(bool val);
 
     // sort expressions:
     SortExprUid  sortexpr(Location const &loc, TermUid from, TermUid to);
@@ -95,10 +108,32 @@ public:
     void attdecl(Location const &loc, String name, SortExprVecUid svec, SortExprUid sExpr);
 
     // sort definitions:
+    void sortdef(Location const &loc, String name, SortExprUid se);
 
-    // statements:
+    // literals:
+    LitUid lit(Location const &loc, String id, TermVecUid tvec);
+    LitUid lit(Location const &loc, String id, TermVecUid tvec, TermUid term);
+    LitUid lit(Location const &loc, String id, TermUid term);
+    LitUid lit(Location const &loc, String att_name, String range_name);
+    LitUid lit(Location const &loc, TermUid t);
+    LitUid lit(bool type);
+    LitUid lit(Location const &loc, TermUid t1, Relation rel, TermUid t2);
+    LitUid elit(Location const &loc, LitUid lit, bool negative);
 
+    // rules:
+    void rule(Location const &loc, LitUid head) ;
+    void rule(Location const &loc, LitUid head, BdLitVecUid body);
 
+    // bodies:
+    BdLitVecUid body();
+    BdLitVecUid body(BdLitVecUid bid, LitUid elit);
+
+    // pr-atoms:
+    void pratom(Location const &loc, LitUid lit, BdLitVecUid  body, ProbUid prob);
+    ProbUid prob(Location const &loc, int num, int denum);
+
+    // queries:
+    void query(Location const &loc, LitUid query);
 
 
 private:
@@ -112,6 +147,9 @@ private:
     VarSortExprs        varsortexprs_;
     VarSortExprVecs     varsortexprvecs_;
     Conditions          conds_;
+    Literals            lits_;
+    Bodies              bodies_;
+    Probabilities       probs_;
 };
 
 

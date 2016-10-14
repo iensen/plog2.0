@@ -43,7 +43,6 @@
 #line 36 "ploggrammar.yy" // lalr1.cc:377
 
     #include "plog/programbuilder.h"
-    #include "groundplog/program_types.h"
 
     class PlogParser;
 
@@ -52,7 +51,7 @@
     };
 
 
-#line 56 "ploggrammar.tab.hh" // lalr1.cc:377
+#line 55 "ploggrammar.tab.hh" // lalr1.cc:377
 
 
 # include <cstdlib> // std::abort
@@ -132,7 +131,7 @@
 
 #line 19 "ploggrammar.yy" // lalr1.cc:377
 namespace PlogGrammar {
-#line 136 "ploggrammar.tab.hh" // lalr1.cc:377
+#line 135 "ploggrammar.tab.hh" // lalr1.cc:377
 
 
 
@@ -146,7 +145,7 @@ namespace PlogGrammar {
     /// Symbol semantic values.
     union semantic_type
     {
-    #line 97 "ploggrammar.yy" // lalr1.cc:377
+    #line 96 "ploggrammar.yy" // lalr1.cc:377
 
       uintptr_t str;
       int num;
@@ -157,9 +156,12 @@ namespace PlogGrammar {
       SortExprUid sortexpr;
       VarSortExprUid varsortexpr;
       CondUid cond;
+      LitUid lit;
       Gringo::Relation rel;
+      BdLitVecUid body;
+      ProbUid prob;
 
-#line 163 "ploggrammar.tab.hh" // lalr1.cc:377
+#line 165 "ploggrammar.tab.hh" // lalr1.cc:377
     };
 #else
     typedef PLOGGRAMMAR_STYPE semantic_type;
@@ -527,7 +529,7 @@ namespace PlogGrammar {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 324,     ///< Last index in yytable_.
+      yylast_ = 307,     ///< Last index in yytable_.
       yynnts_ = 38,  ///< Number of nonterminal symbols.
       yyfinal_ = 3, ///< Termination state number.
       yyterror_ = 1,
@@ -543,7 +545,7 @@ namespace PlogGrammar {
 
 #line 19 "ploggrammar.yy" // lalr1.cc:377
 } // PlogGrammar
-#line 547 "ploggrammar.tab.hh" // lalr1.cc:377
+#line 549 "ploggrammar.tab.hh" // lalr1.cc:377
 
 
 

@@ -4,5 +4,17 @@
 
 #ifndef PLOG_SORTDEFINITION_H
 #define PLOG_SORTDEFINITION_H
-class SortDefinition{};
+
+#include <gringo/printable.hh>
+#include <gringo/locatable.hh>
+#include <plog/sortexpression.h>
+
+class SortDefinition: Gringo::Printable, Gringo::Locatable{
+public:
+    SortDefinition(String sortname, USortExpr && sortExpr): sortName(sortname), sexpr(std::move(sortExpr)){}
+    virtual void print(std::ostream &out) const;
+private:
+    String sortName;
+    USortExpr  sexpr;
+};
 #endif //PLOG_SORTDEFINITION_H
