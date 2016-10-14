@@ -145,7 +145,7 @@ public:
     std::unique_ptr<PlogParser>                               parser_;
     FinishHandler                                             finishHandler_;
     GroundPlog::GroundPlogFacade                              *groundplog_ = nullptr;
-    GroundPlog::Cli::GroundPlogCliConfig                      &claspConfig_;
+    GroundPlog::Cli::GroundPlogCliConfig                      &groundPlogConfig_;
     PostGroundFunc                                            pgf_;
     PreSolveFunc                                              psf_;
     std::vector<Gringo::UProp>                                props_;

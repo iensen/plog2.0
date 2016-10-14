@@ -3,12 +3,12 @@
 #include "plog/plogcontrol.hh"
 
 bool PlogControl::hasSubKey(unsigned key, char const *name, unsigned* subKey) {
-    //*subKey = claspConfig_.getKey(key, name);
+    //*subKey = groundPlogConfig_.getKey(key, name);
     //return *subKey != Clasp::Cli::ClaspCliConfig::KEY_INVALID;
     throw "not implemented yet";
 }
 unsigned PlogControl::getSubKey(unsigned key, char const *name) {
-    //unsigned ret = claspConfig_.getKey(key, name);
+    //unsigned ret = groundPlogConfig_.getKey(key, name);
     //if (ret == Clasp::Cli::ClaspCliConfig::KEY_INVALID) {
     //    throw std::runtime_error("invalid key");
     //}
@@ -16,7 +16,7 @@ unsigned PlogControl::getSubKey(unsigned key, char const *name) {
     throw "not implemented yet";
 }
 unsigned PlogControl::getArrKey(unsigned key, unsigned idx) {
-    //unsigned ret = claspConfig_.getArrKey(key, idx);
+    //unsigned ret = groundPlogConfig_.getArrKey(key, idx);
     //if (ret == Clasp::Cli::ClaspCliConfig::KEY_INVALID) {
     //    throw std::runtime_error("invalid key");
     //}
@@ -24,13 +24,13 @@ unsigned PlogControl::getArrKey(unsigned key, unsigned idx) {
     throw "not implemented yet";
 }
 void PlogControl::getKeyInfo(unsigned key, int* nSubkeys, int* arrLen, const char** help, int* nValues) const {
-    //if (claspConfig_.getKeyInfo(key, nSubkeys, arrLen, help, nValues) < 0) {
+    //if (groundPlogConfig_.getKeyInfo(key, nSubkeys, arrLen, help, nValues) < 0) {
     //    throw std::runtime_error("could not get key info");
     //}
     throw "not implemented yet";
 }
 const char* PlogControl::getSubKeyName(unsigned key, unsigned idx) const {
-  //  char const *ret = claspConfig_.getSubkey(key, idx);
+  //  char const *ret = groundPlogConfig_.getSubkey(key, idx);
   //  if (!ret) {
   //      throw std::runtime_error("could not get subkey");
   //  }
@@ -38,7 +38,7 @@ const char* PlogControl::getSubKeyName(unsigned key, unsigned idx) const {
     throw "not implemented yet";
 }
 bool PlogControl::getKeyValue(unsigned key, std::string &value) {
-   // int ret = claspConfig_.getValue(key, value);
+   // int ret = groundPlogConfig_.getValue(key, value);
    // if (ret < -1) {
    //     throw std::runtime_error("could not get option value");
    // }
@@ -47,7 +47,7 @@ bool PlogControl::getKeyValue(unsigned key, std::string &value) {
 }
 void PlogControl::setKeyValue(unsigned key, const char *val) {
    // configUpdate_ = true;
-   // if (claspConfig_.setValue(key, val) <= 0) {
+   // if (groundPlogConfig_.setValue(key, val) <= 0) {
    //     throw std::runtime_error("could not set option value");
    // }
     throw "not implemented yet";
@@ -86,14 +86,20 @@ void PlogControl::parse(const PlogControl::StringSeq &files, const PlogOptions &
 }
 
 void PlogControl::main() {
-    throw "not implemented yet";
+    out_->init(false);
+    groundPlogConfig_.releaseOptions();
+    Gringo::Control::GroundVec parts;
+    parts.emplace_back("base", Gringo::SymVec{});
+    ground(parts, nullptr);
+    solve();
+
 }
 
 PlogControl::PlogControl(GroundPlog::GroundPlogFacade *groundplog,
                          GroundPlog::Cli::GroundPlogCliConfig &groundplogConfig, PlogControl::PostGroundFunc pgf,
                          PlogControl::PreSolveFunc psf,Gringo::Logger::Printer printer):
  groundplog_(groundplog)
-, claspConfig_(groundplogConfig)
+, groundPlogConfig_(groundplogConfig)
 , pgf_(pgf)
 , psf_(psf)
         ,logger_(printer)

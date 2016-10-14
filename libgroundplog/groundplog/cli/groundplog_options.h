@@ -107,7 +107,12 @@ public:
     bool setAppDefaults(UserConfig* active, const ParsedOpts& exclude);
     bool             isGenerator() const { return (cliMode & mode_tester) == 0; }
     int  applyActive(int o, const char* setValue, std::string* getValue, const char** getDesc, const char** name);
-
+	//! Releases internal option objects needed for command-line style option processing.
+	/*!
+	 * \note Subsequent calls to certain functions of this object (e.g. addOptions(), setConfig())
+	 *       recreate the option objects if necessary.
+	 */
+	void releaseOptions();
 
 private:
     static const uint8 mode_solver = 1u;

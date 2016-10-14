@@ -139,5 +139,9 @@ namespace GroundPlog {
             return new ProgOption(*this, o);
         }
 
+        void GroundPlogCliConfig::releaseOptions() {
+            opts_=0;
+        }
+
     }
 }
