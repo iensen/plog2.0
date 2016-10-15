@@ -5,7 +5,7 @@
 #ifndef FOO_H
 #define FOO_H
 
-#include <gringo/ground/program.hh>
+#include <gringo/input/program.hh>
 #include "statement.h"
 
 
@@ -29,9 +29,7 @@
 
         void print(std::ostream &out) const;
 
-        // here is the thing! this should return a Gringo - Kind of ground program ready to ground
-        // to do it, we will need to convert current program to ASP program and call toGround There
-        Gringo::Ground::Program toGround(Logger &log);
+        Gringo::Input::Program toGringo();
 
         ~Program();
 

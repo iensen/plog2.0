@@ -22,8 +22,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
-#ifndef LIBLP_RULE_UTILS_H_INCLUDED
-#define LIBLP_RULE_UTILS_H_INCLUDED
+
 #include<groundplog/program_types.h>
 #include<vector>
 
@@ -97,6 +96,6 @@ namespace GroundPlog {
     };
 
 }
-#endif
+
 
 #endif //PLOG_RULE_UTILS_H

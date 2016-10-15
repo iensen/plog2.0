@@ -1,6 +1,8 @@
 
 #include <plog/plogoutput.h>
+#include <clingo/clingocontrol.hh>
 #include "plog/plogcontrol.hh"
+
 
 bool PlogControl::hasSubKey(unsigned key, char const *name, unsigned* subKey) {
     //*subKey = groundPlogConfig_.getKey(key, name);
@@ -88,9 +90,7 @@ void PlogControl::parse(const PlogControl::StringSeq &files, const PlogOptions &
 void PlogControl::main() {
     out_->init(false);
     groundPlogConfig_.releaseOptions();
-    Gringo::Control::GroundVec parts;
-    parts.emplace_back("base", Gringo::SymVec{});
-    ground(parts, nullptr);
+    ground();
     solve();
 
 }
@@ -139,8 +139,32 @@ void PlogControl::add(std::string const &name, Gringo::FWStringVec const &params
     throw "not implemented yet";
 }
 
-void PlogControl::ground(Gringo::Control::GroundVec const &vec, Gringo::Context *ctx) {
-    throw "not implemented yet";
+void PlogControl::ground() {
+    if (!update()) { return; }
+    if (parsed) {
+        // replace constants with their values, ...
+        prg_.rewrite(defs_, logger_);
+        // check semantic errors:
+        prg_.check(logger_);
+        if (logger_.hasError()) {
+            throw std::runtime_error("grounding stopped because of errors");
+        }
+        parsed = false;
+    }
+    Gringo::Input::Program gringoProgram_ = prg_.toGringo();
+    // create dummy logger
+    Gringo::Logger log = Gringo::Logger();
+    // create intermediary program for grounding (note, the logger should not have errors!)
+    auto gPrg = gringoProgram_.toGround(out_->data, log);
+    DefaultGringoModule module;
+    auto exit = Gringo::onExit([&module]{ module.scripts.context = nullptr; });
+    // create params (ground base part)
+    Gringo::Control::GroundVec parts;
+    parts.emplace_back("base", Gringo::SymVec{});
+    Gringo::Ground::Parameters params;
+    for (auto &x : parts) { params.add(x.first, Gringo::SymVec(x.second)); }
+    // do the grounding and output the result in out_ object
+    gPrg.ground(params, module.scripts, *out_, false, log);
 }
 
 Gringo::SymbolicAtoms &PlogControl::getDomain() {

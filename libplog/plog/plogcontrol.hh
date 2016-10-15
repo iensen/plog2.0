@@ -30,7 +30,7 @@ struct plog_control {
     using NewControlFunc = Gringo::Control* (*)(int, char const **);
     using FreeControlFunc = void (*)(Gringo::Control *);
     virtual Gringo::SymbolicAtoms &getDomain() = 0;
-    virtual void ground(GroundVec const &vec, Gringo::Context *context) = 0;
+    virtual void ground() = 0;
     virtual Gringo::SolveResult solve() = 0;
     virtual void interrupt() = 0;
     virtual void add(std::string const &name, Gringo::FWStringVec const &params, std::string const &part) = 0;
@@ -64,11 +64,6 @@ struct PlogOptions {
 
 // {{{1 declaration of DefaultGringoModule
 
-struct DefaultGringoModule : Gringo::GringoModule {
-    DefaultGringoModule();
-    Gringo::Control *newControl(int argc, char const * const *argv, Gringo::Logger::Printer p, unsigned messageLimit)override;
-    Gringo::Symbol parseValue(std::string const &str, Gringo::Logger::Printer printer, unsigned messageLimit) override;
-};
 
 
 class PlogControl : public plog_control, private Gringo::ConfigProxy, private Gringo::SymbolicAtoms {
@@ -124,7 +119,7 @@ public:
     // {{{2 Control interface
 
     Gringo::SymbolicAtoms &getDomain() override;
-    void ground(Gringo::Control::GroundVec const &vec, Gringo::Context *ctx) override;
+    void ground();
     void add(std::string const &name, Gringo::FWStringVec const &params, std::string const &part) override;
     void load(std::string const &filename) override;
     Gringo::SolveResult solve() override;
@@ -149,37 +144,12 @@ public:
     PostGroundFunc                                            pgf_;
     PreSolveFunc                                              psf_;
     std::vector<Gringo::UProp>                                props_;
-    Plog::Logger                                            logger_;
+    Plog::Logger                                              logger_;
     bool parsed                 = false;
     bool grounded               = false;
     bool configUpdate_          = false;
 };
 
-inline std::vector<std::string> split(std::string const &source, char const *delimiter = " ", bool keepEmpty = false) {
-    std::vector<std::string> results;
-    size_t prev = 0;
-    size_t next = 0;
-    while ((next = source.find_first_of(delimiter, prev)) != std::string::npos) {
-        if (keepEmpty || (next - prev != 0)) { results.push_back(source.substr(prev, next - prev)); }
-        prev = next + 1;
-    }
-    if (prev < source.size()) { results.push_back(source.substr(prev)); }
-    return results;
-}
-
-
-static inline bool parseFoobar(const std::string& str, PlogOptions::Foobar& foobar) {
-    for (auto &x : split(str, ",")) {
-        auto y = split(x, "/");
-        if (y.size() != 2) { return false; }
-        unsigned a;
-        if (!bk_lib::string_cast<unsigned>(y[1], a)) { return false; }
-        bool sign = !y[0].empty() && y[0][0] == '-';
-        if (sign) { y[0] = y[0].substr(1); }
-        foobar.emplace_back(y[0].c_str(), a, sign);
-    }
-    return true;
-}
 
 inline void enableAll(PlogOptions& out, bool enable) {
     out.wNoAtomUndef          = !enable;
@@ -209,4 +179,5 @@ inline bool parseWarning(const std::string& str, PlogOptions& out) {
     return false;
 }
 
+//inline bool parseWarning(const std::string& str, PlogOptions& out);
 #endif

@@ -55,7 +55,6 @@ protected:
 private:
     PlogOptions grOpts_;
     Mode mode_;
-    DefaultGringoModule module;
     std::unique_ptr<PlogControl> grd;
 };
 

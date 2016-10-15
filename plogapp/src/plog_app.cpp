@@ -19,6 +19,8 @@
 // }}}
 
 
+
+#include <clingo/clingocontrol.hh>
 #include "plog_app.h"
 
 using namespace GroundPlog;

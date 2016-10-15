@@ -39,10 +39,6 @@ void Program::print(std::ostream &out) const {
     throw "not implemented yet";
 }
 
-Gringo::Ground::Program Program::toGround(Logger &log) {
-    throw "not implemented yet";
-}
-
 Program::~Program() {
     throw "not implemented yet";
 }
@@ -56,6 +52,10 @@ void Program::rewriteArithmetics() {
 }
 
 void Program::unpool() {
+    throw "not implemented yet";
+}
+
+Gringo::Input::Program Program::toGringo() {
     throw "not implemented yet";
 }
 
