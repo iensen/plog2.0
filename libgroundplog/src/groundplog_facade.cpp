@@ -168,6 +168,10 @@ void GroundPlog::GroundPlogFacade::initBuilder(GroundPlog::ProgramBuilder *in) {
     builder_->startProgram(ctx);
 }
 
+GroundPlog::ProgramBuilder &GroundPlog::GroundPlogFacade::update(bool updateConfig) {
+    throw "not implemented yet";
+}
+
 void GroundPlog::GroundPlogFacade::Summary::init(GroundPlog::GroundPlogFacade &f) {
     std::memset(this, 0, sizeof(Summary)); facade = &f;
 }

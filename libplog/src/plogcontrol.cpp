@@ -216,7 +216,15 @@ Gringo::SymbolicAtomIter PlogControl::begin(Gringo::Sig sig) const {
 }
 
 bool PlogControl::update() {
-    throw "not implemented yet";
+    groundplog_->update(configUpdate_);
+    configUpdate_ = false;
+    if (!groundplog_->ok()) { return false; }
+
+    if (!grounded) {
+        out_->beginStep();
+        grounded = true;
+    }
+    return true;
 }
 
 void PlogControl::parse() {
