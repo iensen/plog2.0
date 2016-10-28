@@ -6,6 +6,7 @@
 
 void PlogOutput::output(DomainData &data, GringoStatement &stm) {
     // implement text output for now:
+
     stm.print({data, std::cout},"");
 
 

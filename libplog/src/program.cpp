@@ -4,6 +4,7 @@
 
 
 #include <plog/input/program.h>
+#include <plog/ploggrammar.tab.hh>
 
 
 Program::Program() {
@@ -28,11 +29,11 @@ void Program::add(UStm &&stm) {
 }
 
 void Program::rewrite(Defines &defs, Logger &log) {
-    throw "not implemented yet";
+    printf("REWRITING IS NOT IMPLEMENTED YET\n");
 }
 
 void Program::check(Logger &log) {
-    throw "not implemented yet";
+    printf("CHECKING IS NOT IMPLEMENTED YET\n");
 }
 
 void Program::print(std::ostream &out) const {
@@ -56,7 +57,24 @@ void Program::unpool() {
 }
 
 Gringo::Input::Program Program::toGringo() {
-    throw "not implemented yet";
+    // create a program
+    Gringo::Input::Program prg;
+   // Location loc(filename().c_str(), 1, 1, filename().c_str(), 1, 1);
+   // IdVecUid params = pb_.idvec();
+   // for (auto &x : data().second.second) { params = pb_.idvec(params, x.first, x.second); }
+    //std::cout <<"BLOCK";
+    //std::cout << data().second.first;
+    //pb_.block(loc, data().second.first, params);
+    prg.begin(DefaultLocation(),String("base"),{});
+//    Symbol::createId(String("hz"));
+    for(const UStm &stm: stms_)
+        if (stm->getType() == StatementType::QUERY)
+        prg.add(stm->toGringo());
+    // create dummy defines and logger
+    Gringo::Defines defs;
+    Gringo::Logger log;
+    prg.rewrite(defs,log);
+    return prg;
 }
 
 

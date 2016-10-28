@@ -4,10 +4,17 @@
 
 #ifndef PLOG_PROBABILITY_H
 #define PLOG_PROBABILITY_H
-struct Probability {
+
+#include <gringo/printable.hh>
+#include <gringo/locatable.hh>
+
+class Probability: Gringo::Printable, Gringo::Locatable {
+    int num, denum;
+public:
     Probability(int num, int denum);
     double getDoubleVal();
-    int num, denum;
+    virtual void print(std::ostream &out) const;
+
 
 };
 #endif //PLOG_PROBABILITY_H

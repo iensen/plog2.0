@@ -416,8 +416,8 @@ e_literal: literal[l] { $$ = BUILDER.elit(@$,  $l, false);}
     ;
 
 // pr-atoms
-stmt: PR LPAREN head_atom[a] VBAR body[b] RPAREN EQ probability[p] {BUILDER.pratom(@$,$a,$b,$p);}
-        | LPAREN head_atom[a] RPAREN EQ probability[p] {BUILDER.pratom(@$,$a,BUILDER.body(),$p);}
+stmt: PR LPAREN head_atom[a] VBAR body[b] RPAREN EQ probability[p] DOT {BUILDER.pratom(@$,$a,$b,$p);}
+        | LPAREN head_atom[a] RPAREN EQ probability[p] DOT {BUILDER.pratom(@$,$a,BUILDER.body(),$p);}
        ;
 
 probability: NUMBER[n1] SLASH NUMBER[n2] {$$ = BUILDER.prob(@$,$n1,$n2);}

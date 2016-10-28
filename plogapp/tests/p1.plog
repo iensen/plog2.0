@@ -7,10 +7,12 @@ sorts
 #boolean = {true,false}.
 
 attributes
-a: #boolean.
+x: #a -> #boolean.
+y: #a -> #boolean.
 
 statements 
-random(a).
-pr(a) = 3/10.
-?a.
+y(a).
+random(x(X)):- y(X).
+pr(x(a)|y(a)) = 3/10.
+?x(a).
 

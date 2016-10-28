@@ -216,6 +216,8 @@ void PlogParser::_init() {
         Location loc(filename().c_str(), 1, 1, filename().c_str(), 1, 1);
         IdVecUid params = pb_.idvec();
         for (auto &x : data().second.second) { params = pb_.idvec(params, x.first, x.second); }
+        //std::cout <<"BLOCK";
+        //std::cout << data().second.first;
 //        pb_.block(loc, data().second.first, params);
     }
 }

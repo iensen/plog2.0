@@ -140,7 +140,6 @@ void PlogControl::add(std::string const &name, Gringo::FWStringVec const &params
 }
 
 void PlogControl::ground() {
-    if (!update()) { return; }
     if (parsed) {
         // replace constants with their values, ...
         prg_.rewrite(defs_, logger_);
@@ -156,6 +155,7 @@ void PlogControl::ground() {
     Gringo::Logger log = Gringo::Logger();
     // create intermediary program for grounding (note, the logger should not have errors!)
     auto gPrg = gringoProgram_.toGround(out_->data, log);
+
     DefaultGringoModule module;
     auto exit = Gringo::onExit([&module]{ module.scripts.context = nullptr; });
     // create params (ground base part)

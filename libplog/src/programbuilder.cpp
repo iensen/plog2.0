@@ -16,6 +16,7 @@ using UnOpTerm = Gringo::UnOpTerm;
 using FunctionTerm = Gringo::FunctionTerm;
 using VarTerm = Gringo::VarTerm;
 
+
 NonGroundProgramBuilder::NonGroundProgramBuilder(Program &prg, Defines &defs):prg_(prg)
         , defs_(defs)
 {
@@ -141,7 +142,7 @@ void NonGroundProgramBuilder::sortdef(Location const &loc, String name, SortExpr
 
 TermUid NonGroundProgramBuilder::boolterm(bool val) {
     String sval = val?String("true"):String("false");
-    return term(DefaultLocation(), sval);
+    return term(DefaultLocation(), Symbol::createId(sval));
 }
 
 LitUid NonGroundProgramBuilder::lit(Location const &loc, String id, TermVecUid tvec) {

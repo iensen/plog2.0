@@ -65,6 +65,7 @@ int PlogParser::lex_impl(void *pValue, Location &loc) {
     for (;;) {
         /*!re2c
         <normal> WS         { start(loc); continue; }
+        <normal> "pr"                         { return PlogGrammar::parser::token::PR; }
         <normal> NL         { if(eof()) return 0; step(); start(loc); continue; }
         <normal> "#const"                     { return PlogGrammar::parser::token::CONST; }
         <normal> "#"IDENTIFIER                { return PlogGrammar::parser::token::SORT_NAME; }
@@ -76,6 +77,7 @@ int PlogParser::lex_impl(void *pValue, Location &loc) {
         <normal> NUMBER     { value.num = integer(); return PlogGrammar::parser::token::NUMBER; }
         <normal> VARIABLE              { value.str = String::toRep(string()); return PlogGrammar::parser::token::VARIABLE; }
         <normal> ".."                         { return PlogGrammar::parser::token::DOTS; }
+        <normal> "->"                         { return PlogGrammar::parser::token::ARROW; }
         <normal> "."        { return PlogGrammar::parser::token::DOT; }
         <normal> ":"        { return PlogGrammar::parser::token::COLON; }
         <normal> ":-"                  { return PlogGrammar::parser::token::IF; }
@@ -91,7 +93,6 @@ int PlogParser::lex_impl(void *pValue, Location &loc) {
         <normal> "-"                          { return PlogGrammar::parser::token::SUB; }
         <normal> "**"                         { return PlogGrammar::parser::token::POW; }
         <normal> "&"                         { return PlogGrammar::parser::token::AND; }
-        <normal> "|"                         { return PlogGrammar::parser::token::OR; }
         <normal> "\\"                         { return PlogGrammar::parser::token::MOD; }
         <normal> "*"                          { return PlogGrammar::parser::token::MUL; }
         <normal> ">"                          { return PlogGrammar::parser::token::GT; }
