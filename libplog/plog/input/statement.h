@@ -21,6 +21,8 @@ using Gringo::Input::ToGroundArg;
 using UGLit = std::unique_ptr<Gringo::Input::Literal>;
 using Gringo::Input::UHeadAggr ;
 using UGStm = Gringo::Input::UStm ;
+using Gringo::Input::UBodyAggrVec ;
+using Gringo::Input::UBodyAggr;
 
 struct Statement : Gringo::Printable, Gringo::Locatable {
     Statement(ULit &&query);
@@ -38,6 +40,9 @@ struct Statement : Gringo::Printable, Gringo::Locatable {
 
 private:
     Gringo::UTerm gringovalterm(String rep);
+    UBodyAggr  gringobodyel(ULit &lit);
+    Gringo::UTerm gringostrterm(const char *s);
+    UBodyAggrVec gringobody();
     UHeadAggr head(UGLit && lit);
     std::pair<Gringo::UTerm,bool> term(ULit && lit);
     UGStm prAtomToGringo();
@@ -47,6 +52,8 @@ private:
     ULitVec  body_;
     UProb probability_;
     StatementType type_;
+    char *numbuf;
+    char *denumbuf;
 };
 
 #endif //PLOG_STATEMENT_H_H

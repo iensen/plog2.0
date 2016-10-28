@@ -68,7 +68,7 @@ Gringo::Input::Program Program::toGringo() {
     prg.begin(DefaultLocation(),String("base"),{});
 //    Symbol::createId(String("hz"));
     for(const UStm &stm: stms_)
-        if (stm->getType() == StatementType::QUERY)
+ //       if (stm->getType() == StatementType::QUERY || stm->getType() == StatementType::PR_ATOM)
         prg.add(stm->toGringo());
     // create dummy defines and logger
     Gringo::Defines defs;

@@ -58,6 +58,7 @@ using Conditions       = Indexed<UCond, CondUid>;
 using Literals         = Indexed<ULit, LitUid >;
 using Bodies           = Indexed<ULitVec, BdLitVecUid >;
 using Probabilities    = Indexed<UProb, ProbUid>;
+using VarVals          = std::unordered_map<String, Term::SVal>;
 
 class NonGroundProgramBuilder {
 
@@ -150,6 +151,7 @@ private:
     Literals            lits_;
     Bodies              bodies_;
     Probabilities       probs_;
+    VarVals             vals_;
 };
 
 

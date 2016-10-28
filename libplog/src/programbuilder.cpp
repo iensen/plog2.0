@@ -64,8 +64,11 @@ TermUid NonGroundProgramBuilder::term(Location const &loc, String name, TermVecU
 }
 
 TermUid NonGroundProgramBuilder::term(Location const &loc, String name) {
-        auto ret = std::make_shared<Symbol>();
-        return terms_.insert(make_locatable<VarTerm>(loc, name, ret));
+
+    auto &ret(vals_[name]);
+    if (!ret) { ret = std::make_shared<Symbol>(); }
+    return terms_.insert(make_locatable<VarTerm>(loc, name, ret));
+
 }
 
 SortExprUid NonGroundProgramBuilder::sortexpr(Location const &loc, TermUid from, TermUid to) {

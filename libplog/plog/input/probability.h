@@ -14,7 +14,8 @@ public:
     Probability(int num, int denum);
     double getDoubleVal();
     virtual void print(std::ostream &out) const;
-
+    int getNum();
+    int getDenum();
 
 };
 #endif //PLOG_PROBABILITY_H

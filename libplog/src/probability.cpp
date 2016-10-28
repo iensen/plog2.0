@@ -15,3 +15,11 @@ double Probability::getDoubleVal() {
 void Probability::print(std::ostream &out) const {
     throw "not implemented yet";
 }
+
+int Probability::getNum() {
+    return num;
+}
+
+int Probability::getDenum() {
+    return denum;
+}
