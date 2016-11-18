@@ -15,6 +15,7 @@
 #include<gringo/input/literals.hh>
 #include<gringo/input/programbuilder.hh>
 #include<gringo/input/aggregates.hh>
+#include<clingo.hh>
 
 enum class StatementType { RULE, PR_ATOM, QUERY};
 using Gringo::Input::ToGroundArg;
@@ -35,19 +36,19 @@ struct Statement : Gringo::Printable, Gringo::Locatable {
     // this should ground the statement and store the result in stms (collection of gringo statements!)
     virtual void toGround(ToGroundArg &x, UStmVec &stms) const;
     virtual ~Statement();
-    UGStm toGringo();
+    Clingo::AST::Statement toGringoAST();
     StatementType  getType();
 
 private:
-    Gringo::UTerm gringovalterm(String rep);
-    UBodyAggr  gringobodyel(ULit &lit);
-    Gringo::UTerm gringostrterm(const char *s);
-    UBodyAggrVec gringobody();
-    UHeadAggr head(UGLit && lit);
+    Clingo::AST::BodyLiteral  gringobodyelast(ULit &lit);
+    std::vector<Clingo::AST::BodyLiteral> gringobodyast();
     std::pair<Gringo::UTerm,bool> term(ULit && lit);
-    UGStm prAtomToGringo();
-    UGStm queryToGringo();
-    UGStm ruleToGringo();
+
+
+    Clingo::AST::Statement prAtomToGringoAST();
+    Clingo::AST::Statement queryToGringoAST();
+    Clingo::AST::Statement ruleToGringoAST();
+
     ULit     head_;
     ULitVec  body_;
     UProb probability_;

@@ -5,12 +5,13 @@
 #include<gringo/input/statement.hh>
 #include<gringo/locatable.hh>
 #include<src/input/nongroundgrammar/grammar.hh>
-
+#include <sstream>
 
 using Gringo::make_locatable;
 using Gringo::gringo_make_unique;
 using Gringo::FunctionTerm;
 using Gringo::ValTerm;
+using Gringo::VarTerm;
 using Gringo::Symbol;
 using Gringo::Location;
 using Gringo::make_locatable;
@@ -55,38 +56,10 @@ Statement::~Statement() {
     throw "not implemented yet";
 }
 
-UGStm Statement::toGringo() {
-   switch(type_) {
-       case StatementType::PR_ATOM: return prAtomToGringo();
-       case StatementType::QUERY:   return queryToGringo();
-       default: return ruleToGringo();
-   }
-}
-
-// given a pr-atom pr(a(t) = y|B) = x/y, form a rule
-//                   pr(a(t),y,"x","y"):- B
-UGStm Statement::prAtomToGringo() {
-    // construct head:
-    String prName = String("pr");
-    UTermVec vec;
-    vec.push_back(std::move(head_->lt));
-    vec.push_back(std::move(head_->rt));
-    numbuf = new char[12];
-    denumbuf = new char [12];
-    sprintf(numbuf, "%d", probability_->getNum());
-    sprintf(denumbuf, "%d", probability_->getDenum());
-    vec.push_back(std::move(gringostrterm(numbuf)));
-    vec.push_back(std::move(gringostrterm(denumbuf)));
-    UTerm  fterm =    make_locatable<FunctionTerm>(DefaultLocation(), prName,std::move(vec));
-    UGLit   predLit = make_locatable<PredicateLiteral>(DefaultLocation(), Gringo::NAF ::POS,std::move(fterm));
-    UHeadAggr h = head(std::move(predLit));
-    UBodyAggrVec b = gringobody();
-    return make_locatable<GStatement>(DefaultLocation(), std::move(h),std::move(b),GStatementType::RULE);
-}
 
 // for a(t) = y, return <a(t,y), true>
 // for a(t) != y, return <a(t,y), false>
-
+// to do: get rid of this and construct clingo terms directly
 std::pair<Gringo::UTerm,bool>  Statement::term(ULit && lit) {
     FunctionTerm * fterm = dynamic_cast<FunctionTerm*>(lit->lt.get());
 
@@ -99,73 +72,134 @@ std::pair<Gringo::UTerm,bool>  Statement::term(ULit && lit) {
     return {std::move(term),pos};
 }
 
-Gringo::UTerm Statement::gringovalterm(String rep) {
-    Symbol sym=  Symbol::createId(rep);
-    UTerm term = make_locatable<ValTerm>(DefaultLocation(), sym);
-    return term;
-}
 
 
-Gringo::UTerm Statement::gringostrterm(const char *s) {
-    Symbol sym=  Symbol::createStr(String(s));
-    UTerm term = make_locatable<ValTerm>(DefaultLocation(), sym);
-    return term;
-}
 
-UHeadAggr Statement::head(UGLit && lit) {
-    return gringo_make_unique<SimpleHeadLiteral>(std::move(lit));
-}
-
-
-// form  a rule (query(a(t,y),pos/neg))
-UGStm Statement::queryToGringo() {
-    String name = String("query"); // query should go as an argument inside
-    auto   queryargs = term(std::move(head_));
-    UTermVec  vec;
-    vec.push_back(std::move(queryargs.first));
-    vec.push_back(gringovalterm(queryargs.second?"true":"false"));
-    UTerm  fterm =    make_locatable<FunctionTerm>(DefaultLocation(), name,std::move(vec));
-    UGLit   predLit = make_locatable<PredicateLiteral>(DefaultLocation(), Gringo::NAF ::POS,std::move(fterm));
-    UHeadAggr h = head(std::move(predLit));
-    UBodyAggrVec b;
-    return make_locatable<GStatement>(DefaultLocation(), std::move(h),std::move(b),GStatementType::RULE);
-}
-
-UGStm Statement::ruleToGringo() {
-    // construct head:
-    auto    fterm = term(std::move(head_));
-    UGLit   predLit = make_locatable<PredicateLiteral>(DefaultLocation(), Gringo::NAF ::POS,std::move(fterm.first));
-    UHeadAggr h = head(std::move(predLit));
-    UBodyAggrVec b = gringobody();
-    return make_locatable<GStatement>(DefaultLocation(), std::move(h),std::move(b),GStatementType::RULE);
-
-}
 
 StatementType Statement::getType() {
     return type_;
 }
 
-UBodyAggrVec Statement::gringobody() {
-    UBodyAggrVec resvec;
+
+
+Clingo::AST::Statement Statement::toGringoAST() {
+    switch(type_) {
+        case StatementType::PR_ATOM: return prAtomToGringoAST();
+        case StatementType::QUERY:   return queryToGringoAST();
+        default: return ruleToGringoAST();
+    }
+}
+
+Clingo::AST::Term termToClingoTerm(const UTerm & term) {
+    std::stringstream stream;
+    term.get()->print(stream);
+
+    Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
+
+    // if it is a function term:
+    FunctionTerm * fterm = dynamic_cast<FunctionTerm*>(term.get());
+
+    if (fterm) {
+        String name = fterm->name;
+        UTermVec fargs = std::move(fterm->args);
+        std::vector<Clingo::AST::Term> args;
+        for(const UTerm &t: fargs) {
+            args.push_back(termToClingoTerm(t));
+        }
+        auto f_ = Clingo::AST::Function{name.c_str(), args};
+        return {loc,f_};
+    }
+
+    // if term is a variable
+
+    VarTerm * varT = dynamic_cast<VarTerm*>(term.get());
+
+    if (varT) {
+        String name = varT->name;
+        //printf("%s\n",varT->name.c_str());
+        auto f_ = Clingo::AST::Variable{name.c_str()};
+        return {loc,f_};
+    }
+
+    // if term is a valterm:
+
+    ValTerm * valT = dynamic_cast<ValTerm*>(term.get());
+
+    if (valT) {
+        std::stringstream ss;
+        valT->print(ss);
+        Clingo::Symbol sym = Clingo::parse_term(stream.str().c_str());
+        return {loc,sym};
+    }
+
+    // bin op and un op terms go here
+
+    throw std::logic_error("cannot convert a term");
+
+}
+
+Clingo::AST::Statement Statement::prAtomToGringoAST() {
+    // construct head:
+    Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
+    std::vector<Clingo::AST::Term> args;
+    args.push_back(termToClingoTerm(head_->lt));
+    args.push_back(termToClingoTerm(head_->rt));
+    std::stringstream stream;
+    stream << probability_->getNum();
+    args.push_back(Clingo::AST::Term{loc,Clingo::String(stream.str().c_str())});
+    stream.str("");
+    stream << probability_->getDenum();
+    args.push_back(Clingo::AST::Term{loc,Clingo::String(stream.str().c_str())});
+    Clingo::AST::Function f_ = {"pr", args};
+    Clingo::AST::Term f_t{loc, f_};
+    Clingo::AST::Literal f_l{loc, Clingo::AST::Sign::None, f_t};
+    Clingo::AST::Rule f_r{{loc, f_l}, gringobodyast()};
+    return {loc, f_r};
+
+}
+
+Clingo::AST::Statement Statement::queryToGringoAST() {
+    Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
+    std::vector<Clingo::AST::Term> args;
+    auto   queryargs = term(std::move(head_));
+    args.push_back(termToClingoTerm(queryargs.first));
+    args.push_back(queryargs.second?Clingo::AST::Term{loc,Clingo::Id("true")}:Clingo::AST::Term{loc,Clingo::Id("false")});
+    Clingo::AST::Function f_ = {"query", args};
+    Clingo::AST::Term f_t{loc, f_};
+    Clingo::AST::Literal f_l{loc, Clingo::AST::Sign::None, f_t};
+    Clingo::AST::Rule f_r{{loc, f_l}, std::vector<Clingo::AST::BodyLiteral>()};
+    return {loc, f_r};
+}
+
+Clingo::AST::Statement Statement::ruleToGringoAST() {
+    Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
+    auto    fterm = term(std::move(head_));
+    Clingo::AST::Term f_ = termToClingoTerm(fterm.first);
+    Clingo::AST::Literal f_l{loc, Clingo::AST::Sign::None, f_};
+    Clingo::AST::Rule f_r{{loc, f_l}, gringobodyast()};
+    //std::cout << f_r << std::endl;
+    return {loc, f_r};
+}
+
+std::vector<Clingo::AST::BodyLiteral> Statement::gringobodyast() {
+    std::vector<Clingo::AST::BodyLiteral> resvec;
     for (auto& lit: body_) {
-        resvec.push_back(gringobodyel(lit));
+        resvec.push_back(gringobodyelast(lit));
     }
     return resvec;
 }
 
-//a(t) = y becomes a(t,y)
-//a(t) !=y) becomes -a(t,y)
-UBodyAggr Statement::gringobodyel(ULit &lit) {
+Clingo::AST::BodyLiteral Statement::gringobodyelast(ULit &lit) {
+    Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
     ELiteral* elit = dynamic_cast<ELiteral*>(lit.get());
-    Gringo::NAF naf = elit->neg?Gringo::NAF::NOT:Gringo::NAF ::POS;
-    printf("%d\n",naf);
     std::pair<Gringo::UTerm,bool> termb = term(std::move(elit->lit));
-    // need simple body literal constructed form ulit!
-    // first, construct ULIT:
-    if(!termb.second){
-        termb.first = make_locatable<Gringo::UnOpTerm>(DefaultLocation(),Gringo::UnOp::NEG,std::move(termb.first));
+    Clingo::AST::Term f_t = termToClingoTerm(termb.first);
+    if(!termb.second) {
+        throw "not implemented yet";
+        // negate f_t
     }
-    UGLit   predLit = make_locatable<PredicateLiteral>(DefaultLocation(), naf,std::move(termb.first));
-    return gringo_make_unique<SimpleBodyLiteral>(std::move(predLit));
+
+    Clingo::AST::Literal alit{loc, Clingo::AST::Sign::None, f_t};
+    return Clingo::AST::BodyLiteral{loc, elit->neg?Clingo::AST::Sign::Negation:Clingo::AST::Sign::None, alit};
 }
 

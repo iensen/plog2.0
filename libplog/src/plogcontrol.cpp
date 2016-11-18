@@ -103,6 +103,8 @@ PlogControl::PlogControl(GroundPlog::GroundPlogFacade *groundplog,
 , pgf_(pgf)
 , psf_(psf)
         ,logger_(printer)
+
+
 {
 
 }
@@ -150,21 +152,34 @@ void PlogControl::ground() {
         }
         parsed = false;
     }
-    Gringo::Input::Program gringoProgram_ = prg_.toGringo();
-    // create dummy logger
-    Gringo::Logger log = Gringo::Logger();
-    // create intermediary program for grounding (note, the logger should not have errors!)
-    auto gPrg = gringoProgram_.toGround(out_->data, log);
+    prg_.loadToControl(clingoControl);
 
-    DefaultGringoModule module;
-    auto exit = Gringo::onExit([&module]{ module.scripts.context = nullptr; });
+    clingoControl.ground({{"base", {}}});
+
+    // solve:
+    for (auto m : clingoControl.solve_iteratively()) {
+        std::cout << "Model:";
+        for (auto &atom : m.symbols()) {
+            std::cout << " " << atom;
+        }
+        std::cout << "\n";
+    };
+
+    //Gringo::Input::Program gringoProgram_ = prg_.toGringo();
+    // create dummy logger
+    //Gringo::Logger log = Gringo::Logger();
+    // create intermediary program for grounding (note, the logger should not have errors!)
+    //auto gPrg = gringoProgram_.toGround(out_->data, log);
+
+    //DefaultGringoModule module;
+    //auto exit = Gringo::onExit([&module]{ module.scripts.context = nullptr; });
     // create params (ground base part)
-    Gringo::Control::GroundVec parts;
-    parts.emplace_back("base", Gringo::SymVec{});
-    Gringo::Ground::Parameters params;
-    for (auto &x : parts) { params.add(x.first, Gringo::SymVec(x.second)); }
+    //Gringo::Control::GroundVec parts;
+    //parts.emplace_back("base", Gringo::SymVec{});
+    //Gringo::Ground::Parameters params;
+    //for (auto &x : parts) { params.add(x.first, Gringo::SymVec(x.second)); }
     // do the grounding and output the result in out_ object
-    gPrg.ground(params, module.scripts, *out_, false, log);
+    //gPrg.ground(params, module.scripts, *out_, false, log);
 }
 
 Gringo::SymbolicAtoms &PlogControl::getDomain() {

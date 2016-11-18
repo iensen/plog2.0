@@ -4,9 +4,10 @@
 
 #ifndef FOO_H
 #define FOO_H
-
+#include<clingo.hh>
 #include <gringo/input/program.hh>
 #include "statement.h"
+
 
 
 
@@ -30,6 +31,8 @@
         void print(std::ostream &out) const;
 
         Gringo::Input::Program toGringo();
+
+        void loadToControl(Clingo::Control &ctl);
 
         ~Program();
 

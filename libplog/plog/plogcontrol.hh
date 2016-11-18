@@ -4,6 +4,7 @@
 #include <gringo/input/nongroundparser.hh>
 #include <gringo/input/groundtermparser.hh>
 #include <gringo/control.hh>
+#include <clingo.hh>
 #include <gringo/logger.hh>
 #include <gringo/scripts.hh>
 #include <groundplog/program.h>
@@ -17,6 +18,7 @@
 #include "plogparser.h"
 #include<plog/programbuilder.h>
 #include<plog/term.h>
+#include <clingo/clingocontrol.hh>
 
 #ifndef PLOGCONTROL_H
 #define PLOGCONTROL_H
@@ -145,6 +147,7 @@ public:
     PreSolveFunc                                              psf_;
     std::vector<Gringo::UProp>                                props_;
     Plog::Logger                                              logger_;
+    Clingo::Control                                           clingoControl;
     bool parsed                 = false;
     bool grounded               = false;
     bool configUpdate_          = false;

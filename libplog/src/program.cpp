@@ -56,25 +56,16 @@ void Program::unpool() {
     throw "not implemented yet";
 }
 
-Gringo::Input::Program Program::toGringo() {
-    // create a program
-    Gringo::Input::Program prg;
-   // Location loc(filename().c_str(), 1, 1, filename().c_str(), 1, 1);
-   // IdVecUid params = pb_.idvec();
-   // for (auto &x : data().second.second) { params = pb_.idvec(params, x.first, x.second); }
-    //std::cout <<"BLOCK";
-    //std::cout << data().second.first;
-    //pb_.block(loc, data().second.first, params);
-    prg.begin(DefaultLocation(),String("base"),{});
-//    Symbol::createId(String("hz"));
+
+void Program::loadToControl(Clingo::Control &ctl) {
+    auto b = ctl.builder();
+    b.begin();
+    Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
+    b.add({loc, Clingo::AST::Program{"base", {}}});
     for(const UStm &stm: stms_)
- //       if (stm->getType() == StatementType::QUERY || stm->getType() == StatementType::PR_ATOM)
-        prg.add(stm->toGringo());
-    // create dummy defines and logger
-    Gringo::Defines defs;
-    Gringo::Logger log;
-    prg.rewrite(defs,log);
-    return prg;
+        //       if (stm->getType() == StatementType::QUERY || stm->getType() == StatementType::PR_ATOM)
+        b.add(stm->toGringoAST());
+    b.end();
 }
 
 
