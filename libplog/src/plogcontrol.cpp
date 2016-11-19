@@ -1,6 +1,7 @@
 
 #include <plog/plogoutput.h>
 #include <clingo/clingocontrol.hh>
+#include <plog/grprogramobs.h>
 #include "plog/plogcontrol.hh"
 
 
@@ -153,7 +154,8 @@ void PlogControl::ground() {
         parsed = false;
     }
     prg_.loadToControl(clingoControl);
-
+    PlogGroundProgramBuilder pb;
+    clingoControl.register_observer(pb);
     clingoControl.ground({{"base", {}}});
 
     // solve:
