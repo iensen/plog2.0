@@ -13,6 +13,7 @@ y: #a -> #boolean.
 statements 
 y(a).
 p(X) :- y(X).
-%pr(x(a)|y(a)) = 3/10.
+random(x(X),p) :- y(X).
+pr(x(a)|y(a)) = 3/10.
 ?x(a).
 
