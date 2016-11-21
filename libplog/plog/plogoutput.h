@@ -7,18 +7,29 @@
 
 #include<gringo/output/statement.hh>
 #include<gringo/output/literal.hh>
+#include<groundplog/program_types.h>
 #include "plogcontrol.hh"
+#include<vector>
 
 using Gringo::Output::AbstractOutput;
 using Gringo::Output::DomainData;
 using GringoStatement = Gringo::Output::Statement;
+using GroundPlog::Atom_t;
+using GroundPlog::Lit_t;
+using GroundPlog::AttId ;
 
-class PlogOutput:public AbstractOutput {
+
+class GroundPlogBackend {
 public:
-    PlogOutput(PlogControl& ctl):ctl_(ctl) {}
-    void output(DomainData &data, GringoStatement &stm) override;
+
+    GroundPlogBackend(PlogControl& ctl):ctl_(ctl) {}
+    void rule(Atom_t &head, const std::vector<Lit_t> &body);
+    void randomRule(std::vector<std::pair<Atom_t,AttId>> head, const std::vector<Lit_t> &body);
+    void prAtom(Atom_t &head, const std::vector<Lit_t> &body);
+    void query(Lit_t &query);
 
 private:
+    GroundPlog::Program* prg();
     PlogControl& ctl_;
 
 };

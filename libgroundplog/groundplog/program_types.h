@@ -12,15 +12,25 @@
 namespace GroundPlog {
 
     class Program;
-    typedef uint64 Atom_t;
-    typedef uint64 Lit_t;
-    typedef uint64 Id_t;
+    typedef uint32 AttId;
     typedef uint32 ValueRep;
-    //! A variable is an integer in the range [0..varMax).
     typedef uint32 Var;
-    enum class Head_t : unsigned {
-        normal, random
+
+    struct Atom_t {
+        AttId attid;
+        ValueRep valid;
     };
+
+    struct Lit_t {
+        AttId attid;
+        ValueRep valid;
+        bool defaultNeg;
+        bool classicNeg;
+    };
+
+
+    typedef uint64 Id_t;
+      //! A variable is an integer in the range [0..varMax).
 
 
     //! Possible types of a variable.
@@ -63,12 +73,20 @@ namespace GroundPlog {
 
 
     struct Rule {
-        Head_t ht;
         Atom_t head;
         std::vector<Lit_t> body;
-
-        Rule normal(Head_t ht, const Atom_t head, const std::vector<Lit_t> &body);
     };
+
+    struct RandomRule {
+        std::vector<std::pair<Atom_t,AttId>>  head;
+        std::vector<Lit_t> body;
+    };
+
+    struct PrAtom {
+        Atom_t head;
+        std::vector<Lit_t> body;
+    };
+
 
 
 //! A node of a program-dependency graph.

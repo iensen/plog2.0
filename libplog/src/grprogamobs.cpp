@@ -11,3 +11,8 @@ void PlogGroundProgramBuilder::rule(bool choice, AtomSpan headats, LiteralSpan b
 void PlogGroundProgramBuilder::output_atom(Clingo::Symbol symbol, atom_t atom) {
    printf("ATOM\n");
 }
+
+PlogGroundProgramBuilder::PlogGroundProgramBuilder(GroundPlogBackend &out):out(out) {
+
+}
+

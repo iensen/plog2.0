@@ -30,10 +30,10 @@ namespace GroundPlog {
 
 //! A type that can represent an aspif rule.
     struct Rule_t {
-        Head_t   ht;
+
         Atom_t head;
         std::vector<Lit_t> body;
-        Rule_t(Head_t ht, Atom_t head, const std::vector<Lit_t>& body);
+        Rule_t(Atom_t head, const std::vector<Lit_t>& body);
     };
 
 //! A builder class for creating a rule.

@@ -10,6 +10,7 @@
 #include <groundplog/rule_utils.h>
 #include <clasp/util/misc_types.h>
 #include<clasp/shared_context.h>
+#include<utility>
 #include <vector>
 
 namespace GroundPlog {
@@ -21,6 +22,12 @@ namespace GroundPlog {
     typedef std::pair<Id_t, ConstString>    ShowPair;
 
     class Program : public ProgramBuilder {
+        std::vector<Rule> rules;
+        std::vector<RandomRule> randomrules;
+        std::vector<PrAtom> pratoms;
+        Lit_t query;
+
+
     public:
         Program();
 
@@ -111,9 +118,16 @@ namespace GroundPlog {
          *       unfreeze() is implicitly called. In the latter case, the rule is interpreted
          *       as an integrity constraint.
          */
-        Program &addRule(const Rule &rule);
 
-        Program &addRule(Head_t ht, Atom_t head, const std::vector<Lit_t> &body);
+
+        // todo: rewrite this to use unique ptrs
+        Program &addRule(Atom_t head, const std::vector<Lit_t> body);
+
+        Program &addRandomRule(std::vector<std::pair<Atom_t,AttId>> head, const std::vector<Lit_t> body);
+
+        Program &addPratom(Atom_t head, const std::vector<Lit_t> body);
+
+        Program &addQuery(Lit_t query);
 
 
         //@}
@@ -212,7 +226,7 @@ namespace GroundPlog {
 
 
         typedef std::vector<RuleBuilder*> RuleList;
-        typedef Range<uint32>                   AtomRange;
+        typedef Range<uint32>                  AttRange;
         // ------------------------------------------------------------------------
         // virtual overrides
         bool doStartProgram();
@@ -223,10 +237,10 @@ namespace GroundPlog {
 
         void doGetAssumptions(std::vector<Literal>  &out) const;
 
-        Atom_t startAtom()       const { return input_.lo; }
+        AttId startAtom()       const { return input_.lo; }
         // ------------------------------------------------------------------------
         // Program definition
-        bool isNew(Atom_t atomId) const { return atomId >= startAtom(); }
+        bool isNew(AttId attId) const { return attId >= startAtom(); }
 
         PrgAtom *resize(Atom_t atomId);
 
@@ -250,7 +264,7 @@ namespace GroundPlog {
         ValueRep litVal(const PrgAtom *a, bool pos) const;
 
 
-        AtomRange   input_;       // input atoms of current step
+        AttRange   input_;       // input attribute terms of current step
         RuleBuilder rule_;        // temporary: active rule
         std::vector<PrgBody*> bodies_;      // all bodies
         std::vector<PrgAtom*> atoms_;       // all atoms

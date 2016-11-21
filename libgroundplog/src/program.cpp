@@ -119,7 +119,7 @@ namespace GroundPlog{
 
     bool Program::doStartProgram() {
         dispose(true);
-        input_   = AtomRange(0, -1);
+        input_   = AttRange(0, -1);
         return true;
     }
 
@@ -135,6 +135,26 @@ namespace GroundPlog{
         for (auto it = atoms_.begin() + start, end = atoms_.end(); it != end; ++it) {
               delete *it;
         }
+    }
+
+    Program &Program::addRule(Atom_t head, std::vector<Lit_t> body) {
+        rules.emplace_back(Rule{head,body});
+        return *this;
+    }
+
+    Program &Program::addRandomRule(std::vector<std::pair<Atom_t, AttId>> head, const std::vector<Lit_t> body) {
+        randomrules.emplace_back(RandomRule{head,body});
+        return *this;
+    }
+
+    Program &Program::addPratom(Atom_t head, const std::vector<Lit_t> body) {
+        pratoms.emplace_back(PrAtom{head,body});
+        return *this;
+    }
+
+    Program &Program::addQuery(Lit_t query) {
+        this->query = query;
+        return *this;
     }
 
 }

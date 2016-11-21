@@ -3,6 +3,8 @@
 //
 
 #include<clingo.hh>
+#include<gringo/output/output.hh>
+#include "plogoutput.h"
 
 using Clingo::GroundProgramObserver;
 using Clingo::AtomSpan ;
@@ -14,8 +16,12 @@ using Clingo::atom_t ;
 #define PLOG_GRPROGRAMOBS_H
 
 class PlogGroundProgramBuilder:public GroundProgramObserver {
+public:
+    PlogGroundProgramBuilder(GroundPlogBackend &out);
+private:
     virtual void output_atom(Clingo::Symbol symbol, atom_t atom) override;
     virtual void rule(bool, AtomSpan, LiteralSpan) override;
+    GroundPlogBackend& out;
 
 };
 

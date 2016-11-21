@@ -16,8 +16,10 @@
 #include<plog/plog.h>
 #include <plog/input/program.h>
 #include "plogparser.h"
+#include "plogoutput.h"
 #include<plog/programbuilder.h>
 #include<plog/term.h>
+#include<plog/plogoutput.h>
 #include <clingo/clingocontrol.hh>
 
 #ifndef PLOGCONTROL_H
@@ -66,7 +68,7 @@ struct PlogOptions {
 
 // {{{1 declaration of DefaultGringoModule
 
-
+class GroundPlogBackend;
 
 class PlogControl : public plog_control, private Gringo::ConfigProxy, private Gringo::SymbolicAtoms {
 public:
@@ -135,7 +137,7 @@ public:
 
     // }}}2
 
-    std::unique_ptr<Gringo::Output::OutputBase>               out_;
+    std::unique_ptr<GroundPlogBackend>                        out_;
     Program                                                   prg_;
     Defines                                                   defs_;
     std::unique_ptr<NonGroundProgramBuilder>   pb_;

@@ -4,6 +4,7 @@
 #include <plog/grprogramobs.h>
 #include "plog/plogcontrol.hh"
 
+class GroundPlogBackend;
 
 bool PlogControl::hasSubKey(unsigned key, char const *name, unsigned* subKey) {
     //*subKey = groundPlogConfig_.getKey(key, name);
@@ -74,8 +75,7 @@ void PlogControl::parse(const PlogControl::StringSeq &files, const PlogOptions &
     for (auto &x : opts.foobar) {
         outPreds.emplace_back(Location("<cmd>",1,1,"<cmd>", 1,1), x, false);
     }
-    out_ = gringo_make_unique<Gringo::Output::OutputBase>(*data, std::move(outPreds), gringo_make_unique<PlogOutput>(*this));
-    out_->keepFacts = opts.keepFacts;
+    out_ = gringo_make_unique<GroundPlogBackend>(*this);
     pb_ = gringo_make_unique<NonGroundProgramBuilder>( prg_, defs_);
     parser_ = Gringo::gringo_make_unique<PlogParser>(*pb_);
     for (auto &x : opts.defines) {
@@ -89,7 +89,6 @@ void PlogControl::parse(const PlogControl::StringSeq &files, const PlogOptions &
 }
 
 void PlogControl::main() {
-    out_->init(false);
     groundPlogConfig_.releaseOptions();
     ground();
     solve();
@@ -154,7 +153,7 @@ void PlogControl::ground() {
         parsed = false;
     }
     prg_.loadToControl(clingoControl);
-    PlogGroundProgramBuilder pb;
+    PlogGroundProgramBuilder pb(*out_);
     clingoControl.register_observer(pb);
     clingoControl.ground({{"base", {}}});
 
@@ -238,7 +237,6 @@ bool PlogControl::update() {
     if (!groundplog_->ok()) { return false; }
 
     if (!grounded) {
-        out_->beginStep();
         grounded = true;
     }
     return true;
