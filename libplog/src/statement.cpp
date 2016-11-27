@@ -141,8 +141,6 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
     std::vector<Clingo::AST::BodyLiteral> sortAtoms = getSortAtoms(sortDefVec, attdecls);
     Clingo::AST::External extr =Clingo::AST::External{exheadterm,sortAtoms};
     ++rule_id;
-    std::cout << f_r << std::endl;
-    std::cout << extr << std::endl;
     return {{defaultLoc, f_r},{defaultLoc,extr}};
 }
 
