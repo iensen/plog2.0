@@ -70,7 +70,6 @@ void PlogGroundProgramBuilder::addRegularRuleToBackend(PlogGroundProgramBuilder:
 
 
     }
-    printf("%d\n",hsymbolid);
 }
 
 void PlogGroundProgramBuilder::addQueryToBackend(PlogGroundProgramBuilder::GRule &rule) {

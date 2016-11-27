@@ -7,3 +7,11 @@
 void SortDefinition::print(std::ostream &out) const {
     throw "not implemented yet";
 }
+
+const String SortDefinition::getSortName() const {
+    return sortName;
+}
+
+const USortExpr &SortDefinition::getSortExpr() {
+    return sexpr;
+}

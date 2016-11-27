@@ -6,6 +6,7 @@
 #include<gringo/locatable.hh>
 #include<src/input/nongroundgrammar/grammar.hh>
 #include <sstream>
+#include<plog/input/utils.h>
 
 using Gringo::make_locatable;
 using Gringo::gringo_make_unique;
@@ -22,10 +23,11 @@ using GStatementType = Gringo::Input::StatementType ;
 using Gringo::Input::SimpleHeadLiteral;
 using Gringo::Input::SimpleBodyLiteral;
 using USimpleHeadLit = std::unique_ptr<SimpleHeadLiteral>;
+
 // TODO: move all "locations" to a static variable
 // TODO: add consts to function signatures (expecially those which are unique pointers references)
 int Statement::rule_id = 0;
-const Clingo::Location Statement::defaultLoc = {"<test>", "<test>", 1, 1, 1, 1};
+
 
 
 Statement::Statement(ULit &&head, ULitVec &&body):head_(std::move(head)),body_(std::move(body)),type_(StatementType::RULE){
@@ -67,7 +69,6 @@ Statement::~Statement() {
 // to do: get rid of this and construct clingo terms directly
 std::pair<Gringo::UTerm,bool>  Statement::term(ULit & lit) {
     FunctionTerm * fterm = dynamic_cast<FunctionTerm*>(lit->lt.get());
-
     String name = fterm->name;
     UTermVec& args = fterm->args;
     std::unique_ptr<Term> ut(lit->rt->clone());
@@ -79,15 +80,13 @@ std::pair<Gringo::UTerm,bool>  Statement::term(ULit & lit) {
 
 
 
-
-
 StatementType Statement::getType() {
     return type_;
 }
 
 
 
-Clingo::AST::Statement Statement::toGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec) {
+std::vector<Clingo::AST::Statement> Statement::toGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec) {
     switch(type_) {
         case StatementType::PR_ATOM: return prAtomToGringoAST(attdecls, sortDefVec);
         case StatementType::QUERY:   return queryToGringoAST();
@@ -95,56 +94,10 @@ Clingo::AST::Statement Statement::toGringoAST(const UAttDeclVec & attdecls, cons
     }
 }
 
-Clingo::AST::Term Statement::termToClingoTerm(const UTerm & term) {
-    std::stringstream stream;
-    term.get()->print(stream);
 
-    Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
-
-    // if it is a function term:
-    FunctionTerm * fterm = dynamic_cast<FunctionTerm*>(term.get());
-
-    if (fterm) {
-        String name = fterm->name;
-        UTermVec fargs = this->clone(fterm->args);
-        std::vector<Clingo::AST::Term> args;
-        for(const UTerm &t: fargs) {
-            args.push_back(termToClingoTerm(t));
-        }
-        auto f_ = Clingo::AST::Function{name.c_str(), args};
-        return {loc,f_};
-    }
-
-    // if term is a variable
-
-    VarTerm * varT = dynamic_cast<VarTerm*>(term.get());
-
-    if (varT) {
-        String name = varT->name;
-        //printf("%s\n",varT->name.c_str());
-        auto f_ = Clingo::AST::Variable{name.c_str()};
-        return {loc,f_};
-    }
-
-    // if term is a valterm:
-
-    ValTerm * valT = dynamic_cast<ValTerm*>(term.get());
-
-    if (valT) {
-        std::stringstream ss;
-        valT->print(ss);
-        Clingo::Symbol sym = Clingo::parse_term(stream.str().c_str());
-        return {loc,sym};
-    }
-
-    // bin op and un op terms go here
-
-    throw std::logic_error("cannot convert a term");
-
-}
 
 // TODO: rename sortDefVec
-Clingo::AST::Statement Statement::prAtomToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec) {
+std::vector<Clingo::AST::Statement> Statement::prAtomToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec) {
     // construct head:
     Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
     std::vector<Clingo::AST::Term> args;
@@ -160,11 +113,11 @@ Clingo::AST::Statement Statement::prAtomToGringoAST(const UAttDeclVec & attdecls
     Clingo::AST::Term f_t{loc, f_};
     Clingo::AST::Literal f_l{loc, Clingo::AST::Sign::None, f_t};
     Clingo::AST::Rule f_r{{loc, f_l}, gringobodyast(attdecls, sortDefVec)};
-    return {loc, f_r};
+    return {{loc, f_r}};
 
 }
 
-Clingo::AST::Statement Statement::queryToGringoAST() {
+std::vector<Clingo::AST::Statement> Statement::queryToGringoAST() {
     Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
     std::vector<Clingo::AST::Term> args;
     auto   queryargs = term(head_);
@@ -174,41 +127,40 @@ Clingo::AST::Statement Statement::queryToGringoAST() {
     Clingo::AST::Term f_t{loc, f_};
     Clingo::AST::Literal f_l{loc, Clingo::AST::Sign::None, f_t};
     Clingo::AST::Rule f_r{{loc, f_l}, std::vector<Clingo::AST::BodyLiteral>()};
-    return {loc, f_r};
+    return {{loc, f_r}};
 }
 
-Clingo::AST::Statement Statement::ruleToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec) {
-    //std::cout << "head" <<*head_.get();
-    Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
+std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec) {
+    // generate a rule of the form head :- body, sort_atoms, ex_atom
     auto    fterm = term(head_);
     Clingo::AST::Term f_ = termToClingoTerm(fterm.first);
-    Clingo::AST::Literal f_l{loc, Clingo::AST::Sign::None, f_};
-    Clingo::AST::Rule f_r{{loc, f_l}, gringobodyast(attdecls, sortDefVec)};
-
-    //std::cout << f_r << std::endl;
-    return {loc, f_r};
+    Clingo::AST::Literal f_l{defaultLoc, Clingo::AST::Sign::None, f_};
+    Clingo::AST::Rule f_r{{defaultLoc, f_l}, gringobodyast(attdecls, sortDefVec)};
+    // generate a rule of the form #external ex_atom:sort_atoms
+    Clingo::AST::Term exheadterm = make_external_term();
+    std::vector<Clingo::AST::BodyLiteral> sortAtoms = getSortAtoms(sortDefVec, attdecls);
+    Clingo::AST::External extr =Clingo::AST::External{exheadterm,sortAtoms};
+    ++rule_id;
+    std::cout << f_r << std::endl;
+    std::cout << extr << std::endl;
+    return {{defaultLoc, f_r},{defaultLoc,extr}};
 }
-
-
-
 
 // do not pass e-literal here!
 std::vector<Clingo::AST::BodyLiteral> Statement::getSortAtoms(const ULit & lit, const USortDefVec &sortDefVec,const UAttDeclVec & attdecls) {
     // add assert that it is not an e-literal
-
     std::vector<Clingo::AST::BodyLiteral> result;
-
     String attrName = lit->getAttrName();
     if(attrName == "") {
         return {};
     }
+
     FunctionTerm * fterm = dynamic_cast<FunctionTerm*>(lit->lt.get());
     if(attrName == "random" || attrName == "pr") {
         // take the term from the first argument!
         fterm = dynamic_cast<FunctionTerm*>(fterm->args[0].get());
         attrName = fterm->name;
     }
-
 
    // refactor common code:
     if(fterm) {
@@ -231,44 +183,27 @@ std::vector<Clingo::AST::BodyLiteral> Statement::getSortAtoms(const ULit & lit, 
         Clingo::AST::BodyLiteral bodylit = make_body_lit(concat('_',sortName),args);
         result.push_back(bodylit);
     }
-
     return result;
-
-
-
 }
 
 std::vector<Clingo::AST::BodyLiteral> Statement::gringobodyast(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec) {
     Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
     std::vector<Clingo::AST::BodyLiteral> resvec;
 
+    // add literals obtain from the given body:
     for (auto& lit: body_) {
         resvec.push_back(gringobodyelast(lit));
     }
 
     // add sorts here
-
-    // add sorts for the head
-    std::vector<Clingo::AST::BodyLiteral> sortAtoms = getSortAtoms(head_, sortDefVec, attdecls);
+    std::vector<Clingo::AST::BodyLiteral> sortAtoms = getSortAtoms(sortDefVec, attdecls);
     resvec.insert(resvec.end(),resvec.begin(), resvec.end());
 
-    // add sorts for the body:
-
-
     // add external __ext(id, X1,...,Xn) to the body of the rule
-    std::vector<Clingo::AST::Term> args;
 
-    Clingo::AST::Term idarg = Clingo::AST::Term{loc,Clingo::Id(int_to_str(rule_id).c_str())};
-    args.push_back(idarg);
-    ++rule_id;
-    // insert all the variables
-    auto varstrs = getVariables();
-    for(const std::string &var: varstrs) {
-        Clingo::AST::Term vararg = Clingo::AST::Term{loc,Clingo::AST::Variable{var.c_str()}};
-        args.push_back(vararg);
-    }
-
-    resvec.push_back( make_body_lit("__ext", args));
+    Clingo::AST::Term extterm = make_external_term();
+    Clingo::AST::Literal extlit ={defaultLoc, Clingo::AST::Sign::None, extterm};
+    resvec.emplace_back(Clingo::AST::BodyLiteral{defaultLoc,Clingo::AST::Sign::None, extlit});
 
     return resvec;
 }
@@ -304,7 +239,6 @@ std::unordered_set<std::string> Statement::getVariables() {
         auto blvarsr = getVariables(elit->lit->rt);
         result.insert(blvarsl.begin(), blvarsl.end());
         result.insert(blvarsr.begin(), blvarsr.end());
-
     }
     return result;
 }
@@ -320,33 +254,11 @@ std::unordered_set<std::string> Statement::getVariables(const UTerm &term) {
     return result;
 }
 
-UTermVec Statement::clone(const UTermVec &vec) {
-    UTermVec  res;
-    for(const UTerm &term:vec) {
-        std::unique_ptr<Term> ut(term->clone());
-        res.emplace_back(std::move(ut));
-    }
-    return res;
-}
 
 
-// not sure if this leaks.
-// does String own the memory?
-String Statement::concat(char prefix, String s) {
-    char* raw = new char [2 + s.length()];
-    raw[0] = prefix;
-    for(int i=0;i<s.length();i++) {
-        raw[i+1] = s.c_str()[i];
-    }
-    raw[s.length()-1] = '\0';
-    return String(raw);
-}
-
+// todo use references if possible:
 Clingo::AST::BodyLiteral Statement::make_body_lit(String name, std::vector<Clingo::AST::Term> args) {
-    Clingo::AST::Function f_ = {name.c_str(), args};
-    Clingo::AST::Term f_t = {defaultLoc, f_};
-    Clingo::AST::Literal alit{defaultLoc, Clingo::AST::Sign::None, f_t};
-    return {defaultLoc,Clingo::AST::Sign::None, alit};
+    return {defaultLoc,Clingo::AST::Sign::None, make_lit(name,args)};
 }
 
 std::vector<String> Statement::findArgSorts(String attrName,const UAttDeclVec & attdecls) {
@@ -363,5 +275,39 @@ std::vector<String> Statement::findArgSorts(String attrName,const UAttDeclVec & 
         }
     }
     return argSorts;
+}
+
+Clingo::AST::Literal Statement::make_lit(String name, std::vector<Clingo::AST::Term> args) {
+    Clingo::AST::Function f_ = {name.c_str(), args};
+    Clingo::AST::Term f_t = {defaultLoc, f_};
+    return {defaultLoc, Clingo::AST::Sign::None, f_t};
+}
+
+std::vector<Clingo::AST::BodyLiteral>
+Statement::getSortAtoms(const USortDefVec &sortDefVec, const UAttDeclVec &attdecls) {
+    std::vector<Clingo::AST::BodyLiteral> resvec = getSortAtoms(head_, sortDefVec, attdecls);
+    // add sorts for the body:
+    for(const ULit& blit:body_) {
+        ELiteral* elit = dynamic_cast<ELiteral*>(blit.get());
+        std::vector<Clingo::AST::BodyLiteral> litSortAtoms = getSortAtoms(elit->lit, sortDefVec, attdecls);
+        resvec.insert(resvec.end(), litSortAtoms.begin(), litSortAtoms.end());
+    }
+    return resvec;
+}
+
+Clingo::AST::Term Statement::make_external_term() {
+    std::vector<Clingo::AST::Term> args;
+    Clingo::AST::Term idarg = Clingo::AST::Term{defaultLoc,Clingo::Id(int_to_str(rule_id).c_str())};
+    args.push_back(idarg);
+    // insert all the variables
+    auto varstrs = getVariables();// this will get destroyed k chertyam by the end of the function call
+    for(const std::string &var: varstrs) {
+        char * buf = new char [var.length()+1];
+        strcpy(buf,var.c_str());
+        Clingo::AST::Term vararg = Clingo::AST::Term{defaultLoc,Clingo::AST::Variable{buf}};
+        args.push_back(vararg);
+    }
+    Clingo::AST::Function f_ = {"__ext", args};
+    return {defaultLoc, f_};
 }
 

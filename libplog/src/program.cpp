@@ -5,7 +5,7 @@
 
 #include <plog/input/program.h>
 #include <plog/ploggrammar.tab.hh>
-
+#include<plog/input/utils.h>
 
 Program::Program() {
 
@@ -63,13 +63,30 @@ void Program::loadToControl(Clingo::Control &ctl) {
     Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
     b.add({loc, Clingo::AST::Program{"base", {}}});
     // add program rules:
-    for(const UStm &stm: stms_)
+    for(const UStm &stm: stms_) {
         //       if (stm->getType() == StatementType::QUERY || stm->getType() == StatementType::PR_ATOM)
-        b.add(stm->toGringoAST(attdecls_, sortdefs_));
+        auto rules = stm->toGringoAST(attdecls_, sortdefs_);
+        for (const auto &rule: rules) {
+            b.add(rule);
+        }
+    }
+
 
     //add sorts:
+    for(const USortDef& sortDef:sortdefs_) {
+        String sortName = sortDef->getSortName();
+        std::vector<Clingo::AST::Term> instances = sortDef->getSortExpr()->generate();
+        for(const Clingo::AST::Term & term:instances) {
+            Clingo::AST::Literal hlit = Statement::make_lit(concat('_',sortName),{term});
+            Clingo::AST::Rule f_r{{loc, hlit}, {}};
+            b.add({defaultLoc,f_r});
+        }
+    }
 
     //add axioms:
+
+
+
     b.end();
 }
 

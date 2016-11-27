@@ -157,7 +157,6 @@ void PlogControl::ground() {
     clingoControl.register_observer(pb);
     clingoControl.ground({{"base", {}}});
 
-     printf("START\n");
     // solve:
     for (auto m : clingoControl.solve_iteratively()) {
         std::cout << "Model:";
@@ -166,7 +165,7 @@ void PlogControl::ground() {
         }
         std::cout << "\n";
     };
-    printf("END\n");
+
 
     //Gringo::Input::Program gringoProgram_ = prg_.toGringo();
     // create dummy logger

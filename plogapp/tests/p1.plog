@@ -3,7 +3,7 @@
 
 sorts
 #a = {a,b,c}.
-#f =  f(#a(X),#a(Y),#a(Z)):   X< Y & X>Z | Z>Y.
+%#f =  f(#a(X),#a(Y),#a(Z)):   X< Y & X>Z | Z>Y.
 #boolean = {true,false}.
 
 attributes

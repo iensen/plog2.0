@@ -36,7 +36,7 @@ struct Statement : Gringo::Printable, Gringo::Locatable {
     // this should ground the statement and store the result in stms (collection of gringo statements!)
     virtual void toGround(ToGroundArg &x, UStmVec &stms) const;
     virtual ~Statement();
-    Clingo::AST::Statement toGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec);
+    std::vector<Clingo::AST::Statement> toGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec);
     StatementType  getType();
 
 private:
@@ -47,24 +47,25 @@ private:
     std::unordered_set<std::string> getVariables();
     std::unordered_set<std::string> getVariables(const UTerm &term);
 
-    Clingo::AST::Statement prAtomToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec);
-    Clingo::AST::Statement queryToGringoAST();
-    Clingo::AST::Statement ruleToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec);
+    std::vector<Clingo::AST::Statement> prAtomToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec);
+    std::vector<Clingo::AST::Statement>queryToGringoAST();
+    std::vector<Clingo::AST::Statement> ruleToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec);
     std::string int_to_str(int n);
     static int rule_id;
     ULit     head_;
     ULitVec  body_;
     UProb probability_;
     StatementType type_;
-    char *numbuf;
-    char *denumbuf;
-    static const Clingo::Location defaultLoc;
-    UTermVec  clone(const UTermVec &vec);
-    Clingo::AST::Term termToClingoTerm(const UTerm & term);
     std::vector<Clingo::AST::BodyLiteral> getSortAtoms(const ULit &lit,const USortDefVec &sortDefVec,const UAttDeclVec & attdecls);
-    static String  concat (char prefix, String s);
-    static Clingo::AST::BodyLiteral make_body_lit(String name, std::vector<Clingo::AST::Term> args);
+    std::vector<Clingo::AST::BodyLiteral> getSortAtoms(const USortDefVec &sortDefVec,const UAttDeclVec & attdecl);
     static  std::vector<String> findArgSorts(String attName, const UAttDeclVec & attdecls);
+    Clingo::AST::Term make_external_term();
+
+
+public:
+    static Clingo::AST::BodyLiteral make_body_lit(String name, std::vector<Clingo::AST::Term> args);
+    static Clingo::AST::Literal make_lit(String name, std::vector<Clingo::AST::Term> args);
+
 };
 
 #endif //PLOG_STATEMENT_H_H
