@@ -83,8 +83,8 @@ SortExprUid NonGroundProgramBuilder::sortexpr(Location const &loc, SortExprVecUi
     return sortexprs_.insert(make_locatable<Concatenation>(loc, std::move(sortexprvecs_.erase(svec))));
 }
 
-SortExprUid NonGroundProgramBuilder::sortexpr(Location const &loc, Symbol sym) {
-    return sortexprs_.insert(make_locatable<SortNameExpr>(loc, sym));
+SortExprUid NonGroundProgramBuilder::sortexpr(Location const &loc, String sortn) {
+    return sortexprs_.insert(make_locatable<SortNameExpr>(loc, sortn));
 }
 
 SortExprUid NonGroundProgramBuilder::sortexpr(Location const &loc, Symbol smb, VarSortExprVecUid uid, CondUid cond) {

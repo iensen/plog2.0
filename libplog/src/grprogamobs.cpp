@@ -5,7 +5,6 @@
 #include<plog/grprogramobs.h>
 
 void PlogGroundProgramBuilder::rule(bool choice, AtomSpan headats, LiteralSpan bodyLits) {
-    printf("%d\n",*headats.begin());
     GRule r;
     for(auto c : headats) {
         r.head.push_back(c);

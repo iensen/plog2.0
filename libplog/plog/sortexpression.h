@@ -62,9 +62,9 @@ struct CurlyBrackets: public SortExpression {
 
 
 struct SortNameExpr: public SortExpression {
-    SortNameExpr(Symbol s):s(s){};
+    SortNameExpr(String name) :name(name){};
     virtual void print(std::ostream &out) const;
-    Symbol s;
+    String name;
 };
 
 struct Condition:public Gringo::Printable {

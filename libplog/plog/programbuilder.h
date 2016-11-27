@@ -87,7 +87,7 @@ public:
     SortExprUid  sortexpr(Location const &loc, TermUid from, TermUid to);
     SortExprUid  sortexpr(Location const &loc, TermVecUid tvec);
     SortExprUid  sortexpr(Location const &loc, SortExprVecUid tvec);
-    SortExprUid  sortexpr(Location const &loc, Symbol tvec);
+    SortExprUid  sortexpr(Location const &loc, String name);
     SortExprUid  sortexpr(Location const &loc, Symbol smb, VarSortExprVecUid uid);
     SortExprUid  sortexpr(Location const &loc, Symbol smb, VarSortExprVecUid uid, CondUid cond);
     SortExprUid  sortexpr(Location const &loc, SEBinOp op, SortExprUid left, SortExprUid right);

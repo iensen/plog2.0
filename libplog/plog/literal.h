@@ -11,6 +11,7 @@
 
 using Relation = Gringo::Relation ;
 using UTerm = Gringo::UTerm ;
+using Gringo::String;
 struct Literal;
 
 
@@ -22,18 +23,29 @@ struct Literal : public Gringo::Printable, public Gringo::Locatable {
     Relation rel;
     UTerm lt;
     UTerm rt;
+    virtual UTerm & getAttr();
+    virtual UTerm & getVal();
+    virtual String getAttrName();
+
 };
 
 
 using ULit = std::unique_ptr<Literal>;
 using ULitVec = std::vector<ULit>;
 
-struct ELiteral : public Literal {
+// change this to either use composition or inheritance
+// currently, two copies of lt/rt are stored..
+
+struct ELiteral :public Literal {
 
     ELiteral(ULit lit, bool neg);
     virtual void print(std::ostream &out) const;
     ULit lit;
     bool neg;
+    UTerm & getAttr() override;
+    UTerm & getVal() override;
+    String getAttrName() override ;
+
 
 };
 

@@ -9,6 +9,7 @@ sorts
 attributes
 x: #a -> #boolean.
 y: #a -> #boolean.
+p: #a -> #boolean.
 
 statements 
 y(a).

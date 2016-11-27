@@ -62,9 +62,14 @@ void Program::loadToControl(Clingo::Control &ctl) {
     b.begin();
     Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
     b.add({loc, Clingo::AST::Program{"base", {}}});
+    // add program rules:
     for(const UStm &stm: stms_)
         //       if (stm->getType() == StatementType::QUERY || stm->getType() == StatementType::PR_ATOM)
-        b.add(stm->toGringoAST());
+        b.add(stm->toGringoAST(attdecls_, sortdefs_));
+
+    //add sorts:
+
+    //add axioms:
     b.end();
 }
 

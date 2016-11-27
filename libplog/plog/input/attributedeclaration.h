@@ -15,11 +15,12 @@
 struct AttributeDeclaration : Gringo::Printable, Gringo::Locatable {
 
     AttributeDeclaration(String attname, USortExprVec && svec, USortExpr &&se):
-            attname(attname),svec(std::move(svec)),se(std::move(se)) {}
+            attname(attname),svec(std::move(svec)),se(std::move(se)) {
+    }
 
 
     virtual void print(std::ostream &out) const;
-    // this should ground the statement and store the result in stms (collection of gringo statements!)
+
     virtual ~AttributeDeclaration();
 
     String attname;

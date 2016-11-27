@@ -40,7 +40,7 @@
 #ifndef YY_PLOGGRAMMAR_PLOGGRAMMAR_TAB_HH_INCLUDED
 # define YY_PLOGGRAMMAR_PLOGGRAMMAR_TAB_HH_INCLUDED
 // //                    "%code requires" blocks.
-#line 36 "ploggrammar.yy" // lalr1.cc:377
+#line 36 "ploggrammar.yy" // lalr1.cc:392
 
     #include "plog/programbuilder.h"
 
@@ -51,7 +51,7 @@
     };
 
 
-#line 55 "ploggrammar.tab.hh" // lalr1.cc:377
+#line 55 "ploggrammar.tab.hh" // lalr1.cc:392
 
 
 # include <cstdlib> // std::abort
@@ -129,9 +129,9 @@
 # endif /* ! defined YYDEBUG */
 #endif  /* ! defined PLOGGRAMMAR_DEBUG */
 
-#line 19 "ploggrammar.yy" // lalr1.cc:377
+#line 19 "ploggrammar.yy" // lalr1.cc:392
 namespace PlogGrammar {
-#line 135 "ploggrammar.tab.hh" // lalr1.cc:377
+#line 135 "ploggrammar.tab.hh" // lalr1.cc:392
 
 
 
@@ -145,7 +145,7 @@ namespace PlogGrammar {
     /// Symbol semantic values.
     union semantic_type
     {
-    #line 96 "ploggrammar.yy" // lalr1.cc:377
+    #line 96 "ploggrammar.yy" // lalr1.cc:392
 
       uintptr_t str;
       int num;
@@ -161,7 +161,7 @@ namespace PlogGrammar {
       BdLitVecUid body;
       ProbUid prob;
 
-#line 165 "ploggrammar.tab.hh" // lalr1.cc:377
+#line 165 "ploggrammar.tab.hh" // lalr1.cc:392
     };
 #else
     typedef PLOGGRAMMAR_STYPE semantic_type;
@@ -210,18 +210,17 @@ namespace PlogGrammar {
         POW = 283,
         RBRACE = 284,
         RBRACK = 285,
-        RANDOM = 286,
-        PR = 287,
-        RPAREN = 288,
-        SLASH = 289,
-        SUB = 290,
-        UBNOT = 291,
-        UMINUS = 292,
-        NUMBER = 293,
-        IDENTIFIER = 294,
-        VARIABLE = 295,
-        NOT = 296,
-        SORT_NAME = 297
+        PR = 286,
+        RPAREN = 287,
+        SLASH = 288,
+        SUB = 289,
+        UBNOT = 290,
+        UMINUS = 291,
+        NUMBER = 292,
+        IDENTIFIER = 293,
+        VARIABLE = 294,
+        NOT = 295,
+        SORT_NAME = 296
       };
     };
 
@@ -382,7 +381,7 @@ namespace PlogGrammar {
     /// \param yyvalue   the value to check
     static bool yy_table_value_is_error_ (int yyvalue);
 
-    static const signed char yypact_ninf_;
+    static const short int yypact_ninf_;
     static const signed char yytable_ninf_;
 
     /// Convert a scanner token number \a t to a symbol number.
@@ -409,7 +408,7 @@ namespace PlogGrammar {
   // number is the opposite.  If YYTABLE_NINF, syntax error.
   static const short int yytable_[];
 
-  static const short int yycheck_[];
+  static const unsigned char yycheck_[];
 
   // YYSTOS[STATE-NUM] -- The (internal number of the) accessing
   // symbol of state STATE-NUM.
@@ -529,12 +528,12 @@ namespace PlogGrammar {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 309,     ///< Last index in yytable_.
-      yynnts_ = 38,  ///< Number of nonterminal symbols.
+      yylast_ = 291,     ///< Last index in yytable_.
+      yynnts_ = 37,  ///< Number of nonterminal symbols.
       yyfinal_ = 3, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
-      yyntokens_ = 43  ///< Number of tokens.
+      yyntokens_ = 42  ///< Number of tokens.
     };
 
 
@@ -543,9 +542,9 @@ namespace PlogGrammar {
   };
 
 
-#line 19 "ploggrammar.yy" // lalr1.cc:377
+#line 19 "ploggrammar.yy" // lalr1.cc:392
 } // PlogGrammar
-#line 549 "ploggrammar.tab.hh" // lalr1.cc:377
+#line 548 "ploggrammar.tab.hh" // lalr1.cc:392
 
 
 

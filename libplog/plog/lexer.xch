@@ -68,7 +68,7 @@ int PlogParser::lex_impl(void *pValue, Location &loc) {
         <normal> "pr"                         { return PlogGrammar::parser::token::PR; }
         <normal> NL         { if(eof()) return 0; step(); start(loc); continue; }
         <normal> "#const"                     { return PlogGrammar::parser::token::CONST; }
-        <normal> "#"IDENTIFIER                { return PlogGrammar::parser::token::SORT_NAME; }
+        <normal> "#"IDENTIFIER                { value.str = String::toRep(string(1)); return PlogGrammar::parser::token::SORT_NAME; }
         <normal> "not"                        { value.str = String::toRep(not_); return PlogGrammar::parser::token::NOT; }
         <normal> SORTDEFKEYWORD {return PlogGrammar::parser::token::SORTDEFKEYWORD; }
         <normal> ATTDEFKEYWORD { return PlogGrammar::parser::token:: ATTDEFKEYWORD; }

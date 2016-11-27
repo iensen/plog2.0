@@ -40,9 +40,9 @@
 
 # include <vector>
 
-#line 19 "ploggrammar.yy" // stack.hh:132
+#line 19 "ploggrammar.yy" // stack.hh:151
 namespace PlogGrammar {
-#line 46 "stack.hh" // stack.hh:132
+#line 46 "stack.hh" // stack.hh:151
   template <class T, class S = std::vector<T> >
   class stack
   {
@@ -150,8 +150,8 @@ namespace PlogGrammar {
     unsigned int range_;
   };
 
-#line 19 "ploggrammar.yy" // stack.hh:132
+#line 19 "ploggrammar.yy" // stack.hh:151
 } // PlogGrammar
-#line 156 "stack.hh" // stack.hh:132
+#line 156 "stack.hh" // stack.hh:151
 
 #endif // !YY_PLOGGRAMMAR_STACK_HH_INCLUDED

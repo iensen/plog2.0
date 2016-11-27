@@ -120,7 +120,7 @@ void PlogGrammar::parser::error(DefaultLocation const &l, std::string const &msg
 %type <termvec>         ntermvec consttermvec
 %type <cond>            cond
 %type <rel>             cmp
-%type <lit>             literal e_literal head_atom random_atom head
+%type <lit>             literal e_literal head_atom head
 %type <body>            body
 %type <prob>            probability
 
@@ -156,7 +156,6 @@ void PlogGrammar::parser::error(DefaultLocation const &l, std::string const &msg
     POW         "^"
     RBRACE      "}"
     RBRACK      "]"
-    RANDOM      "random"
     PR          "pr"
     RPAREN      ")"
     SLASH       "/"
@@ -231,7 +230,7 @@ sort_expr:
             range |
             concatenation[c] {$$ = BUILDER.sortexpr(@$,$c); } |
             functional_symbol |
-            SORT_NAME[s] {$$ = BUILDER.sortexpr(@$,Symbol::createId(String::fromRep($s)));} |
+            SORT_NAME[s] {$$ = BUILDER.sortexpr(@$,String::fromRep($s));} |
             curly_brackets |
             sort_expr[a] ADD sort_expr[b] {$$ = BUILDER.sortexpr(@$,SEBinOp::UNION,$a,$b);}  |
             sort_expr[a] MUL sort_expr[b] {$$ = BUILDER.sortexpr(@$,SEBinOp::INTERSECT,$a,$b);} |
@@ -290,7 +289,7 @@ att_def: IDENTIFIER[a] COLON sort_expr_vec[v] ARROW sort_expr[r] DOT {BUILDER.at
        | IDENTIFIER[a] COLON sort_expr[r] DOT {BUILDER.attdecl(@$, String::fromRep($a), BUILDER.sortexprvec(), $r);}
        ;
 
-sort_expr_vec: sort_expr[a] {$$= BUILDER.sortexprvec($$= BUILDER.sortexprvec(), $a);}
+sort_expr_vec: sort_expr[a] {$$= BUILDER.sortexprvec(BUILDER.sortexprvec(), $a);}
               | sort_expr_vec[a] COMMA sort_expr[b]
                                                {$$= BUILDER.sortexprvec($a,$b);}
               ;
@@ -319,7 +318,7 @@ stmt : head[hd] DOT           {  BUILDER.rule(@$, $hd); }
 
 head
     : head_atom
-    | random_atom
+
     ;
 
 head_atom
@@ -328,12 +327,6 @@ head_atom
     | IDENTIFIER[id] LPAREN ntermvec[tvv] RPAREN[r]  EQ term[t] {$$ = BUILDER.lit(@$, String::fromRep($id), $tvv, $t); }
     | IDENTIFIER[id] EQ term[t]                          {$$ = BUILDER.lit(@$, String::fromRep($id), $t); }
     ;
-
-random_atom: RANDOM[r] LPAREN IDENTIFIER[id1] COMMA IDENTIFIER[id2] RPAREN[r] {$$ = BUILDER.lit(@$, String::fromRep($id1),String::fromRep($id2));}|
-             RANDOM LPAREN IDENTIFIER[id1] COLON LBRACE VARIABLE COLON IDENTIFIER[id2] LPAREN VARIABLE RPAREN RBRACE RPAREN{
-             $$ = BUILDER.lit(@$, String::fromRep($id1),String::fromRep($id2));}
-
-             ;
 
 body
     : body[bd] COMMA e_literal[lit]  {$$ = BUILDER.body($bd, $lit);}
