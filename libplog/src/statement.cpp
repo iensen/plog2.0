@@ -113,8 +113,7 @@ std::vector<Clingo::AST::Statement> Statement::prAtomToGringoAST(const UAttDeclV
     Clingo::AST::Term f_t{loc, f_};
     Clingo::AST::Literal f_l{loc, Clingo::AST::Sign::None, f_t};
     Clingo::AST::Rule f_r{{loc, f_l}, gringobodyast(attdecls, sortDefVec)};
-    return {{loc, f_r}};
-
+    return {{loc, f_r},make_external_atom_rule(attdecls, sortDefVec)};
 }
 
 std::vector<Clingo::AST::Statement> Statement::queryToGringoAST() {
@@ -137,11 +136,9 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
     Clingo::AST::Literal f_l{defaultLoc, Clingo::AST::Sign::None, f_};
     Clingo::AST::Rule f_r{{defaultLoc, f_l}, gringobodyast(attdecls, sortDefVec)};
     // generate a rule of the form #external ex_atom:sort_atoms
-    Clingo::AST::Term exheadterm = make_external_term();
-    std::vector<Clingo::AST::BodyLiteral> sortAtoms = getSortAtoms(sortDefVec, attdecls);
-    Clingo::AST::External extr =Clingo::AST::External{exheadterm,sortAtoms};
+
     ++rule_id;
-    return {{defaultLoc, f_r},{defaultLoc,extr}};
+    return {{defaultLoc, f_r},make_external_atom_rule(attdecls, sortDefVec)};
 }
 
 // do not pass e-literal here!
@@ -307,5 +304,12 @@ Clingo::AST::Term Statement::make_external_term() {
     }
     Clingo::AST::Function f_ = {"__ext", args};
     return {defaultLoc, f_};
+}
+
+Clingo::AST::Statement Statement::make_external_atom_rule(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec) {
+    Clingo::AST::Term exheadterm = make_external_term();
+    std::vector<Clingo::AST::BodyLiteral> sortAtoms = getSortAtoms(sortDefVec, attdecls);
+    Clingo::AST::External extr =Clingo::AST::External{exheadterm,sortAtoms};
+    return {defaultLoc, extr};
 }
 

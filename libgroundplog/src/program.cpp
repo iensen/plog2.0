@@ -138,6 +138,7 @@ namespace GroundPlog{
     }
 
     Program &Program::addRule(Atom_t head, std::vector<Lit_t> body) {
+        // need to change this to add the dependency (and do not add the whole body)
         rules.emplace_back(Rule{head,body});
         return *this;
     }

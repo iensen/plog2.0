@@ -60,6 +60,8 @@ private:
     std::vector<Clingo::AST::BodyLiteral> getSortAtoms(const USortDefVec &sortDefVec,const UAttDeclVec & attdecl);
     static  std::vector<String> findArgSorts(String attName, const UAttDeclVec & attdecls);
     Clingo::AST::Term make_external_term();
+    Clingo::AST::Statement make_external_atom_rule(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec);
+
 
 
 public:

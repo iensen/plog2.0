@@ -130,7 +130,7 @@ std::string PlogControl::str() {
 }
 
 Gringo::SolveResult PlogControl::solve() {
-    throw "not implemented yet";
+   groundplog_->solve();
 }
 
 void PlogControl::load(std::string const &filename) {
@@ -156,32 +156,11 @@ void PlogControl::ground() {
     PlogGroundProgramBuilder pb(*out_);
     clingoControl.register_observer(pb);
     clingoControl.ground({{"base", {}}});
-
-    // solve:
+    // solve (this is needed to make sure that the rules are passed from gringo to clasp:
     for (auto m : clingoControl.solve_iteratively()) {
-        std::cout << "Model:";
-        for (auto &atom : m.symbols()) {
-            std::cout << " " << atom;
-        }
-        std::cout << "\n";
+       break;
     };
 
-
-    //Gringo::Input::Program gringoProgram_ = prg_.toGringo();
-    // create dummy logger
-    //Gringo::Logger log = Gringo::Logger();
-    // create intermediary program for grounding (note, the logger should not have errors!)
-    //auto gPrg = gringoProgram_.toGround(out_->data, log);
-
-    //DefaultGringoModule module;
-    //auto exit = Gringo::onExit([&module]{ module.scripts.context = nullptr; });
-    // create params (ground base part)
-    //Gringo::Control::GroundVec parts;
-    //parts.emplace_back("base", Gringo::SymVec{});
-    //Gringo::Ground::Parameters params;
-    //for (auto &x : parts) { params.add(x.first, Gringo::SymVec(x.second)); }
-    // do the grounding and output the result in out_ object
-    //gPrg.ground(params, module.scripts, *out_, false, log);
 }
 
 Gringo::SymbolicAtoms &PlogControl::getDomain() {
