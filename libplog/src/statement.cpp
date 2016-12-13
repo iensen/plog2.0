@@ -208,12 +208,14 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
             Clingo::AST::External ext = Clingo::AST::External{ext_term,bodylits};
             result.emplace_back(Clingo::AST::Statement{defaultLoc, ext}); //2
         }
-        //for() {// for every y in the range of
-        //    // for every value in the range of a
-        //    // fterm.first constraint the literal random(a(t),p) from the head of the rule
-        //    UTerm &term = fgterm->args[0]; // here we are looking at a(t), o.k.
-        //    // we need to extend the vector t with a new value (which is the value from the loop)
-        //}
+        // add the atom of the form __range(a,s), where a is the atom name and s is the sort
+        std::vector<Clingo::AST::Term> rargs;
+        rargs.push_back(make_term(termName));
+        rargs.push_back(make_term(resSort->toString().c_str()));
+        Clingo::AST::Literal lit = make_lit("__range",rargs);
+        Clingo::AST::Rule f_r{{defaultLoc, lit}, {}};
+        result.push_back(Clingo::AST::Statement{defaultLoc, f_r});
+
     }
 
     //std::cout << "result for the rule" << std::endl;
@@ -390,5 +392,10 @@ Clingo::AST::Statement Statement::make_external_atom_rule(const UAttDeclVec & at
 Clingo::AST::Term Statement::make_term(String name, std::vector<Clingo::AST::Term> args) {
     Clingo::AST::Function f_ = {name.c_str(), args};
     return {defaultLoc, f_};
+}
+
+Clingo::AST::Term Statement::make_term(String name) {
+    Clingo::Symbol s = Clingo::Id(name.c_str());
+    return {defaultLoc, s};
 }
 

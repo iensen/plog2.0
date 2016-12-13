@@ -46,9 +46,6 @@ TermUid NonGroundProgramBuilder::term(Location const &loc, UnOp op, TermUid a) {
 
 
 TermUid NonGroundProgramBuilder::term(Location const &loc, Symbol val) {
-    //std::cout << "termsym" << std::endl;
-    //val.print(std::cout);
-    //std::cout << std::endl;
     return terms_.insert(make_locatable<ValTerm>(loc, val));
 }
 

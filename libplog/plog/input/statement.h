@@ -68,7 +68,7 @@ public:
     static Clingo::AST::BodyLiteral make_body_lit(String name, std::vector<Clingo::AST::Term> args);
     static Clingo::AST::Literal make_lit(String name, std::vector<Clingo::AST::Term> args);
     static Clingo::AST::Term make_term(String name, std::vector<Clingo::AST::Term> args);
-
+    static Clingo::AST::Term make_term(String name);
 };
 
 #endif //PLOG_STATEMENT_H_H

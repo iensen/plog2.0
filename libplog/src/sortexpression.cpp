@@ -10,39 +10,43 @@ Range::Range(UTerm &&from, UTerm &&to):from(std::move(from)), to(std::move(to)) 
 
 }
 
-void Range::print(std::ostream &out) const {
-    throw "not implemented yet";
-}
 
 std::vector<Clingo::AST::Term> Range::generate( const USortDefVec &sortDefVec) {
     throw "not implemented";
+}
+
+std::string Range::toString() const{
+    return std::__cxx11::string();
 }
 
 Concatenation::Concatenation(USortExprVec vec):sexprvec(std::move(vec)) {
 
 }
 
-void Concatenation::print(std::ostream &out) const {
-    throw "not implemented yet";
-}
 
 std::vector<Clingo::AST::Term> Concatenation::generate( const USortDefVec &sortDefVec) {
     throw "not implemented yet";
 }
 
-void BinOpSortExpr::print(std::ostream &out) const {
-    throw "not implemented yet";
+std::string Concatenation::toString() const {
+    return std::__cxx11::string();
 }
+
 
 std::vector<Clingo::AST::Term> BinOpSortExpr::generate( const USortDefVec &sortDefVec) {
     throw "not implemented yet";
 }
 
-void FuncSortExpr::print(std::ostream &out) const {
+std::string BinOpSortExpr::toString() const{
+    return std::__cxx11::string();
+}
+
+
+std::vector<Clingo::AST::Term> FuncSortExpr::generate( const USortDefVec &sortDefVec) {
     throw "not implemented yet";
 }
 
-std::vector<Clingo::AST::Term> FuncSortExpr::generate( const USortDefVec &sortDefVec) {
+std::string FuncSortExpr::toString() const {
     throw "not implemented yet";
 }
 
@@ -54,9 +58,6 @@ void UnaryCondition::print(std::ostream &out) const {
     throw "not implemented yet";
 }
 
-void SortNameExpr::print(std::ostream &out) const {
-    throw "not implemented yet";
-}
 
 std::vector<Clingo::AST::Term> SortNameExpr::generate( const USortDefVec &sortDefVec) {
     for(const USortDef& def : sortDefVec) {
@@ -66,8 +67,8 @@ std::vector<Clingo::AST::Term> SortNameExpr::generate( const USortDefVec &sortDe
     }
 }
 
-void CurlyBrackets::print(std::ostream &out) const {
-    throw "not implemented yet";
+std::string SortNameExpr::toString() const {
+    return std::string(name.c_str());
 }
 
 std::vector<Clingo::AST::Term> CurlyBrackets::generate( const USortDefVec &sortDefVec) {
@@ -78,6 +79,11 @@ std::vector<Clingo::AST::Term> CurlyBrackets::generate( const USortDefVec &sortD
     return result;
 }
 
-void VarSortExpression::print(std::ostream &out) const {
+std::string CurlyBrackets::toString() const {
     throw "not implemented yet";
+
+}
+
+void SortExpression::print(std::ostream &out) const {
+   out << toString();
 }
