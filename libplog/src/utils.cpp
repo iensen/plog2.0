@@ -55,7 +55,6 @@ Clingo::AST::Term termToClingoTerm(const UTerm & term) {
     // bin op and un op terms go here
 
     throw std::logic_error("cannot convert a term");
-
 }
 
 
@@ -65,6 +64,15 @@ UTermVec clone(const UTermVec &vec) {
         std::unique_ptr<Term> ut(term->clone());
         res.emplace_back(std::move(ut));
     }
+    return res;
+}
+
+
+std::string term_to_string (Clingo::AST::Term term) {
+    std::stringstream ss;
+    ss << term;
+    std::string res;
+    ss >> res;
     return res;
 }
 
@@ -79,3 +87,72 @@ String concat(char prefix, String s) {
     raw[s.length()+1] = '\0';
     return String(raw);
 }
+
+
+std::string int_to_str(int n) {
+    std::stringstream ss;
+    ss << n;
+    return ss.str();
+}
+
+int str_to_int(std::string str) {
+    std::stringstream ss;
+    ss << str;
+    int n;
+    ss >> n;
+    return n;
+}
+
+// given a term,
+// if it is of the form f(t1,..,tn), return f
+// if it is of the form a, return a
+Gringo::String getAttrName(const UTerm &term) {
+    FunctionTerm * faterm = (FunctionTerm*) term.get();
+    String termName = "";
+    if(faterm) {
+        termName = faterm->name;
+    }
+    ValTerm *vaterm = (ValTerm*)term.get();
+    if(!faterm && vaterm) { // for some reason both casts work!
+        termName = vaterm->value.name();
+    }
+    return termName;
+}
+
+
+// given a term,
+// if it is of the form f(t1,..,tn), return a vector of clingo terms {t1,,,tn}
+// if it is of the form a, return {}
+std::vector<Clingo::AST::Term> getAttrArgs(const UTerm &term) {
+    FunctionTerm * faterm = (FunctionTerm*) term.get();
+    String termName = "";
+    std::vector<Clingo::AST::Term> result;
+    if(faterm) {
+        for(const UTerm &arg: faterm->args) {
+            result.emplace_back(termToClingoTerm(arg));
+        }
+    }
+    return result;
+}
+
+
+
+
+std::pair<const USortExprVec &, const USortExpr &> getSorts(String attrName, const UAttDeclVec &attdecls) {
+    for (const auto& decl:attdecls) {
+        if(decl.get()->attname == attrName) {
+            return {decl.get()->svec, decl.get()->se};
+        }
+    }
+    throw std::logic_error("attribute not found");
+}
+
+const USortExpr &getResultSort(String attrName, const UAttDeclVec &attdecls) {
+    return getSorts(attrName,attdecls).second;
+}
+
+const USortExprVec &getArgSorts(String attrName, const UAttDeclVec &attdecls) {
+    return getSorts(attrName,attdecls).first;
+}
+
+

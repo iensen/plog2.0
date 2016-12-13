@@ -158,6 +158,7 @@ void PlogControl::ground() {
     clingoControl.ground({{"base", {}}});
     // solve (this is needed to make sure that the rules are passed from gringo to clasp:
     for (auto m : clingoControl.solve_iteratively()) {
+        std::cout << m;
        break;
     };
 

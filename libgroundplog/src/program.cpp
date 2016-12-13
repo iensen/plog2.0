@@ -148,8 +148,8 @@ namespace GroundPlog{
         return *this;
     }
 
-    Program &Program::addPratom(Atom_t head, const std::vector<Lit_t> body) {
-        pratoms.emplace_back(PrAtom{head,body});
+    Program &Program::addPratom(Atom_t head, const std::vector<Lit_t> body, double prob) {
+        pratoms.emplace_back(PrAtom{head,body, prob});
         return *this;
     }
 

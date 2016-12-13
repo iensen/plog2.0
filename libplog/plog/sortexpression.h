@@ -12,6 +12,7 @@
 #include <gringo/symbol.hh>
 #include <gringo/base.hh>
 #include <clingo.hh>
+#include <plog/input/types.h>
 
 enum class LogicBinOp: int {AND, OR};
 enum class SEBinOp : int { UNION, INTERSECT, SUBTRACT };
@@ -22,13 +23,12 @@ using Relation = Gringo::Relation;
 
 
 struct SortExpression: public Gringo::Printable, public Gringo::Locatable{
-     virtual std::vector<Clingo::AST::Term> generate() = 0;
+     virtual std::vector<Clingo::AST::Term> generate( const USortDefVec &sortDefVec) = 0;
 };
 
 using UTerm  = Gringo::UTerm ;
 using UTermVec  = Gringo::UTermVec ;
-using USortExpr = std::unique_ptr<SortExpression>;
-using USortExprVec = std::vector<USortExpr>;
+
 
 struct VarSortExpression {
     VarSortExpression(USortExpr expr, String var):expr(std::move(expr)), varName(var){};
@@ -44,7 +44,7 @@ struct Range:public SortExpression {
     Range(UTerm && from, UTerm && to);
     virtual void print(std::ostream &out) const;
 
-    std::vector<Clingo::AST::Term> generate() override;
+    std::vector<Clingo::AST::Term> generate( const USortDefVec &sortDefVec) override;
 
     UTerm from;
     UTerm to;
@@ -54,7 +54,7 @@ struct Concatenation: public SortExpression {
     Concatenation(USortExprVec);
     virtual void print(std::ostream &out) const;
 
-    std::vector<Clingo::AST::Term> generate() override;
+    std::vector<Clingo::AST::Term> generate( const USortDefVec &sortDefVec) override;
 
     USortExprVec  sexprvec;
 };
@@ -64,7 +64,7 @@ struct CurlyBrackets: public SortExpression {
     CurlyBrackets(UTermVec tvec):termvec(std::move(tvec)){}
         virtual void print(std::ostream &out) const;
 
-    std::vector<Clingo::AST::Term> generate() override;
+    std::vector<Clingo::AST::Term> generate( const USortDefVec &sortDefVec) override;
 
     UTermVec  termvec;
 };
@@ -74,7 +74,7 @@ struct SortNameExpr: public SortExpression {
     SortNameExpr(String name) :name(name){};
     virtual void print(std::ostream &out) const;
 
-    std::vector<Clingo::AST::Term> generate() override;
+    std::vector<Clingo::AST::Term> generate( const USortDefVec &sortDefVec) override;
 
     String name;
 };
@@ -109,7 +109,7 @@ struct FuncSortExpr:public SortExpression {
     FuncSortExpr(Symbol fname, UVarSortExprVec vec, UCond cond):fname(fname),vec(std::move(vec)),cond(std::move(cond)){};
     virtual void print(std::ostream &out) const;
 
-    std::vector<Clingo::AST::Term> generate() override;
+    std::vector<Clingo::AST::Term> generate( const USortDefVec &sortDefVec) override;
 
     Symbol fname;
     UVarSortExprVec  vec;
@@ -121,7 +121,7 @@ struct BinOpSortExpr:public SortExpression {
     BinOpSortExpr(SEBinOp op, USortExpr left, USortExpr right){};
     virtual void print(std::ostream &out) const;
 
-    std::vector<Clingo::AST::Term> generate() override;
+    std::vector<Clingo::AST::Term> generate( const USortDefVec &sortDefVec) override;
 
     SEBinOp op;
     USortExpr left;

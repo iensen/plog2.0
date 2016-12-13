@@ -125,7 +125,7 @@ namespace GroundPlog {
 
         Program &addRandomRule(std::vector<std::pair<Atom_t,AttId>> head, const std::vector<Lit_t> body);
 
-        Program &addPratom(Atom_t head, const std::vector<Lit_t> body);
+        Program &addPratom(Atom_t head, const std::vector<Lit_t> body, double prob);
 
         Program &addQuery(Lit_t query);
 

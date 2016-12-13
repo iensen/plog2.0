@@ -18,3 +18,4 @@ random(x(X),p) :- y(X).
 pr(x(a)|y(a)) = 3/10.
 ?x(a).
 
+%{ _boolean(true), _boolean(false), _a(a), _a(b), _a(c), y(a,true), p(a,true), random(x(a),p,true), pr(x(a),true,"3","10"), query(x(a,true),true) }

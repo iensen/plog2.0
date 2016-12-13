@@ -20,6 +20,7 @@ using Clingo::AtomSpan ;
 using Clingo::LiteralSpan ;
 using Clingo::Symbol;
 using Clingo::atom_t ;
+using Clingo::literal_t;
 
 using GroundPlog::AttId ;
 using GroundPlog::ValueRep ;
@@ -46,8 +47,8 @@ private:
     void addRandomRuleToBackend(GRule &rule);
     void addPrAtomToBackend(GRule &rule);
     unsigned insert(std::string value, std::unordered_map<std::string, unsigned> & dist);
-    Atom_t getGroundPlogAtom(Clingo::Symbol &s);
-
+    Atom_t getGroundPlogAtom(const Clingo::Symbol &s);
+    std::vector<Lit_t>  getGroundPlogBody(const std::vector<literal_t> gbody);
 
     GroundPlogBackend& out;
 

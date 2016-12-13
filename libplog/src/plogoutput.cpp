@@ -12,11 +12,11 @@ void GroundPlogBackend::randomRule(std::vector<std::pair<Atom_t,AttId>> head, co
     if (auto p = prg()) { p->addRandomRule(head, body); }
 }
 
-void GroundPlogBackend::prAtom(Atom_t &head, const std::vector<Lit_t> &body) {
-    if (auto p = prg()) { p->addPratom(head, body); }
+void GroundPlogBackend::prAtom(const Atom_t &head, const std::vector<Lit_t> &body, double prob) {
+    if (auto p = prg()) { p->addPratom(head, body, prob); }
 }
 
-void GroundPlogBackend::query(Lit_t &query) {
+void GroundPlogBackend::query(const Lit_t &query) {
     if (auto p = prg()) { p->addQuery(query); }
 }
 

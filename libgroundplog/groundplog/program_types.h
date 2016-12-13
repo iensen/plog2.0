@@ -85,6 +85,7 @@ namespace GroundPlog {
     struct PrAtom {
         Atom_t head;
         std::vector<Lit_t> body;
+        double prob;
     };
 
 

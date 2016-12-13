@@ -3,10 +3,9 @@
 //
 
 #include<plog/programbuilder.h>
-#include<gringo/term.hh>
-#include<gringo/locatable.hh>
 #include <plog/input/attributedeclaration.h>
 #include<plog/ploggrammar.tab.hh>
+#include<plog/input/sortdefinition.h>
 
 using Gringo::make_locatable;
 using Gringo::gringo_make_unique;
@@ -47,6 +46,9 @@ TermUid NonGroundProgramBuilder::term(Location const &loc, UnOp op, TermUid a) {
 
 
 TermUid NonGroundProgramBuilder::term(Location const &loc, Symbol val) {
+    //std::cout << "termsym" << std::endl;
+    //val.print(std::cout);
+    //std::cout << std::endl;
     return terms_.insert(make_locatable<ValTerm>(loc, val));
 }
 
@@ -60,15 +62,15 @@ TermVecUid NonGroundProgramBuilder::termvec() {
 }
 
 TermUid NonGroundProgramBuilder::term(Location const &loc, String name, TermVecUid a) {
+
     return terms_.insert(make_locatable<FunctionTerm>(loc, name, std::move(termvecs_.erase(a))));
 }
 
 TermUid NonGroundProgramBuilder::term(Location const &loc, String name) {
-
     auto &ret(vals_[name]);
+    //std::cout << name << std::endl;
     if (!ret) { ret = std::make_shared<Symbol>(); }
     return terms_.insert(make_locatable<VarTerm>(loc, name, ret));
-
 }
 
 SortExprUid NonGroundProgramBuilder::sortexpr(Location const &loc, TermUid from, TermUid to) {
@@ -90,7 +92,6 @@ SortExprUid NonGroundProgramBuilder::sortexpr(Location const &loc, String sortn)
 SortExprUid NonGroundProgramBuilder::sortexpr(Location const &loc, Symbol smb, VarSortExprVecUid uid, CondUid cond) {
     return sortexprs_.insert(make_locatable<FuncSortExpr>(loc, smb, std::move(varsortexprvecs_.erase(uid)),
                                                           conds_.erase(cond)));
-
 }
 
 SortExprUid NonGroundProgramBuilder::sortexpr(Location const &loc, Symbol smb, VarSortExprVecUid uid) {

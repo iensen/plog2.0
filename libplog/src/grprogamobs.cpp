@@ -3,6 +3,7 @@
 //
 
 #include<plog/grprogramobs.h>
+#include<plog/input/utils.h>
 
 void PlogGroundProgramBuilder::rule(bool choice, AtomSpan headats, LiteralSpan bodyLits) {
     GRule r;
@@ -59,21 +60,27 @@ void PlogGroundProgramBuilder::addRegularRuleToBackend(PlogGroundProgramBuilder:
         // we will do something later when we have a query
     } else {
         // o.k, this wasn't a fact
-        // here the symbol is of the form a(t, X)
+        // here the symbol is of the form a(t, V)
         Clingo::Symbol hsymbol = symbols[hsymbolid];
         // we need first to create a new attid for a(t),
         // note that this can be optimized if we store integers for every string, but in that case
         // we will need to write a hash function for such a symbol!
         Atom_t head = getGroundPlogAtom(hsymbol);
+
         // constructbody
-        //std::vector<Lit_t> body = getGroundPlogBody(rule.)
-
-
+        std::vector<Lit_t> body = getGroundPlogBody(rule.body);
+        out.rule(head, body);
     }
 }
 
 void PlogGroundProgramBuilder::addQueryToBackend(PlogGroundProgramBuilder::GRule &rule) {
-
+    const atom_t hsymbolid =  *rule.head.begin();
+    Clingo::Symbol hsymbol = symbols[hsymbolid];
+    auto *h = hsymbol.arguments().begin();
+    Atom_t attr = getGroundPlogAtom(*h);
+    bool classicNeg =  (h+1)->to_string()!="true";
+    bool defaultNeg = false;
+    out.query(Lit_t{attr.attid, attr.valid, defaultNeg,classicNeg});
 }
 
 void PlogGroundProgramBuilder::addRandomRuleToBackend(PlogGroundProgramBuilder::GRule &rule) {
@@ -81,12 +88,23 @@ void PlogGroundProgramBuilder::addRandomRuleToBackend(PlogGroundProgramBuilder::
 }
 
 void PlogGroundProgramBuilder::addPrAtomToBackend(PlogGroundProgramBuilder::GRule &rule) {
-
+ //  pr(x(a),true,"3","10") :- B
+    const atom_t hsymbolid =  *rule.head.begin();
+    Clingo::Symbol hsymbol = symbols[hsymbolid];
+    auto *h = hsymbol.arguments().begin();
+    AttId attid = insert(h->to_string(), attids);
+    ValueRep atid = insert((h+1)->to_string(),atids);
+    std::string numstr = (h+2)->to_string();
+    std::string denumstr = (h+3)->to_string();
+    int probnum =   str_to_int(numstr.substr(1,numstr.length()-2));
+    int probdenum = str_to_int(denumstr.substr(1,numstr.length()-2));
+    double prob = ((double) probnum)/((double) probdenum);
+    out.prAtom({attid, atid}, getGroundPlogBody(rule.body),prob);
 }
 
 
 
-Atom_t PlogGroundProgramBuilder::getGroundPlogAtom(Clingo::Symbol &s) {
+Atom_t PlogGroundProgramBuilder::getGroundPlogAtom(const Clingo::Symbol &s) {
     std::string hsymbolstr = std::string(s.name());
     if(s.arguments().size() > 1) hsymbolstr.push_back('(');
 
@@ -96,6 +114,7 @@ Atom_t PlogGroundProgramBuilder::getGroundPlogAtom(Clingo::Symbol &s) {
         hsymbolstr.append(h->to_string());
         if(i!=s.arguments().size()-2)
             hsymbolstr.append(",");
+        h++;
     }
     if(s.arguments().size() > 1) hsymbolstr.push_back(')');
     AttId attid = insert(hsymbolstr, attids);
@@ -115,6 +134,17 @@ unsigned PlogGroundProgramBuilder::insert(std::string value, std::unordered_map<
         res = respt->second;
     }
     return res;
+}
+
+std::vector<Lit_t> PlogGroundProgramBuilder::getGroundPlogBody(const std::vector<literal_t> gbody) {
+    std::vector<Lit_t> body;
+    for(literal_t lit:gbody) {
+        int32_t  litpos = abs(lit);
+        Clingo::Symbol hsymbol = symbols[litpos];
+        Atom_t atom = getGroundPlogAtom(hsymbol);
+        body.emplace_back(Lit_t{atom.attid, atom.valid, lit < 0, hsymbol.is_negative()});
+    }
+    return body;
 }
 
 bool PlogGroundProgramBuilder::GRule::isRandom() {

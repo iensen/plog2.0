@@ -25,8 +25,8 @@ public:
     GroundPlogBackend(PlogControl& ctl):ctl_(ctl) {}
     void rule(Atom_t &head, const std::vector<Lit_t> &body);
     void randomRule(std::vector<std::pair<Atom_t,AttId>> head, const std::vector<Lit_t> &body);
-    void prAtom(Atom_t &head, const std::vector<Lit_t> &body);
-    void query(Lit_t &query);
+    void prAtom(const Atom_t &head, const std::vector<Lit_t> &body, double prob);
+    void query(const Lit_t &query);
 
 private:
     GroundPlog::Program* prg();

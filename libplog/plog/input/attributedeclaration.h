@@ -8,9 +8,10 @@
 
 #include <gringo/printable.hh>
 #include <gringo/locatable.hh>
+#include<plog/input/types.h>
 #include<plog/sortexpression.h>
 
-
+using Gringo::String;
 
 struct AttributeDeclaration : Gringo::Printable, Gringo::Locatable {
 

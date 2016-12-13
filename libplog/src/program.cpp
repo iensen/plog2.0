@@ -6,6 +6,7 @@
 #include <plog/input/program.h>
 #include <plog/ploggrammar.tab.hh>
 #include<plog/input/utils.h>
+#include<plog/input/sortdefinition.h>
 
 Program::Program() {
 
@@ -67,15 +68,15 @@ void Program::loadToControl(Clingo::Control &ctl) {
         //       if (stm->getType() == StatementType::QUERY || stm->getType() == StatementType::PR_ATOM)
         auto rules = stm->toGringoAST(attdecls_, sortdefs_);
         for (const auto &rule: rules) {
+            std::cout << rule << std::endl;
             b.add(rule);
         }
     }
 
-
     //add sorts:
     for(const USortDef& sortDef:sortdefs_) {
         String sortName = sortDef->getSortName();
-        std::vector<Clingo::AST::Term> instances = sortDef->getSortExpr()->generate();
+        std::vector<Clingo::AST::Term> instances = sortDef->getSortExpr()->generate(sortdefs_);
         for(const Clingo::AST::Term & term:instances) {
             Clingo::AST::Literal hlit = Statement::make_lit(concat('_',sortName),{term});
             Clingo::AST::Rule f_r{{loc, hlit}, {}};
@@ -84,9 +85,6 @@ void Program::loadToControl(Clingo::Control &ctl) {
     }
 
     //add axioms:
-
-
-
     b.end();
 }
 

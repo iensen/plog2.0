@@ -16,6 +16,7 @@
 #include<gringo/input/programbuilder.hh>
 #include<gringo/input/aggregates.hh>
 #include<clingo.hh>
+#include <plog/plogparser.h>
 
 enum class StatementType { RULE, PR_ATOM, QUERY};
 using Gringo::Input::ToGroundArg;
@@ -50,7 +51,7 @@ private:
     std::vector<Clingo::AST::Statement> prAtomToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec);
     std::vector<Clingo::AST::Statement>queryToGringoAST();
     std::vector<Clingo::AST::Statement> ruleToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec);
-    std::string int_to_str(int n);
+
     static int rule_id;
     ULit     head_;
     ULitVec  body_;
@@ -63,10 +64,10 @@ private:
     Clingo::AST::Statement make_external_atom_rule(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec);
 
 
-
 public:
     static Clingo::AST::BodyLiteral make_body_lit(String name, std::vector<Clingo::AST::Term> args);
     static Clingo::AST::Literal make_lit(String name, std::vector<Clingo::AST::Term> args);
+    static Clingo::AST::Term make_term(String name, std::vector<Clingo::AST::Term> args);
 
 };
 
