@@ -127,7 +127,7 @@ namespace GroundPlog {
 
 
 
-        //! Starts definition of an ASP-problem.
+        //! Starts definition of a P-log problem
         Program& start(GroundPlogConfig & config);
 
         //! Starts definition of a problem given in stream.
@@ -197,19 +197,6 @@ namespace GroundPlog {
          * \return summary(true)
          */
         const Summary &shutdown();
-
-        //! Starts update of the active problem.
-        /*!
-         * \pre solving() is false and program updates are enabled (incremental() is true).
-         * \post !solved()
-         * \param updateConfig If true, the function applies any configuration changes.
-         * \param sigQ An action to be performed for any queued signal.
-         *        The default is to apply the signal to the next solve operation, while
-         *        SIGN_IGN can be used to discard queued signals.
-         */
-        ProgramBuilder &update(bool updateConfig, void (*sigQ)(int));
-
-        ProgramBuilder &update(bool updateConfig = false);
 
 
         struct Ready : Event_t<Ready> {

@@ -108,7 +108,7 @@ std::vector<Clingo::AST::Statement> Statement::prAtomToGringoAST(const UAttDeclV
     stream.str("");
     stream << probability_->getDenum();
     args.push_back(Clingo::AST::Term{loc,Clingo::String(stream.str().c_str())});
-    Clingo::AST::Function f_ = {"pr", args};
+    Clingo::AST::Function f_ = {"__pr", args};
     Clingo::AST::Term f_t{loc, f_};
     Clingo::AST::Literal f_l{loc, Clingo::AST::Sign::None, f_t};
     Clingo::AST::Rule f_r{{loc, f_l}, gringobodyast(attdecls, sortDefVec)};
@@ -121,7 +121,7 @@ std::vector<Clingo::AST::Statement> Statement::queryToGringoAST() {
     auto   queryargs = term(head_);
     args.push_back(termToClingoTerm(queryargs.first));
     args.push_back(queryargs.second?Clingo::AST::Term{loc,Clingo::Id("true")}:Clingo::AST::Term{loc,Clingo::Id("false")});
-    Clingo::AST::Function f_ = {"query", args};
+    Clingo::AST::Function f_ = {"__query", args};
     Clingo::AST::Term f_t{loc, f_};
     Clingo::AST::Literal f_l{loc, Clingo::AST::Sign::None, f_t};
     Clingo::AST::Rule f_r{{loc, f_l}, std::vector<Clingo::AST::BodyLiteral>()};

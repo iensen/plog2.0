@@ -15,6 +15,7 @@ namespace GroundPlog {
     typedef uint32 AttId;
     typedef uint32 ValueRep;
     typedef uint32 Var;
+    typedef uint32 AId;
 
     struct Atom_t {
         AttId attid;
@@ -78,7 +79,7 @@ namespace GroundPlog {
     };
 
     struct RandomRule {
-        std::vector<std::pair<Atom_t,AttId>>  head;
+        std::pair<AttId,AId>  head;
         std::vector<Lit_t> body;
     };
 
@@ -86,6 +87,18 @@ namespace GroundPlog {
         Atom_t head;
         std::vector<Lit_t> body;
         double prob;
+    };
+
+    struct Observation {
+        AttId  attid;
+        ValueRep  valid;
+        bool positive;
+    };
+
+
+    struct Action {
+        AttId  attid;
+        ValueRep  valid;
     };
 
 

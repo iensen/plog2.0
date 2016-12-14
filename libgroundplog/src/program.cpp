@@ -137,14 +137,16 @@ namespace GroundPlog{
         }
     }
 
-    Program &Program::addRule(Atom_t head, std::vector<Lit_t> body) {
+    Program &Program::addRule(Atom_t head, std::vector<Lit_t> body, int ex_id) {
         // need to change this to add the dependency (and do not add the whole body)
         rules.emplace_back(Rule{head,body});
+        ruleExternals.push_back(ex_id);
         return *this;
     }
 
-    Program &Program::addRandomRule(std::vector<std::pair<Atom_t, AttId>> head, const std::vector<Lit_t> body) {
+    Program &Program::addRandomRule(std::pair<AttId, AId > head, const std::vector<Lit_t> body, int ex_id) {
         randomrules.emplace_back(RandomRule{head,body});
+        randomRuleExternals.push_back(ex_id);
         return *this;
     }
 
@@ -156,6 +158,31 @@ namespace GroundPlog{
     Program &Program::addQuery(Lit_t query) {
         this->query = query;
         return *this;
+    }
+
+    void Program::addAttributeMap(std::vector<unsigned int> vector) {
+         this->attmap = vector;
+    }
+
+    void Program::addSortElem(unsigned int sort_id, unsigned int sort_elem_id) {
+        if(sort_elems.size()<=sort_id)
+                 sort_elems.resize(sort_id+1);
+        sort_elems[sort_id].push_back(sort_elem_id);
+
+    }
+
+    void Program::addAtRangeSort(unsigned int a_id, unsigned int sort_id) {
+        if(a_ranges.size()<=a_id)
+            a_ranges.resize(a_id+1);
+        a_ranges[a_id] = sort_id;
+    }
+
+    void Program::addObservation(unsigned int att_id, unsigned int val_id, bool positive){
+         observations.emplace_back(Observation{att_id,val_id,positive});
+    }
+
+    void Program::addAction(unsigned int att_id, unsigned int val_id) {
+         actions.emplace_back(Action{att_id,val_id});
     }
 
 }

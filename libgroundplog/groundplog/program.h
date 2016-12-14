@@ -23,8 +23,15 @@ namespace GroundPlog {
 
     class Program : public ProgramBuilder {
         std::vector<Rule> rules;
+        std::vector<Observation> observations;
+        std::vector<Action> actions;
         std::vector<RandomRule> randomrules;
         std::vector<PrAtom> pratoms;
+        std::vector<int> ruleExternals;
+        std::vector<int> randomRuleExternals;
+        std::vector<std::vector<unsigned> > sort_elems;
+        std::vector<unsigned > a_ranges;
+
         Lit_t query;
 
 
@@ -121,9 +128,9 @@ namespace GroundPlog {
 
 
         // todo: rewrite this to use unique ptrs
-        Program &addRule(Atom_t head, const std::vector<Lit_t> body);
+        Program &addRule(Atom_t head, const std::vector<Lit_t> body, int ex_id);
 
-        Program &addRandomRule(std::vector<std::pair<Atom_t,AttId>> head, const std::vector<Lit_t> body);
+        Program &addRandomRule(std::pair<AttId, AId > head, const std::vector<Lit_t> body, int ex_id);
 
         Program &addPratom(Atom_t head, const std::vector<Lit_t> body, double prob);
 
@@ -219,6 +226,20 @@ namespace GroundPlog {
         // ------------------------------------------------------------------------
         // ------------------------------------------------------------------------
         //@}
+        void addAttributeMap(std::vector<unsigned int> vector);
+
+        void registerRandomRuleExternal(int i);
+
+        void registerRuleExternal(int i);
+
+        void addSortElem(unsigned int i, unsigned int i1);
+
+        void addAtRangeSort(unsigned int a_id, unsigned int sort_id);
+
+        void addObservation(unsigned int att_id, unsigned int val_id, bool positive);
+
+        void addAction(unsigned int att_id, unsigned int val_id);
+
     private:
         Program(const Program &);
 
@@ -273,6 +294,8 @@ namespace GroundPlog {
         std::vector<ShowPair> show_;        // shown atoms/conditions
         std::vector<Atom_t> propQ_;       // assigned atoms
         PrepOptions opts_;
+        std::vector<unsigned int> attmap;// a map frpm attribute terms to corresponding attributes in the program
+
 
     };
 }

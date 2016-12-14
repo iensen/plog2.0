@@ -213,7 +213,6 @@ Gringo::SymbolicAtomIter PlogControl::begin(Gringo::Sig sig) const {
 }
 
 bool PlogControl::update() {
-    groundplog_->update(configUpdate_);
     configUpdate_ = false;
     if (!groundplog_->ok()) { return false; }
 

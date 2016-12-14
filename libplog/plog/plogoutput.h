@@ -17,16 +17,21 @@ using GringoStatement = Gringo::Output::Statement;
 using GroundPlog::Atom_t;
 using GroundPlog::Lit_t;
 using GroundPlog::AttId ;
-
+using GroundPlog::AId;
 
 class GroundPlogBackend {
 public:
 
     GroundPlogBackend(PlogControl& ctl):ctl_(ctl) {}
-    void rule(Atom_t &head, const std::vector<Lit_t> &body);
-    void randomRule(std::vector<std::pair<Atom_t,AttId>> head, const std::vector<Lit_t> &body);
+    void rule(Atom_t &head, const std::vector<Lit_t> &body, int ex_atom_id);
+    void randomRule(std::pair<AttId ,AId> head, const std::vector<Lit_t> &body, int ex_atom_id);
     void prAtom(const Atom_t &head, const std::vector<Lit_t> &body, double prob);
     void query(const Lit_t &query);
+    void atMap(std::vector<unsigned>);
+    void sortElem(unsigned sort_id, unsigned sort_elem_id);
+    void rangeSort(unsigned a_id, unsigned sort_id);
+    void observation(unsigned att_id, unsigned val_id, bool positive);
+    void action(unsigned att_id, unsigned val_id);
 
 private:
     GroundPlog::Program* prg();

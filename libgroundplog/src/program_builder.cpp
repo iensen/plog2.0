@@ -12,7 +12,7 @@ namespace GroundPlog {
     }
 
     bool ProgramBuilder::ok() const {
-        throw "not implemented yet";
+        return true;
     }
 
     bool ProgramBuilder::startProgram(SharedContext &ctx) {
