@@ -31,7 +31,6 @@ namespace GroundPlog {
         std::vector<int> randomRuleExternals;
         std::vector<std::vector<unsigned> > sort_elems;
         std::vector<unsigned > a_ranges;
-
         Lit_t query;
 
 
@@ -46,8 +45,8 @@ namespace GroundPlog {
         };
 
         //! Starts the definition of a logic program.
-        Program &start(SharedContext &ctx, const PrepOptions &opts = PrepOptions()) {
-            startProgram(ctx);
+        Program &start(const PrepOptions &opts = PrepOptions()) {
+            startProgram();
             setOptions(opts);
             return *this;
         }
@@ -82,11 +81,6 @@ namespace GroundPlog {
          */
         void dispose(bool forceFullDispose);
 
-        //! Clones the program and adds it to the given ctx.
-        /*
-         * \pre The program is currently frozen.
-         */
-        bool clone(SharedContext &ctx);
 
         //@}
 

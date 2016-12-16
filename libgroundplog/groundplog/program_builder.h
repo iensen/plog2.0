@@ -5,7 +5,6 @@
 #ifndef PLOG_PROGRAM_BUILDER_H
 #define PLOG_PROGRAM_BUILDER_H
 
-#include "shared_context.h"
 #include<groundplog/literal.h>
 #include <iosfwd>
 #include<vector>
@@ -25,7 +24,7 @@ namespace GroundPlog {
          *
          * \param ctx The context object in which the program should be stored.
          */
-        bool startProgram(SharedContext &ctx);
+        bool startProgram();
 
         //! Parses the given stream as a program of type() and adds it to this object.
         bool parseProgram(std::istream &prg);
@@ -48,15 +47,12 @@ namespace GroundPlog {
         //! Returns true if the program is not conflicting.
         virtual bool ok() const;
 
-        //! Returns the stored context object.
-        SharedContext *ctx() const { return ctx_; }
 
 
     protected:
 
         void setFrozen(bool frozen) { frozen_ = frozen; }
 
-        void setCtx(SharedContext *x) { ctx_ = x; }
 
 
 
@@ -73,8 +69,6 @@ namespace GroundPlog {
         virtual bool doEndProgram()                      = 0;
 
         virtual void doGetAssumptions(std::vector<Literal> &out) const = 0;
-
-        SharedContext *ctx_;
         bool frozen_;
     };
 }

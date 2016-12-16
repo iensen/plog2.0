@@ -5,7 +5,7 @@
 #include <groundplog/program_builder.h>
 
 namespace GroundPlog {
-    ProgramBuilder::ProgramBuilder():ctx_(0), frozen_(true) {
+    ProgramBuilder::ProgramBuilder(): frozen_(true) {
     }
 
     ProgramBuilder::~ProgramBuilder() {
@@ -15,9 +15,8 @@ namespace GroundPlog {
         return true;
     }
 
-    bool ProgramBuilder::startProgram(SharedContext &ctx) {
-        ctx_    = &ctx;
-        return ctx_->ok() && doStartProgram();
+    bool ProgramBuilder::startProgram() {
+        return doStartProgram();
     }
 
     bool ProgramBuilder::parseProgram(std::istream &prg) {

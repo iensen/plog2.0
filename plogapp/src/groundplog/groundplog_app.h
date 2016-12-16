@@ -13,7 +13,7 @@
 #include <vector>
 #include <iosfwd>
 #include <memory>
-#include <groundplog/shared_context.h>
+
 #include <groundplog/program_builder.h>
 #include <groundplog/util/misc_types.h>
 #include <groundplog/solver.h>
@@ -55,7 +55,7 @@ namespace GroundPlog {
 // ground P-log application base
 /////////////////////////////////////////////////////////////////////////////////////////
 // Base class for applications using the clasp library.
-        class GroundPlogAppBase : public ProgramOptions::Application, public GroundPlog::EventHandler {
+        class GroundPlogAppBase : public ProgramOptions::Application {
         public:
             typedef GroundPlogFacade::Summary  RunSummary;
             typedef ProgramOptions::PosOption PosOption;
@@ -66,7 +66,6 @@ namespace GroundPlog {
             // -------------------------------------------------------------------------------------------
             // Functions to be implemented by subclasses
             virtual void          run(GroundPlogFacade& groundPlog)      = 0;
-            virtual Output*       createOutput();
             virtual void          storeCommandArgs(const ProgramOptions::ParsedValues& values);
             // -------------------------------------------------------------------------------------------
             // Helper functions that subclasses might call during run
@@ -101,12 +100,10 @@ namespace GroundPlog {
             std::istream& getStream();
             // -------------------------------------------------------------------------------------------
 
-            typedef SingleOwnerPtr<Output>      OutPtr;
             typedef SingleOwnerPtr<GroundPlogFacade> GroundPlogPtr;
             GroundPlogCliConfig  groundPlogConfig_;
             GroundPlogAppOptions groundPlogAppOpts_;
             GroundPlogPtr        groundPlog_;
-            OutPtr          out_;
         };
 /////////////////////////////////////////////////////////////////////////////////////////
 // clasp application

@@ -147,10 +147,7 @@ void PlogApp::run(GroundPlog::GroundPlogFacade &groundPlog) {
     catch (...) { throw; }
 }
 
-PlogApp::Output *PlogApp::createOutput() {
-    if (mode_ == mode_gringo) return 0;
-    return BaseType::createOutput();
-}
+
 
 void PlogApp::printHelp(const ProgramOptions::OptionContext &root) {
     throw "not implemented yet";

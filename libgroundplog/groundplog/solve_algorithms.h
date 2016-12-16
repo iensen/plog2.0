@@ -10,6 +10,7 @@
 #include "literal.h"
 #include "program_types.h"
 #include "solvingres.h"
+#include "dependency_graph.h"
 
 namespace GroundPlog {
 
@@ -23,8 +24,10 @@ namespace GroundPlog {
 
 
     class ExactDCOSolve : public SolveAlgorithm {
+    DepGraph *dg;
     public:
-        SolveResult run(Program *ctl, Clingo::Control *pControl) override;
+        ExactDCOSolve(){};
+        SolveResult run(Program *pr, Clingo::Control *pControl) override;
 
     };
 

@@ -185,7 +185,6 @@ namespace GroundPlog {
             const Summary* summary;
         };
 
-        SharedContext ctx; /*!< Context-object used to store problem. */
     private:
         struct Statistics;
         typedef SingleOwnerPtr <ProgramBuilder> BuilderPtr;

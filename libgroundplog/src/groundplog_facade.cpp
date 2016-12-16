@@ -61,7 +61,6 @@ GroundPlog::GroundPlogFacade::solve(Clingo::Control *clctl) {
 void GroundPlog::GroundPlogFacade::init(GroundPlog::GroundPlogConfig &cfg) {
     //  ctx.setConfiguration(0, Ownership_t::Retain); // force reload of configuration once done ?? not needed
     config_ = &cfg;
-    ctx.setConfiguration(&cfg, Ownership_t::Retain); // prepare and apply config
     Program* p = static_cast<Program*>(program());
     p->setOptions(cfg.prep);
 }
@@ -69,7 +68,7 @@ void GroundPlog::GroundPlogFacade::init(GroundPlog::GroundPlogConfig &cfg) {
 void GroundPlog::GroundPlogFacade::initBuilder(GroundPlog::ProgramBuilder *in) {
     builder_ = in;
     assume_.clear();
-    builder_->startProgram(ctx);
+    builder_->startProgram();
 }
 
 

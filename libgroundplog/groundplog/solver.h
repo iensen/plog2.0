@@ -6,7 +6,6 @@
 #define PLOG_SOLVER_H
 
 #include <groundplog/solver_strategies.h>
-#include <groundplog/shared_context.h>
 #include <groundplog/solver_types.h>
 
 namespace GroundPlog {
@@ -51,8 +50,6 @@ namespace GroundPlog {
 		const SharedContext *sharedContext() const { return shared_; }
 
 		DecisionHeuristic *heuristic() const { return heuristic_.get(); }
-
-		VarInfo varInfo(Var v) const { return shared_->varInfo(v); }
 
         uint32   numFreeRandomVars() const;
 

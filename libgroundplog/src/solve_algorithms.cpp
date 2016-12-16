@@ -7,5 +7,4 @@
 
 
 GroundPlog::SolveResult GroundPlog::ExactDCOSolve::run(GroundPlog::Program *ctl, Clingo::Control *pControl) {
-    std::cout << "SOLVED!";
 }

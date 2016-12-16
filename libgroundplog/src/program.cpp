@@ -37,10 +37,6 @@ namespace GroundPlog{
         rule_.clear();
     }
 
-    bool Program::clone(SharedContext &ctx) {
-        throw "not implemented yet";
-    }
-
     Atom_t Program::newAtom() {
         throw "not implemented yet";
     }

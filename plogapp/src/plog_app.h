@@ -27,7 +27,6 @@
 
 // Standalone plog application.
 class PlogApp : public GroundPlog::Cli::GroundPlogAppBase {
-    using Output      = GroundPlog::Cli::Output;
     using BaseType    = GroundPlog::Cli::GroundPlogAppBase;
 public:
     PlogApp();
@@ -41,7 +40,6 @@ protected:
     void        initOptions(ProgramOptions::OptionContext& root) override;
     void        validateOptions(const ProgramOptions::OptionContext& root, const ProgramOptions::ParsedOptions& parsed, const ProgramOptions::ParsedValues& vals) override;
     void        run(GroundPlog::GroundPlogFacade& clasp) override;
-    Output*     createOutput() override;
     void        printHelp(const ProgramOptions::OptionContext& root) override;
     void        printVersion() override;
 

@@ -12,12 +12,6 @@ namespace GroundPlog {
 
         GroundPlogAppBase::~GroundPlogAppBase() {}
 
-        Output *GroundPlogAppBase::createOutput() {
-            SingleOwnerPtr<Output> out;
-            out.reset(new TextOutput());
-            return out.release();
-        }
-
         void GroundPlogAppBase::storeCommandArgs(const ProgramOptions::ParsedValues &values) {
             /* for whatever reason, we don't need the values */
         }
@@ -73,14 +67,10 @@ namespace GroundPlog {
 
         void GroundPlogAppBase::setup() {
             groundPlog_         = new GroundPlogFacade();
-            out_ = createOutput();
-
-            groundPlog_->ctx.setEventHandler(this);
         }
 
         void GroundPlogAppBase::run() {
-            if (out_.get()) { out_->run(getName(), getVersion(), &groundPlogAppOpts_.input[0], &groundPlogAppOpts_.input[0]
-                                                                                               + groundPlogAppOpts_.input.size()); }
+
             try        { run(*groundPlog_); }
             catch(...) {
                 try { blockSignals(); setExitCode(E_ERROR); throw; }
