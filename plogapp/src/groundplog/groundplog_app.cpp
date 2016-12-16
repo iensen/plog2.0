@@ -165,15 +165,6 @@ namespace GroundPlog {
             root.add(basic);
         }
 
-        void GroundPlogAppBase::run(GroundPlogFacade& groundPlog) {
-            groundPlog.start(groundPlogConfig_, getStream());
-            handleStartOptions(groundPlog);
-            while (groundPlog.read()) {
-                if (handlePostGroundOptions(*groundPlog.program())) {
-                    groundPlog.prepare();
-                    if (handlePreSolveOptions(groundPlog)) { groundPlog.solve(); }
-                }
-            }
-        }
+
     }
 }

@@ -130,7 +130,7 @@ std::string PlogControl::str() {
 }
 
 Gringo::SolveResult PlogControl::solve() {
-   groundplog_->solve();
+   groundplog_->solve(&clingoControl);
 }
 
 void PlogControl::load(std::string const &filename) {

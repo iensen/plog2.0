@@ -136,7 +136,8 @@ void PlogApp::run(GroundPlog::GroundPlogFacade &groundPlog) {
             grd->main();
         }
         else {
-            GroundPlogAppBase::run(groundPlog);
+            //GroundPlogAppBase::run(groundPlog);
+            throw "not implemented!";
         }
     }
     catch (Gringo::GringoError const &e) {

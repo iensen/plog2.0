@@ -10,30 +10,11 @@
 #include<groundplog/program_builder.h>
 #include<groundplog/program.h>
 #include<vector>
+#include <clingo.hh>
 
 //! Provides a simplified interface to the services of the Ground Plog library.
 namespace GroundPlog {
-    /////////////////////////////////////////////////////////////////////////////////////////
-    // GroundPlogFacade
-    /////////////////////////////////////////////////////////////////////////////////////////
-    //! Result of a solving step.
-    struct SolveResult {
-        //! Possible solving results.
-        enum Base {
-            NOTDCO    = 1, /**< Given program is not DCO.                              */
-        };
-        enum Ext {
-            EXT_EXHAUST  = 2, /**< Search space is exhausted.            */
-            EXT_INTERRUPT= 4, /**< The run was interrupted from outside. */
-        };
-        bool notdco()      const { return *this == NOTDCO; }
-        bool exhausted()  const { return (flags & EXT_EXHAUST)   != 0; }
-        bool interrupted()const { return (flags & EXT_INTERRUPT) != 0; }
-        operator Base()   const { return static_cast<Base>(flags & 3u);}
-        operator double() const { return (double(signal)*256.0) + flags; }
-        uint8 flags;  // result flags
-        uint8 signal; // term signal or 0
-    };
+
 
 
     struct SolveOptions {
@@ -151,7 +132,7 @@ namespace GroundPlog {
          * \post prepared() || !ok()
          * \note If solved() is true, prepare() first starts a new solving step.
          */
-        void prepare();
+
 
         //! Solves the current problem.
         /*!
@@ -162,7 +143,7 @@ namespace GroundPlog {
          *           once the solve operation has completed.
          * \param a A list of unit-assumptions under which solving should operate.
          */
-        Result solve(EventHandler *eh = 0, const std::vector<Lit_t> &a = {});
+        Result solve(Clingo::Control *ctl);
 
                 //! Starts solving of the current problem signaling models via the returned generator object.
         /*!
@@ -230,6 +211,7 @@ namespace GroundPlog {
         GroundPlogConfig *config_;
         Summary      sum;
         SolvePtr solve_; // NOTE: last so that it is destroyed first;
+        Result result();
     };
 
 }
