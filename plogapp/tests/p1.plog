@@ -9,11 +9,12 @@ sorts
 attributes
 x: #a -> #boolean.
 y: #a -> #boolean.
-p: #a -> #boolean.
+p: #boolean -> #boolean.
 
 statements 
 y(a).
-p(X) :- y(X).
+p(true) :- y(a).
+p(false).
 random(x(X),p) :- y(X).
 pr(x(a)|y(a)) = 3/10.
 ?x(a).

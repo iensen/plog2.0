@@ -20,7 +20,7 @@ namespace GroundPlog {
             throw "not implemented yet";
         }
 
-        bool GroundPlogAppBase::handlePostGroundOptions(ProgramBuilder &prg) {
+        bool GroundPlogAppBase::handlePostGroundOptions(Program &prg) {
             throw "not implemented yet";
         }
 
@@ -116,10 +116,6 @@ namespace GroundPlog {
         }
 
         void GroundPlogAppBase::printTemplate() const {
-            throw "not implemented yet";
-        }
-
-        int GroundPlogAppBase::exitCode(const GroundPlogAppBase::RunSummary &sol) const {
             throw "not implemented yet";
         }
 

@@ -17,7 +17,7 @@
  */
 
 #include<groundplog/program_types.h>
-#include<groundplog/literal.h>
+
 
 namespace GroundPlog {
 

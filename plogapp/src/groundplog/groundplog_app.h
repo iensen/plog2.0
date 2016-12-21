@@ -13,10 +13,7 @@
 #include <vector>
 #include <iosfwd>
 #include <memory>
-
-#include <groundplog/program_builder.h>
 #include <groundplog/util/misc_types.h>
-#include <groundplog/solver.h>
 
 namespace GroundPlog {
 
@@ -57,7 +54,7 @@ namespace GroundPlog {
 // Base class for applications using the clasp library.
         class GroundPlogAppBase : public ProgramOptions::Application {
         public:
-            typedef GroundPlogFacade::Summary  RunSummary;
+
             typedef ProgramOptions::PosOption PosOption;
         protected:
             using ProgramOptions::Application::run;
@@ -69,8 +66,8 @@ namespace GroundPlog {
             virtual void          storeCommandArgs(const ProgramOptions::ParsedValues& values);
             // -------------------------------------------------------------------------------------------
             // Helper functions that subclasses might call during run
+            bool handlePostGroundOptions(Program &prg);
             void handleStartOptions(GroundPlogFacade& clasp);
-            bool handlePostGroundOptions(ProgramBuilder& prg);
             bool handlePreSolveOptions(GroundPlogFacade& clasp);
             // -------------------------------------------------------------------------------------------
             // Application functions
@@ -92,8 +89,7 @@ namespace GroundPlog {
             virtual bool onResult(const Solver& s, const double result);
             virtual bool onNonDCO(const Solver& s);
             // -------------------------------------------------------------------------------------------
-            // Status information & output
-            int  exitCode(const RunSummary& sol)    const;
+
             void printTemplate()                    const;
             void printDefaultConfigs()              const;
             void printLibClaspVersion()             const;

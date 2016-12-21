@@ -17,6 +17,7 @@
 #include <plog/input/program.h>
 #include "plogparser.h"
 #include "plogoutput.h"
+#include "grprogramobs.h"
 #include<plog/programbuilder.h>
 #include<plog/term.h>
 #include<plog/plogoutput.h>
@@ -69,13 +70,14 @@ struct PlogOptions {
 // {{{1 declaration of DefaultGringoModule
 
 class GroundPlogBackend;
+class PlogGroundProgramBuilder;
 
 class PlogControl : public plog_control, private Gringo::ConfigProxy, private Gringo::SymbolicAtoms {
 public:
     using StringVec        = std::vector<std::string>;
     using ExternalVec      = std::vector<std::pair<Gringo::Symbol, Potassco::Value_t>>;
     using StringSeq        = ProgramOptions::StringSeq;
-    using PostGroundFunc   = std::function<bool (GroundPlog::ProgramBuilder &)>;
+    using PostGroundFunc   = std::function<bool (GroundPlog::Program &)>;
     using PreSolveFunc     = std::function<bool (GroundPlog::GroundPlogFacade &)>;
     enum class ConfigUpdate { KEEP, REPLACE };
 
@@ -88,7 +90,7 @@ public:
     void onFinish(GroundPlog::GroundPlogFacade::Result ret);
     bool update();
 
-    virtual void postGround(GroundPlog::ProgramBuilder& prg) { throw "not implemented"; }
+    virtual void postGround(GroundPlog::Program& prg) { throw "not implemented"; }
     virtual void prePrepare(GroundPlog::GroundPlogFacade& ) { throw "not implemented"; }
     virtual void preSolve(GroundPlog::GroundPlogFacade& groundplog) { throw "not implemented";  }
     virtual void postSolve(GroundPlog::GroundPlogFacade& ) { }
@@ -153,6 +155,8 @@ public:
     bool parsed                 = false;
     bool grounded               = false;
     bool configUpdate_          = false;
+private:
+    PlogGroundProgramBuilder *pb;
 };
 
 

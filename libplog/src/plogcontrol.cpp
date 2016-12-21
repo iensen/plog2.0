@@ -130,7 +130,13 @@ std::string PlogControl::str() {
 }
 
 Gringo::SolveResult PlogControl::solve() {
-   groundplog_->solve(&clingoControl);
+
+    auto res = groundplog_->solve(&clingoControl);
+    if(!res.is_dco) {
+        fprintf(stderr, "ERROR: the program is not strongly causally ordered\n");
+    } else {
+        printf("answer: %lf\n", res.prob);
+    }
 }
 
 void PlogControl::load(std::string const &filename) {
@@ -153,15 +159,21 @@ void PlogControl::ground() {
         parsed = false;
     }
     prg_.loadToControl(clingoControl);
-    PlogGroundProgramBuilder pb(*out_);
-    clingoControl.register_observer(pb);
+    pb = new PlogGroundProgramBuilder(*out_);
+    clingoControl.register_observer(*pb);
     clingoControl.ground({{"base", {}}});
     // solve (this is needed to make sure that the rules are passed from gringo to clasp:
-    for (auto m : clingoControl.solve_iteratively()) {
-        std::cout << m;
-       break;
-    };
 
+    Clingo::SolveIteratively solveit = clingoControl.solve_iteratively();
+    std::cout << "MODEL: " << solveit.next() << std::endl;
+    solveit.close();
+    GroundProgramObserver *dummy_obs = new GroundProgramObserver();
+    //clingoControl.register_observer(*dummy_obs, true);
+
+    //Clingo::SolveIteratively solveit = clingoControl.solve_iteratively();
+    //Clingo::Model m1 = solveit.next();
+    //Clingo::Model m2 = solveit.next();
+    //std::cout <<"MODEL: " << m1 << std::endl;
 }
 
 Gringo::SymbolicAtoms &PlogControl::getDomain() {
@@ -214,8 +226,6 @@ Gringo::SymbolicAtomIter PlogControl::begin(Gringo::Sig sig) const {
 
 bool PlogControl::update() {
     configUpdate_ = false;
-    if (!groundplog_->ok()) { return false; }
-
     if (!grounded) {
         grounded = true;
     }
@@ -234,6 +244,7 @@ void PlogControl::parse() {
 }
 
 PlogControl::~PlogControl() {
+    // need to destroy the observer here
     throw "not implemented yet";
 }
 
