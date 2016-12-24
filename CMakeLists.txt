@@ -63,5 +63,5 @@ TARGET_LINK_LIBRARIES(plog1  python2.7 tbb pthread dl)
 add_executable(ex ${EXAMPLE_MAIN_FILE} ${CLINGO_SOURCES})
 TARGET_LINK_LIBRARIES(ex  python2.7 tbb pthread dl)
 
-add_executable(tests    ${TEST_SOURCES})
+add_executable(tests    ${TEST_SOURCES} ${PLOG_SOURCES} ${CLINGO_SOURCES} test/utils.h)
 TARGET_LINK_LIBRARIES(tests  python2.7 tbb dl gtest pthread )
