@@ -41,7 +41,6 @@ GroundPlog::Configuration::SolverOpts &GroundPlog::BasicSatConfig::addSolver(uin
 }
 
 GroundPlog::Configuration::~Configuration() {
-	throw "not implemented yet";
 }
 
 uint32 GroundPlog::SolverParams::prepare() {
