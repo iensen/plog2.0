@@ -4,7 +4,7 @@ plog2.0
 P-log: a language combining non-monotonic logic and probabilities.
 
 This repository is an implementation of P-log solver for dynamically causally ordered programs.
-
+**The implementation is currently under development and is not ready to use.**
 
 Detailed instructions on installation/running p-log will be added later.
 
