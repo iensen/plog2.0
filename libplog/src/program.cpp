@@ -42,7 +42,7 @@ void Program::print(std::ostream &out) const {
 }
 
 Program::~Program() {
-    throw "not implemented yet";
+
 }
 
 void Program::rewriteDots() {
@@ -68,7 +68,7 @@ void Program::loadToControl(Clingo::Control &ctl) {
         //       if (stm->getType() == StatementType::QUERY || stm->getType() == StatementType::PR_ATOM)
         auto rules = stm->toGringoAST(attdecls_, sortdefs_);
         for (const auto &rule: rules) {
-            std::cout << rule << std::endl;
+            //std::cout << rule << std::endl;
             b.add(rule);
         }
     }

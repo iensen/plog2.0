@@ -4,21 +4,6 @@
 
 #include <groundplog/solver_strategies.h>
 
-GroundPlog::ResultHandler::~ResultHandler() {
-    throw "not implemented yet";
-}
-
-bool GroundPlog::ResultHandler::onUnsat(const GroundPlog::Solver &) {
-	throw "not implemented yet";
-}
-
-bool GroundPlog::ResultHandler::onResult(const GroundPlog::Solver &, double result) {
-	throw "not implemented yet";
-}
-
-bool GroundPlog::ResultHandler::onNonDCO(const GroundPlog::Solver &) {
-	throw "not implemented yet";
-}
 
 GroundPlog::Configuration *GroundPlog::Configuration::config(const char *n) {
 	throw "not implemented yet";

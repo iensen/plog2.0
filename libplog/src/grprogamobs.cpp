@@ -8,6 +8,7 @@
 
 void PlogGroundProgramBuilder::rule(bool choice, AtomSpan headats, LiteralSpan bodyLits) {
     GRule r;
+    /*
     std::cout << "RULE:" << " ";
     std::cout << "HEAD: " << headats[0] << " ";
     std::cout << "BODY: ";
@@ -15,6 +16,7 @@ void PlogGroundProgramBuilder::rule(bool choice, AtomSpan headats, LiteralSpan b
         std::cout << " " << lit;
     }
     std::cout << std::endl;
+    */
     for(auto c : headats) {
         r.head.push_back(c);
     }
@@ -87,7 +89,7 @@ void PlogGroundProgramBuilder::output_atom(Clingo::Symbol symbol, Clingo::atom_t
 
         // add random attribute term argument!
     }
-     std::cout << atom << " " <<symbol.to_string() << std::endl;
+     //std::cout << atom << " " <<symbol.to_string() << std::endl;
      if(atom==0u) { // this is a fact
          facts.insert(symbol);
      }

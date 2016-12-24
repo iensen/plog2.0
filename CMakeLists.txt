@@ -9,6 +9,7 @@ file(GLOB_RECURSE PLOG_SOURCES
         clingo/liblp/src/*.cpp
         clingo/libclingo/src/*.cc
         clingo/libgringo/src/*.cc
+        clingo/libgringo/src/input/nongroundgrammar/*.cc
         clingo/libclasp/src/*.cpp
         clingo/libprogram_opts/src/*.cpp
         clingo/libreify/src/*.cc

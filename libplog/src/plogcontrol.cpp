@@ -165,15 +165,9 @@ void PlogControl::ground() {
     // solve (this is needed to make sure that the rules are passed from gringo to clasp:
 
     Clingo::SolveIteratively solveit = clingoControl.solve_iteratively();
-    std::cout << "MODEL: " << solveit.next() << std::endl;
+    solveit.next();
+    //std::cout << "MODEL: " << solveit.next() << std::endl;
     solveit.close();
-    GroundProgramObserver *dummy_obs = new GroundProgramObserver();
-    //clingoControl.register_observer(*dummy_obs, true);
-
-    //Clingo::SolveIteratively solveit = clingoControl.solve_iteratively();
-    //Clingo::Model m1 = solveit.next();
-    //Clingo::Model m2 = solveit.next();
-    //std::cout <<"MODEL: " << m1 << std::endl;
 }
 
 Gringo::SymbolicAtoms &PlogControl::getDomain() {
@@ -244,8 +238,7 @@ void PlogControl::parse() {
 }
 
 PlogControl::~PlogControl() {
-    // need to destroy the observer here
-    throw "not implemented yet";
+    delete pb;
 }
 
 bool PlogControl::fact(Gringo::SymbolicAtomIter it) const {

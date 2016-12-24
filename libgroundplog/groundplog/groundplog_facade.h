@@ -33,7 +33,7 @@ namespace GroundPlog {
     };
 
 
-    class GroundPlogFacade : public ResultHandler {
+    class GroundPlogFacade  {
         struct SolveData;
         struct SolveStrategy;
     public:

@@ -14,11 +14,12 @@ GroundPlog::GroundPlogFacade::GroundPlogFacade():config_(0) {
 
 
 GroundPlog::GroundPlogFacade::~GroundPlogFacade() {
-    throw "not implemented yet";
+
 }
 
 GroundPlog::Program &GroundPlog::GroundPlogFacade::start(GroundPlog::GroundPlogConfig &config) {
     init(config);
+    // this are all memory leaks?
     Program* p = new Program();
     p->setOptions(config.prep);
     return *p;
@@ -28,6 +29,7 @@ GroundPlog::Program &GroundPlog::GroundPlogFacade::start(GroundPlog::GroundPlogC
 GroundPlog::GroundPlogFacade::Result
 GroundPlog::GroundPlogFacade::solve(Clingo::Control *clctl) {
 
+    // this is apparently memory leak!
     SolveAlgorithm*  algo = config_->solve.createSolveObject();
     return algo->run(static_cast<GroundPlog::Program *>(this->program()), clctl);
 }

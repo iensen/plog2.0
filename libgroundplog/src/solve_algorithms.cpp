@@ -77,7 +77,7 @@ std::tuple<bool, double, double> GroundPlog::ExactDCOSolve::GetCompletionProb(Gr
     }
 
     std::unordered_set<ATTID> readyatts = prg->getReadyAtts(I);
-    std::cout << "READY: " << readyatts.size() << std::endl;
+    //std::cout << "READY: " << readyatts.size() << std::endl;
     while(!readyatts.empty()) {
         ATTID selected = heu.select(readyatts);
         readyatts.erase(selected);
@@ -92,7 +92,7 @@ std::tuple<bool, double, double> GroundPlog::ExactDCOSolve::GetCompletionProb(Gr
 }
 
 ClingoModelRep convertModelToRep(const Clingo::Model &m, Clingo::Control *cControl) {
-    std::cout <<"MODEL HERE:"<< m << std::endl;
+    //std::cout <<"MODEL HERE:"<< m << std::endl;
     ClingoModelRep result;
     Clingo::SymbolicAtoms ats = cControl->symbolic_atoms();
     const Clingo::SymbolVector &atvec = m.symbols();
@@ -112,15 +112,11 @@ void GroundPlog::ExactDCOSolve::extend(Interpretation &i, GroundPlog::Program *p
     Clingo_Result m = call_clingo(cControl,PofI);
     if(!m.unique_model)
         return;
-    //std::cout << "MODEL here:" << m.m << std::endl;
-    std::cout << "LOOP STARTED" << std::endl;
     for (clingo_literal_t clitid: m.m) {
         // if this is a known thing, and it's not in the interpretation already, we need to update
         // the interpretation:
         if (pr->clingo_to_plog_lit.find(abs(clitid)) != pr->clingo_to_plog_lit.end()) {
             Lit_t plogLit = pr->clingo_to_plog_lit[abs(clitid)];
-            std::cout <<"Clingo Literal:" << clitid << std::endl;
-            std::cout <<"ASSIGN TO:" << plogLit.attid << std::endl;
             // we only care about positive literals:
             if (!plogLit.classicNeg)
                 i.assign(plogLit.attid, plogLit.valid);
@@ -176,9 +172,9 @@ std::unordered_set<unsigned int> GroundPlog::ExactDCOSolve::P(Interpretation &in
                                                        GroundPlog::DepGraph *pGraph) {
 
     std::unordered_set<ATTID> ats = RAT(interpretation, pProgram);
-    std::cout << "RAT: " << ats.size() << std::endl;
+    //std::cout << "RAT: " << ats.size() << std::endl;
     std::unordered_set<ATTID> datats = DAT(interpretation, pProgram, pGraph);
-    std:: cout << "DAT: " << datats.size() << std::endl;
+    //std:: cout << "DAT: " << datats.size() << std::endl;
     ats.insert(datats.begin(), datats.end());
     std::unordered_set<unsigned> rule_ext_ids = pProgram -> getExternalsForSubprogramConstructedFrom(ats);
     std::unordered_set<unsigned> atom_ext_ids = pProgram -> getExternalsForAtomsFrom(interpretation);
@@ -231,7 +227,7 @@ GroundPlog::ExactDCOSolve::GetCompletionProbA(GroundPlog::Program *prg, Clingo::
     double satsum = 0.0;
     double totalsum = 0.0;
     std::unordered_set<ValueRep> pvals= prg->getPossibleValuesFor(selectedATT, I);
-    std::cout << "size: " << pvals.size() << std::endl;
+    //std::cout << "size: " << pvals.size() << std::endl;
     while(!pvals.empty()) {
         ValueRep selectedVal = heuv.select(pvals);
         pvals.erase(selectedVal);

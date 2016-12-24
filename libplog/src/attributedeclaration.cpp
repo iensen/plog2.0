@@ -9,5 +9,4 @@ void AttributeDeclaration::print(std::ostream &out) const {
 }
 
 AttributeDeclaration::~AttributeDeclaration() {
-    throw "not implemented yet";
 }

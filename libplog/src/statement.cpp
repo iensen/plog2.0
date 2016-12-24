@@ -58,8 +58,6 @@ void Statement::toGround(ToGroundArg &x, UStmVec &stms) const {
 }
 
 Statement::~Statement() {
-    // need to remove numbuf and denumbuf if they were created!
-    throw "not implemented yet";
 }
 
 

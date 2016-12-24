@@ -81,7 +81,8 @@ namespace GroundPlog {
         }
 
         void GroundPlogAppBase::shutdown() {
-            throw "not implemented yet";
+            if (!groundPlog_.get()) { return; }
+            setExitCode(getExitCode());
         }
 
         bool GroundPlogAppBase::onSignal(int) {

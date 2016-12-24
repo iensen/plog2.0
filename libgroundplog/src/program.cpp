@@ -59,7 +59,6 @@ namespace GroundPlog {
     }
 
     void Program::addSortElem(unsigned int sort_id, unsigned int sort_elem_id) {
-        std::cout << sort_elems.size() << std::endl;
         if (sort_elems.size() <= sort_id)
             sort_elems.resize(sort_id + 1, {});
         sort_elems[sort_id].push_back(sort_elem_id);
@@ -176,8 +175,6 @@ namespace GroundPlog {
                     }
                 }
             }
-            printf("others: %f\n",others_prob);
-            printf("this: %lf\n", prob);
             if(prob>-0.5)
                 answer *= prob;
             else

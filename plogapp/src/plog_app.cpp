@@ -42,7 +42,7 @@ static bool parseText(const std::string&, PlogOptions& out) {
 PlogApp::PlogApp() { }
 
 void PlogApp::shutdown() {
-   throw "not implemented yet";
+    GroundPlog::Cli::GroundPlogAppBase::shutdown();
 }
 
 void PlogApp::initOptions(ProgramOptions::OptionContext &root) {

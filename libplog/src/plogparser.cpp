@@ -189,7 +189,6 @@ NonGroundProgramBuilder &PlogParser::builder() {
 }
 
 PlogParser::~PlogParser() {
-    throw "not implemented yet";
 }
 
 void PlogParser::lexerError(std::string token) {

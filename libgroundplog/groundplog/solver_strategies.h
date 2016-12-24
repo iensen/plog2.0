@@ -27,14 +27,6 @@ namespace GroundPlog {
         uint32 prepare();
     };
 
-    class ResultHandler {
-    public:
-        virtual ~ResultHandler();
-        virtual bool onUnsat(const Solver&);
-        virtual bool onResult(const Solver&, double result);
-        virtual bool onNonDCO(const Solver&);
-
-    };
     //! Parameters for a SharedContext object.
     struct ContextParams {
         bool hasConfig;
