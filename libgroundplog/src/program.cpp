@@ -104,8 +104,16 @@ namespace GroundPlog {
         }
 
         //add attribute terms from observations
-        for (Observation obs:observations) {
+        for (const Observation &obs:observations) {
             result.insert(obs.attid);
+        }
+
+        // add the attribute term from the query
+        result.insert(query.attid);
+
+        // add the attribute terms from the dynamic range atoms:
+        for(const auto &dynatt:dynRangeAtt) {
+            result.insert(dynatt.second);
         }
 
         std::unordered_set<ATTID> ratts = getRandomAttributeTerms();
@@ -267,10 +275,10 @@ namespace GroundPlog {
         for (RandomRule &r: randomrules) {
             if (r.head.first == attid) {
                 if (I.guarantees(r.body)) {
-                    // check that for every y in the range of y, p(y) is decided:
+                    // check that for every y in the range of a, p(y) is decided:
                     // and that for at least one y p(y) is guaranteed!
-                    unsigned int range_sort_id = a_ranges[r.head.second];
-
+                    AId atid = atfromatt[r.head.first];
+                    unsigned int range_sort_id = a_ranges[atid];
                     bool all_decided = true;
                     bool at_least_one_guaranteed = false;
                     for (unsigned y: sort_elems[range_sort_id]) {
@@ -325,7 +333,7 @@ namespace GroundPlog {
             std::unordered_set<ValueRep> result;
             Rule *rr = findUniqueActiveRuleFor(attid, interpretation);
             if (RandomRule *r = dynamic_cast<RandomRule *>(rr)) {
-                unsigned int range_sort_id = a_ranges[r->head.second];
+                unsigned int range_sort_id = a_ranges[atfromatt[r->head.first]];
                 for (unsigned y: sort_elems[range_sort_id]) {
                     ATTID attid = dynRangeAtt[{r->head.second, y}];
                     if (interpretation.guarantees(Lit_t(attid, TRUE_ID, false, false))) {
@@ -341,5 +349,9 @@ namespace GroundPlog {
             return result;
         }
 
+    }
+
+    void Program::storeatttoatmap(unsigned int attid, unsigned int aid) {
+        atfromatt[attid] = aid;
     }
 }

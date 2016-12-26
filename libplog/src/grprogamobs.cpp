@@ -46,7 +46,7 @@ void PlogGroundProgramBuilder::output_atom(Clingo::Symbol symbol, Clingo::atom_t
 
         unsigned sort_id = insert(ssymb.to_string(), sortids);
         unsigned a_id = insert(asymb.to_string(), aids);
-        att_sort[a_id] = sort_id;
+        a_range_sort[a_id] = sort_id;
         out.rangeSort(a_id, sort_id); // probably do it later to save some memory?
     }
 
@@ -79,6 +79,7 @@ void PlogGroundProgramBuilder::output_atom(Clingo::Symbol symbol, Clingo::atom_t
         Clingo::Symbol aterm = symbol.arguments()[0];
         ATTID attid = insert(aterm.to_string(), attids);
         AId  aid = insert(aterm.name(),aids);
+        out.atttoat(attid,aid);
         insert(aid, attid, attributes);
     } else {
         // else, if the atom is a(t), need to add a(t) -> a to attributes:
@@ -106,7 +107,30 @@ PlogGroundProgramBuilder::PlogGroundProgramBuilder(GroundPlogBackend &out):out(o
 }
 
 void PlogGroundProgramBuilder::end_step() {
+
     if(!rulesPassedToBackend) {
+        /*
+        std::cout << "TERMS:" << std::endl;
+        for(auto c:atids) {
+            std::cout << c.first << " " << c.second << std::endl;
+        }
+        std::cout <<"Attribute Terms" << std::endl;
+        for(auto c:attids) {
+            std::cout << c.first << " " << c.second << std::endl;
+        }
+
+        std::cout << "Attributes" << std::endl;
+        for(auto c:aids) {
+            std::cout << c.first << " " << c.second << std::endl;
+        }
+
+        std::cout << "Sorts" << std::endl;
+        for(auto c:sortids) {
+            std::cout << c.first << " " << c.second << std::endl;
+        }
+        */
+
+
         for (auto rule:storedrules) {
             addRuleToBackend(rule);
             addAttributeMapToBackend();
@@ -174,7 +198,7 @@ void PlogGroundProgramBuilder::addRandomRuleToBackend(PlogGroundProgramBuilder::
     out.randomRule({atid,aid},getGroundPlogBody(rule.body), ex_atom_id);
 
     // store the map p,y -> attid for every y in the range of a!
-    unsigned sort_id = att_sort[aid];
+    unsigned sort_id = a_range_sort[aids[args[0].name()]];
     const std::vector<ValueRep > & elems = sort_elems[sort_id];
     for(ValueRep val : elems) {
         // construct a string p(y) (would be more safe to actually form the symbol)
@@ -292,14 +316,15 @@ void PlogGroundProgramBuilder::addAtomExternalToBackend(PlogGroundProgramBuilder
     out.atomExternal(atom.first, atom.second, ex_atom_id);
 }
 
+
 std::pair<ATTID, ValueRep> PlogGroundProgramBuilder::atomFromSymbol(const Clingo::Symbol &symbol) {
     Clingo::Symbol valsymb = symbol.arguments()[symbol.arguments().size()-1];
     std::string att_str = symbol.name();
-    att_str.push_back('(');
+    if(symbol.arguments().size()>1) att_str.push_back('(');
     for(int i=0;i<symbol.arguments().size()-1;i++) {
         att_str+=symbol.arguments()[i].to_string();
     }
-    att_str.push_back(')');
+    if(symbol.arguments().size()>1) att_str.push_back(')');
     unsigned attid = insert(att_str, attids);
     unsigned valid = insert(valsymb.to_string(), atids);
     return {attid, valid};

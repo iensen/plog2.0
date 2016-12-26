@@ -11,7 +11,8 @@ x: #a -> #boolean.
 y: #a -> #boolean.
 p: #boolean -> #boolean.
 
-statements 
+statements
+ 
 y(a).
 p(true) :- y(a).
 p(false).

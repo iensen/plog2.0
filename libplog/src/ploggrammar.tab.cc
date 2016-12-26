@@ -857,7 +857,7 @@ namespace PlogGrammar {
 
   case 54:
 #line 325 "ploggrammar.yy" // lalr1.cc:859
-    { (yylhs.value.lit) = BUILDER.lit(yylhs.location, String::fromRep((yystack_[0].value.str)),BUILDER.termvec()); }
+    { (yylhs.value.lit) = BUILDER.lit(yylhs.location, Symbol::createId(String::fromRep((yystack_[0].value.str)))); }
 #line 862 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
@@ -875,7 +875,7 @@ namespace PlogGrammar {
 
   case 57:
 #line 328 "ploggrammar.yy" // lalr1.cc:859
-    {(yylhs.value.lit) = BUILDER.lit(yylhs.location, String::fromRep((yystack_[2].value.str)), (yystack_[0].value.term)); }
+    {(yylhs.value.lit) = BUILDER.lit(yylhs.location, Symbol::createId(String::fromRep((yystack_[2].value.str))), (yystack_[0].value.term)); }
 #line 880 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 

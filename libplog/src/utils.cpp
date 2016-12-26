@@ -12,6 +12,9 @@ using Gringo::Term;
 
 Clingo::AST::Term termToClingoTerm(const UTerm & term) {
 
+    if(term.get()== nullptr) {
+        printf("WTF!\n");
+    }
     std::stringstream stream;
     term.get()->print(stream);
 
@@ -107,13 +110,16 @@ int str_to_int(std::string str) {
 // if it is of the form f(t1,..,tn), return f
 // if it is of the form a, return a
 Gringo::String getAttrName(const UTerm &term) {
-    FunctionTerm * faterm = (FunctionTerm*) term.get();
+    std::cout.flush();
     String termName = "";
-    if(faterm) {
+    FunctionTerm * faterm = (FunctionTerm*) term.get();
+    
+    if(faterm   && faterm->args.size()>0) {
         termName = faterm->name;
     }
+
     ValTerm *vaterm = (ValTerm*)term.get();
-    if(!faterm && vaterm) { // for some reason both casts work!
+    if(( !faterm || faterm->args.size()==0) && vaterm) { // for some reason both casts work!
         termName = vaterm->value.name();
     }
     return termName;

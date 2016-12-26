@@ -39,7 +39,6 @@ double run_plog(std::string file) {
     delete[] f[1];
     delete[] f;
     return stringtoDouble(find_trailing_number(output));
-
 }
 
 

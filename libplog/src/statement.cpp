@@ -30,7 +30,6 @@ int Statement::rule_id = 0;
 
 
 Statement::Statement(ULit &&head, ULitVec &&body):head_(std::move(head)),body_(std::move(body)),type_(StatementType::RULE){
-
 }
 
 Statement::Statement(ULit &&head, ULitVec &&body, UProb &&prob):head_(std::move(head)),body_(std::move(body)),probability_(std::move(prob)),type_(StatementType::PR_ATOM){
@@ -38,7 +37,6 @@ Statement::Statement(ULit &&head, ULitVec &&body, UProb &&prob):head_(std::move(
 }
 
 Statement::Statement(ULit &&query):head_(std::move(query)),type_(StatementType::QUERY) {
-
 }
 
 void Statement::print(std::ostream &out) const {
@@ -60,19 +58,32 @@ void Statement::toGround(ToGroundArg &x, UStmVec &stms) const {
 Statement::~Statement() {
 }
 
-
+// lit here must of the the form a rel b,
+// ehre rel in {=,!=} and a is an attribute term
 // for a(t) = y, return <a(t,y), true>
 // for a(t) != y, return <a(t,y), false>
+// for a term of the form term rel term, where term is not con
+// structed from an attribute term, return {term rel term, true}
 // to do: get rid of this and construct clingo terms directly
 std::pair<Gringo::UTerm,bool>  Statement::term(ULit & lit) {
-    FunctionTerm * fterm = dynamic_cast<FunctionTerm*>(lit->lt.get());
-    String name = fterm->name;
-    UTermVec& args = fterm->args;
-    std::unique_ptr<Term> ut(lit->rt->clone());
-    args.push_back(std::move(ut));
-    Gringo::UTerm term = make_locatable<FunctionTerm>(DefaultLocation(), name,clone(args));
-    bool pos = lit->rel==Relation::EQ;
-    return {std::move(term),pos};
+        if (FunctionTerm *fterm = dynamic_cast<FunctionTerm *>(lit->lt.get())) {
+            String name = fterm->name;
+            UTermVec &args = fterm->args;
+            std::unique_ptr<Term> ut(lit->rt->clone());
+            args.push_back(std::move(ut));
+            Gringo::UTerm term = make_locatable<FunctionTerm>(DefaultLocation(), name, clone(args));
+            bool pos = lit->rel == Relation::EQ;
+            return {std::move(term), pos};
+        } else {
+            ValTerm* vterm = dynamic_cast<ValTerm *>(lit->lt.get());
+            String name = vterm->value.name();
+            UTermVec  args;
+            std::unique_ptr<Term> ut(lit->rt->clone());
+            args.push_back(std::move(ut));
+            Gringo::UTerm term = make_locatable<FunctionTerm>(DefaultLocation(), name, clone(args));
+            bool pos = lit->rel == Relation::EQ;
+            return {std::move(term), pos};
+        }
 }
 
 
@@ -109,7 +120,7 @@ std::vector<Clingo::AST::Statement> Statement::prAtomToGringoAST(const UAttDeclV
     Clingo::AST::Function f_ = {"__pr", args};
     Clingo::AST::Term f_t{loc, f_};
     Clingo::AST::Literal f_l{loc, Clingo::AST::Sign::None, f_t};
-    Clingo::AST::Rule f_r{{loc, f_l}, gringobodyast(attdecls, sortDefVec)};
+    Clingo::AST::Rule f_r{{loc, f_l}, gringobody(attdecls, sortDefVec)};
     return {{loc, f_r},make_external_atom_rule(attdecls, sortDefVec)};
 }
 
@@ -117,6 +128,7 @@ std::vector<Clingo::AST::Statement> Statement::queryToGringoAST() {
     Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
     std::vector<Clingo::AST::Term> args;
     auto   queryargs = term(head_);
+
     args.push_back(termToClingoTerm(queryargs.first));
     args.push_back(queryargs.second?Clingo::AST::Term{loc,Clingo::Id("true")}:Clingo::AST::Term{loc,Clingo::Id("false")});
     Clingo::AST::Function f_ = {"__query", args};
@@ -132,7 +144,7 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
     auto    fterm = term(head_);
     Clingo::AST::Term f_ = termToClingoTerm(fterm.first);
     Clingo::AST::Literal f_l{defaultLoc, Clingo::AST::Sign::None, f_};
-    Clingo::AST::Rule f_r{{defaultLoc, f_l}, gringobodyast(attdecls, sortDefVec)};
+    Clingo::AST::Rule f_r{{defaultLoc, f_l}, gringobody(attdecls, sortDefVec)};
     //std::cout <<"f_r: "<< f_r << std::endl;
     result.emplace_back(Clingo::AST::Statement{defaultLoc, f_r});
     // generate a rule of the form #external ex_atom:sort_atoms
@@ -237,7 +249,8 @@ std::vector<Clingo::AST::BodyLiteral> Statement::getSortAtoms(const ULit & lit, 
     if(attrName == "random" || attrName == "pr") {
         // take the term from the first argument!
         fterm = dynamic_cast<FunctionTerm*>(fterm->args[0].get());
-        attrName = fterm->name;
+        if(fterm)
+           attrName = fterm->name;
     }
 
    // refactor common code:
@@ -264,13 +277,12 @@ std::vector<Clingo::AST::BodyLiteral> Statement::getSortAtoms(const ULit & lit, 
     return result;
 }
 
-std::vector<Clingo::AST::BodyLiteral> Statement::gringobodyast(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec) {
-    Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
+std::vector<Clingo::AST::BodyLiteral> Statement::gringobody(const UAttDeclVec &attdecls, const USortDefVec &sortDefVec) {
     std::vector<Clingo::AST::BodyLiteral> resvec;
 
     // add literals obtain from the given body:
     for (auto& lit: body_) {
-        resvec.push_back(gringobodyelast(lit));
+        resvec.push_back(gringobodyexlit(lit,attdecls));
     }
     // add sorts here
     std::vector<Clingo::AST::BodyLiteral> sortAtoms = getSortAtoms(sortDefVec, attdecls);
@@ -283,17 +295,26 @@ std::vector<Clingo::AST::BodyLiteral> Statement::gringobodyast(const UAttDeclVec
 }
 
 
-Clingo::AST::BodyLiteral Statement::gringobodyelast(ULit &lit) {
-    Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
-    ELiteral* elit = dynamic_cast<ELiteral*>(lit.get());
-    std::pair<Gringo::UTerm,bool> termb = term(elit->lit);
-    Clingo::AST::Term f_t = termToClingoTerm(termb.first);
-    if(!termb.second) {
-        throw "not implemented yet";
-        // negate f_t
+Clingo::AST::BodyLiteral Statement::gringobodyexlit(ULit &lit, const UAttDeclVec &attdecls) {
+    ELiteral *elit = dynamic_cast<ELiteral *>(lit.get());
+
+    if (!elit->isRelational(attdecls)) {
+        std::pair<Gringo::UTerm, bool> termb = term(elit->lit); //3
+        Clingo::AST::Term f_t = termToClingoTerm(termb.first);
+        if (!termb.second) {
+            throw "not implemented yet";
+            // negate f_t
+        }
+        Clingo::AST::Literal alit{defaultLoc, Clingo::AST::Sign::None, f_t};
+        return Clingo::AST::BodyLiteral{defaultLoc, elit->neg ? Clingo::AST::Sign::Negation : Clingo::AST::Sign::None,
+                                        alit};
+    } else {
+        Clingo::AST::Term left_clingo_term = termToClingoTerm(elit->lit->lt);
+        Clingo::AST::Term right_clingo_term = termToClingoTerm(elit->lit->rt);
+        Clingo::AST::Comparison cmp{getComparisonOpFromRelation(elit->lit->rel), left_clingo_term, right_clingo_term};
+        Clingo::AST::Literal alit{defaultLoc, Clingo::AST::Sign::None, cmp};
+        return Clingo::AST::BodyLiteral{defaultLoc, Clingo::AST::Sign::None, alit};
     }
-    Clingo::AST::Literal alit{loc, Clingo::AST::Sign::None, f_t};
-    return Clingo::AST::BodyLiteral{loc, elit->neg?Clingo::AST::Sign::Negation:Clingo::AST::Sign::None, alit};
 }
 
 
@@ -356,9 +377,11 @@ Statement::getSortAtoms(const USortDefVec &sortDefVec, const UAttDeclVec &attdec
     std::vector<Clingo::AST::BodyLiteral> resvec = getSortAtoms(head_, sortDefVec, attdecls);
     // add sorts for the body:
     for(const ULit& blit:body_) {
-        ELiteral* elit = dynamic_cast<ELiteral*>(blit.get());
-        std::vector<Clingo::AST::BodyLiteral> litSortAtoms = getSortAtoms(elit->lit, sortDefVec, attdecls);
-        resvec.insert(resvec.end(), litSortAtoms.begin(), litSortAtoms.end());
+        if(!blit->isRelational(attdecls)) {
+            ELiteral *elit = dynamic_cast<ELiteral *>(blit.get());
+            std::vector<Clingo::AST::BodyLiteral> litSortAtoms = getSortAtoms(elit->lit, sortDefVec, attdecls);
+            resvec.insert(resvec.end(), litSortAtoms.begin(), litSortAtoms.end());
+        }
     }
     return resvec;
 }
@@ -397,3 +420,13 @@ Clingo::AST::Term Statement::make_term(String name) {
     return {defaultLoc, s};
 }
 
+Clingo::AST::ComparisonOperator Statement::getComparisonOpFromRelation(Gringo::Relation rel) {
+    switch(rel) {
+        case Gringo::Relation::EQ: return Clingo::AST::ComparisonOperator::Equal;
+        case Gringo::Relation::GEQ: return Clingo::AST::ComparisonOperator::GreaterEqual;
+        case Gringo::Relation::GT: return Clingo::AST::ComparisonOperator::GreaterThan;
+        case Gringo::Relation::LEQ: return Clingo::AST::ComparisonOperator::LessEqual;
+        case Gringo::Relation::LT: return Clingo::AST::ComparisonOperator::LessThan;
+        case Gringo::Relation::NEQ: return Clingo::AST::ComparisonOperator::NotEqual;
+    }
+}

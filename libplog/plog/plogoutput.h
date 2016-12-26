@@ -36,6 +36,7 @@ public:
     void registerLiteral(unsigned atom_id, unsigned att_id, unsigned val_id, bool neg);
     void registerDynRangeAtom(unsigned a_id, unsigned arg_id, unsigned att_id);
     void registerTrueAtId(unsigned true_id);
+    void atttoat(unsigned attid, unsigned aid);
 
 private:
     GroundPlog::Program* prg();

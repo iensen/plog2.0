@@ -77,7 +77,6 @@ std::tuple<bool, double, double> GroundPlog::ExactDCOSolve::GetCompletionProb(Gr
     }
 
     std::unordered_set<ATTID> readyatts = prg->getReadyAtts(I);
-    //std::cout << "READY: " << readyatts.size() << std::endl;
     while(!readyatts.empty()) {
         ATTID selected = heu.select(readyatts);
         readyatts.erase(selected);
@@ -85,7 +84,6 @@ std::tuple<bool, double, double> GroundPlog::ExactDCOSolve::GetCompletionProb(Gr
         if(std::get<0>(res))
             return res;
     }
-
     // backtrack the extend assignment!
     I.backtrackLastLevel();
     return std::tuple<bool, double, double>{false,0.0,0.0};
@@ -108,8 +106,8 @@ ClingoModelRep convertModelToRep(const Clingo::Model &m, Clingo::Control *cContr
 
 
 void GroundPlog::ExactDCOSolve::extend(Interpretation &i, GroundPlog::Program *pr, Clingo::Control *cControl, DepGraph *dg) {
-    std::unordered_set<unsigned> PofI= P(i,pr,dg);
-    Clingo_Result m = call_clingo(cControl,PofI);
+    std::unordered_set<unsigned> P_I= P(i,pr,dg);
+    Clingo_Result m = call_clingo(cControl,P_I);
     if(!m.unique_model)
         return;
     for (clingo_literal_t clitid: m.m) {
@@ -121,6 +119,12 @@ void GroundPlog::ExactDCOSolve::extend(Interpretation &i, GroundPlog::Program *p
             if (!plogLit.classicNeg)
                 i.assign(plogLit.attid, plogLit.valid);
         }
+    }
+
+    std::unordered_set<ATTID> ids = DAT(i,pr,dg);
+    for(ATTID a : ids) {
+        if(i.getVal(a)==UNASSIGNED)
+            i.assign(a,UNDEFINED);
     }
 }
 
@@ -207,7 +211,6 @@ GroundPlog::ExactDCOSolve::call_clingo(Clingo::Control *clingoCtrl, std::unorder
         clingoCtrl->assign_external(s, Clingo::TruthValue::False);
     }
    // std::cout << "MODEL3: " << m1 << std::endl;
-
 
 
     if(!m1 || m2) { // we don't have exactly one model!

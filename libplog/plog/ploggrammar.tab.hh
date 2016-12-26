@@ -40,7 +40,7 @@
 #ifndef YY_PLOGGRAMMAR_PLOGGRAMMAR_TAB_HH_INCLUDED
 # define YY_PLOGGRAMMAR_PLOGGRAMMAR_TAB_HH_INCLUDED
 // //                    "%code requires" blocks.
-#line 36 "ploggrammar.yy" // lalr1.cc:392
+#line 36 "ploggrammar.yy" // lalr1.cc:377
 
     #include "plog/programbuilder.h"
 
@@ -51,7 +51,7 @@
     };
 
 
-#line 55 "ploggrammar.tab.hh" // lalr1.cc:392
+#line 55 "ploggrammar.tab.hh" // lalr1.cc:377
 
 
 # include <cstdlib> // std::abort
@@ -129,9 +129,9 @@
 # endif /* ! defined YYDEBUG */
 #endif  /* ! defined PLOGGRAMMAR_DEBUG */
 
-#line 19 "ploggrammar.yy" // lalr1.cc:392
+#line 19 "ploggrammar.yy" // lalr1.cc:377
 namespace PlogGrammar {
-#line 135 "ploggrammar.tab.hh" // lalr1.cc:392
+#line 135 "ploggrammar.tab.hh" // lalr1.cc:377
 
 
 
@@ -145,7 +145,7 @@ namespace PlogGrammar {
     /// Symbol semantic values.
     union semantic_type
     {
-    #line 96 "ploggrammar.yy" // lalr1.cc:392
+    #line 96 "ploggrammar.yy" // lalr1.cc:377
 
       uintptr_t str;
       int num;
@@ -161,7 +161,7 @@ namespace PlogGrammar {
       BdLitVecUid body;
       ProbUid prob;
 
-#line 165 "ploggrammar.tab.hh" // lalr1.cc:392
+#line 165 "ploggrammar.tab.hh" // lalr1.cc:377
     };
 #else
     typedef PLOGGRAMMAR_STYPE semantic_type;
@@ -542,9 +542,9 @@ namespace PlogGrammar {
   };
 
 
-#line 19 "ploggrammar.yy" // lalr1.cc:392
+#line 19 "ploggrammar.yy" // lalr1.cc:377
 } // PlogGrammar
-#line 548 "ploggrammar.tab.hh" // lalr1.cc:392
+#line 548 "ploggrammar.tab.hh" // lalr1.cc:377
 
 
 

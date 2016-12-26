@@ -41,8 +41,10 @@ struct Statement : Gringo::Printable, Gringo::Locatable {
     StatementType  getType();
 
 private:
-    Clingo::AST::BodyLiteral  gringobodyelast(ULit &lit);
-    std::vector<Clingo::AST::BodyLiteral> gringobodyast(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec);
+    Clingo::AST::ComparisonOperator getComparisonOpFromRelation(Gringo::Relation rel);
+
+    Clingo::AST::BodyLiteral  gringobodyexlit(ULit &lit,const UAttDeclVec &attdecls);
+    std::vector<Clingo::AST::BodyLiteral> gringobody(const UAttDeclVec &attdecls, const USortDefVec &sortDefVec);
     std::pair<Gringo::UTerm,bool> term(ULit & lit);
 
     std::unordered_set<std::string> getVariables();

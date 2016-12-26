@@ -60,3 +60,7 @@ void GroundPlogBackend::registerTrueAtId(unsigned true_id) {
     if (auto p = prg()) { p->registerTrueAtId(true_id);}
 }
 
+void GroundPlogBackend::atttoat(unsigned attid, unsigned aid) {
+    if (auto p = prg()) { p->storeatttoatmap(attid,aid);}
+}
+

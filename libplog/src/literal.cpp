@@ -4,6 +4,7 @@
 
 #include<plog/literal.h>
 #include<gringo/term.hh>
+#include<plog/input/attributedeclaration.h>
 using Gringo::FunctionTerm;
 using Gringo::ValTerm;
 
@@ -42,6 +43,19 @@ Gringo::String Literal::getAttrName() {
     return "";
 }
 
+bool Literal::isRelational(const UAttDeclVec &attdecls) {
+    FunctionTerm * fterm = dynamic_cast<FunctionTerm*>(lt.get());
+    if(!fterm)
+        return true;
+    for(const UAttDecl &decl: attdecls) {
+        if(decl->attname == fterm->name) {
+            return false;
+        }
+    }
+    return true;
+
+}
+
 ELiteral::ELiteral(ULit lit, bool neg):lit(std::move(lit)),neg(neg){}
 
 void ELiteral::print(std::ostream &out) const {
@@ -58,5 +72,9 @@ UTerm &ELiteral::getVal() {
 
 String ELiteral::getAttrName() {
     return lit->getAttrName();
+}
+
+bool ELiteral::isRelational(const UAttDeclVec &attdecls) {
+    return lit->isRelational(attdecls);
 }
 

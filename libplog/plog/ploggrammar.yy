@@ -322,10 +322,10 @@ head
     ;
 
 head_atom
-    : IDENTIFIER[id]                                  { $$ = BUILDER.lit(@$, String::fromRep($id),BUILDER.termvec()); }
+    : IDENTIFIER[id]                                  { $$ = BUILDER.lit(@$, Symbol::createId(String::fromRep($id))); }
     | IDENTIFIER[id] LPAREN ntermvec[tvv] RPAREN[r]     {$$ = BUILDER.lit(@$, String::fromRep($id), $tvv);  }
     | IDENTIFIER[id] LPAREN ntermvec[tvv] RPAREN[r]  EQ term[t] {$$ = BUILDER.lit(@$, String::fromRep($id), $tvv, $t); }
-    | IDENTIFIER[id] EQ term[t]                          {$$ = BUILDER.lit(@$, String::fromRep($id), $t); }
+    | IDENTIFIER[id] EQ term[t]                          {$$ = BUILDER.lit(@$, Symbol::createId(String::fromRep($id)), $t); }
     ;
 
 body

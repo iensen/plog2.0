@@ -43,6 +43,7 @@ namespace GroundPlog {
         std::unordered_map<Atom_t,unsigned > atom_to_external;
         std::unordered_map<clingo_atom_t, Lit_t> clingo_to_plog_lit;
         std::unordered_map<Dyn_Range_Atom, ATTID> dynRangeAtt;
+        std::unordered_map<ATTID, AId > atfromatt;
 
         Program();
         ~Program();
@@ -146,6 +147,8 @@ namespace GroundPlog {
         void registerTrueAtId(unsigned int true_id);
 
         std::unordered_set<ValueRep> getPossibleValuesFor(ATTID attid, Interpretation &interpretation);
+
+        void storeatttoatmap(unsigned int attid, unsigned int aid);
 
     private:
         Program(const Program &);

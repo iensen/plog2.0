@@ -164,6 +164,23 @@ LitUid NonGroundProgramBuilder::lit(Location const &loc, String id, TermUid tid)
 
 }
 
+LitUid NonGroundProgramBuilder::lit(Location const &loc, Symbol id) {
+    TermUid lt  = term(DefaultLocation(),id);
+    TermUid rt = boolterm(true);
+    return lits_.insert(make_locatable<Literal>(loc, Relation::EQ, terms_.erase(lt),terms_.erase(rt)));
+
+}
+
+
+LitUid NonGroundProgramBuilder::lit(Location const &loc, Symbol id, TermUid tid) {
+    TermUid lt  = term(DefaultLocation(),id);
+    return lits_.insert(make_locatable<Literal>(loc, Relation::EQ, terms_.erase(lt),terms_.erase(tid)));
+
+}
+
+
+
+
 LitUid NonGroundProgramBuilder::lit(Location const &loc, String att_name, String range_name) {
     TermUid lt  = term(DefaultLocation(),String("random"),termvec(att_name,range_name));
     return lits_.insert(make_locatable<Literal>(loc, Relation::EQ, terms_.erase(lt),terms_.erase(boolterm(true))));
@@ -224,6 +241,7 @@ ProbUid NonGroundProgramBuilder::prob(Location const &loc, int num, int denum) {
 }
 
 void NonGroundProgramBuilder::query(const Location &loc, LitUid query) {
+
     prg_.add(make_locatable<Statement>(loc, lits_.erase(query)));
 
 }

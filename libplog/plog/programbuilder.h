@@ -112,6 +112,8 @@ public:
     void sortdef(Location const &loc, String name, SortExprUid se);
 
     // literals:
+    LitUid lit(Location const &loc, Symbol id);
+    LitUid lit(Location const &loc, Symbol id, TermUid term );
     LitUid lit(Location const &loc, String id, TermVecUid tvec);
     LitUid lit(Location const &loc, String id, TermVecUid tvec, TermUid term);
     LitUid lit(Location const &loc, String id, TermUid term);
