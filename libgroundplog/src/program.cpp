@@ -277,22 +277,25 @@ namespace GroundPlog {
                 if (I.guarantees(r.body)) {
                     // check that for every y in the range of a, p(y) is decided:
                     // and that for at least one y p(y) is guaranteed!
-                    AId atid = atfromatt[r.head.first];
-                    unsigned int range_sort_id = a_ranges[atid];
-                    bool all_decided = true;
-                    bool at_least_one_guaranteed = false;
-                    for (unsigned y: sort_elems[range_sort_id]) {
-                        ATTID attid = dynRangeAtt[{r.head.second, y}];
-                        if (I.getVal(attid) == UNASSIGNED) {
-                            all_decided = false;
-                            break;
-                        }
-                        if (I.guarantees(Lit_t(attid, TRUE_ID, false, false))) {
-                            at_least_one_guaranteed = true;
+                    bool all_decided,at_least_one_guaranteed;
+                    if(r.head.second!=UNASSIGNED) {
+                        AId atid = atfromatt[r.head.first];
+                        unsigned int range_sort_id = a_ranges[atid];
+                        all_decided = true;
+                        at_least_one_guaranteed = false;
+                        for (unsigned y: sort_elems[range_sort_id]) {
+                            ATTID attid = dynRangeAtt[{r.head.second, y}];
+                            if (I.getVal(attid) == UNASSIGNED) {
+                                all_decided = false;
+                                break;
+                            }
+                            if (I.guarantees(Lit_t(attid, TRUE_ID, false, false))) {
+                                at_least_one_guaranteed = true;
+                            }
                         }
                     }
 
-                    if (all_decided && at_least_one_guaranteed) {
+                    if (r.head.second==UNASSIGNED || all_decided && at_least_one_guaranteed) {
                         if (foundRuleType != RuleType::None)
                             return false;
                         foundRuleType = RuleType::Random;
@@ -335,8 +338,12 @@ namespace GroundPlog {
             if (RandomRule *r = dynamic_cast<RandomRule *>(rr)) {
                 unsigned int range_sort_id = a_ranges[atfromatt[r->head.first]];
                 for (unsigned y: sort_elems[range_sort_id]) {
-                    ATTID attid = dynRangeAtt[{r->head.second, y}];
-                    if (interpretation.guarantees(Lit_t(attid, TRUE_ID, false, false))) {
+                    if(r->head.second!=UNASSIGNED) {
+                        ATTID attid = dynRangeAtt[{r->head.second, y}];
+                        if (interpretation.guarantees(Lit_t(attid, TRUE_ID, false, false))) {
+                            result.insert(y);
+                        }
+                    } else {
                         result.insert(y);
                     }
 

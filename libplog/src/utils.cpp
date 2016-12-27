@@ -113,11 +113,10 @@ Gringo::String getAttrName(const UTerm &term) {
     std::cout.flush();
     String termName = "";
     FunctionTerm * faterm = (FunctionTerm*) term.get();
-    
+
     if(faterm   && faterm->args.size()>0) {
         termName = faterm->name;
     }
-
     ValTerm *vaterm = (ValTerm*)term.get();
     if(( !faterm || faterm->args.size()==0) && vaterm) { // for some reason both casts work!
         termName = vaterm->value.name();

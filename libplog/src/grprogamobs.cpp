@@ -189,7 +189,8 @@ void PlogGroundProgramBuilder::addRandomRuleToBackend(PlogGroundProgramBuilder::
     const atom_t hsymbolid =  *rule.head.begin();
     Clingo::Symbol hsymbol = symbols[hsymbolid];
     Clingo::SymbolSpan  args = hsymbol.arguments();
-    unsigned  aid = aids[args[1].name()];
+    unsigned aid = args.size()==3 ? aids[args[1].name()]:UNASSIGNED;// args.size()==3 if atom is of the form
+    // random(a,p), (the third argument is "true" after the translation")
     Clingo::Symbol atsymb = args[0];
     unsigned atid = insert(atsymb.to_string(),attids);
     // extract the last element from the body:
@@ -197,17 +198,19 @@ void PlogGroundProgramBuilder::addRandomRuleToBackend(PlogGroundProgramBuilder::
     rule.body.pop_back();
     out.randomRule({atid,aid},getGroundPlogBody(rule.body), ex_atom_id);
 
-    // store the map p,y -> attid for every y in the range of a!
-    unsigned sort_id = a_range_sort[aids[args[0].name()]];
-    const std::vector<ValueRep > & elems = sort_elems[sort_id];
-    for(ValueRep val : elems) {
-        // construct a string p(y) (would be more safe to actually form the symbol)
-        std::string at = args[1].name();
-        at.push_back('(');
-        at+=term_str[val];
-        at.push_back(')');
-        ATTID att_id = insert(at, attids);
-        out.registerDynRangeAtom(aid, val, att_id);
+    if(args.size()==3) {
+        // store the map p,y -> attid for every y in the range of a!
+        unsigned sort_id = a_range_sort[aids[args[0].name()]];
+        const std::vector<ValueRep> &elems = sort_elems[sort_id];
+        for (ValueRep val : elems) {
+            // construct a string p(y) (would be more safe to actually form the symbol)
+            std::string at = args[1].name();
+            at.push_back('(');
+            at += term_str[val];
+            at.push_back(')');
+            ATTID att_id = insert(at, attids);
+            out.registerDynRangeAtom(aid, val, att_id);
+        }
     }
 }
 
