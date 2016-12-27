@@ -7,7 +7,9 @@
 #include<ctype.h>
 
 void PlogGroundProgramBuilder::rule(bool choice, AtomSpan headats, LiteralSpan bodyLits) {
+
     GRule r;
+
     /*
     std::cout << "RULE:" << " ";
     std::cout << "HEAD: " << headats[0] << " ";
@@ -17,6 +19,8 @@ void PlogGroundProgramBuilder::rule(bool choice, AtomSpan headats, LiteralSpan b
     }
     std::cout << std::endl;
     */
+
+
     for(auto c : headats) {
         r.head.push_back(c);
     }
@@ -24,10 +28,12 @@ void PlogGroundProgramBuilder::rule(bool choice, AtomSpan headats, LiteralSpan b
         r.body.push_back(c);
     }
     storedrules.push_back(r);
+
 }
 
 // question: why is it i need to include the namespace here? Is it C++ bug?
 void PlogGroundProgramBuilder::output_atom(Clingo::Symbol symbol, Clingo::atom_t atom) {
+
     std::string sname = symbol.name();
     if (sname.length()>=2 && sname[0]=='_' && isalpha(sname[1])) { // this is a sort fact!
         // we need to say that the sort contains the term
@@ -65,12 +71,6 @@ void PlogGroundProgramBuilder::output_atom(Clingo::Symbol symbol, Clingo::atom_t
 
 
 
-    /*
-    if(atom == 0 && sname.length()>=3 && sname[0]=='_' && sname[1]=='_' && sname[2]=='p') {// we have pr-atom which is a fact:
-        std::tuple<ATTID, ValueRep, double> pratomRep = prAtomFromSymbol(symbol);
-        out.prAtom({std::get<0>(pratomRep), std::get<1>(pratomRep)}, {}, std::get<2>(pratomRep));
-    }
-     */
 
 
     // if the rule is random(a(t), p), need to add a(t) -> a to attributes
@@ -100,6 +100,7 @@ void PlogGroundProgramBuilder::output_atom(Clingo::Symbol symbol, Clingo::atom_t
          }
          symbols[atom] = symbol;
      }
+
 }
 
 PlogGroundProgramBuilder::PlogGroundProgramBuilder(GroundPlogBackend &out):out(out) {
@@ -131,14 +132,23 @@ void PlogGroundProgramBuilder::end_step() {
         */
 
 
+
+
+
+
         for (auto rule:storedrules) {
             addRuleToBackend(rule);
             addAttributeMapToBackend();
         }
+
+
+
         // add the value for true
         out.registerTrueAtId(insert("true", atids));
         rulesPassedToBackend = true;
+
     }
+
 }
 
 void PlogGroundProgramBuilder::addRuleToBackend(GRule &rule) {
@@ -385,7 +395,7 @@ void PlogGroundProgramBuilder::GRule::setSymbolTable(std::vector<Clingo::Symbol>
 }
 
 Clingo::Symbol PlogGroundProgramBuilder::GRule::getHeadSymbol() {
-    if(head.size()==0)
+    if(head.size()==0 || *head.begin() >=symbols->size())
         return Clingo::Symbol();
     return symbols->at(*head.begin());
 }
