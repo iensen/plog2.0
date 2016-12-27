@@ -1,0 +1,25 @@
+sorts
+
+#dice={d1,d2}.
+#score={1,2,3,4,5,6}.
+#person={mike,john}.
+#bool = {true,false}.
+
+
+attributes
+
+roll:#dice->#score.
+owns:#dice,#person->#bool.
+
+statements
+
+owns(d1,mike).
+owns(d2,john).
+
+random(roll(D)).
+
+%probability information
+
+pr(roll(D)=6|owns(D,mike))=1/4.
+
+? roll(d1)=6.

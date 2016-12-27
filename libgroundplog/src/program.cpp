@@ -170,23 +170,29 @@ namespace GroundPlog {
         double answer = 1.0;
         std::vector<ATTID > atts =I.getAllAssignAtts();
         for(ATTID at : atts) {
+            if(!isRandom(at))
+                continue;
             if(I.getVal(at)==UNDEFINED)
                 continue;
             double others_prob = 0.0;
             double prob = -1.0;
+            int others_prob_ct = 0;
             for (const PrAtom pr: pratoms) {
                 if (pr.head.attid == at && I.guarantees(pr.body)) {
                     if(pr.head.valid == I.getVal(at)) {
                         prob = pr.prob;
                     } else {
                         others_prob += pr.prob;
-                    }
+                        ++others_prob_ct;
+                       }
                 }
             }
             if(prob>-0.5)
                 answer *= prob;
-            else
-                answer*= (1-others_prob);
+            else { // default probability!
+                double defaultProb = (1 - others_prob) / (getPossibleValuesFor(at, I).size() - others_prob_ct);
+                answer *= defaultProb;
+            }
         }
 
         return answer;

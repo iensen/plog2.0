@@ -80,6 +80,7 @@ void Program::loadToControl(Clingo::Control &ctl) {
         for(const Clingo::AST::Term & term:instances) {
             Clingo::AST::Literal hlit = Statement::make_lit(concat('_',sortName),{term});
             Clingo::AST::Rule f_r{{loc, hlit}, {}};
+            //std::cout << f_r << std::endl;
             b.add({defaultLoc,f_r});
         }
     }

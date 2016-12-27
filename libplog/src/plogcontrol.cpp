@@ -102,9 +102,8 @@ PlogControl::PlogControl(GroundPlog::GroundPlogFacade *groundplog,
 , groundPlogConfig_(groundplogConfig)
 , pgf_(pgf)
 , psf_(psf)
-        ,logger_(printer)
-
-
+        ,logger_(printer),
+ clingoControl{{nullptr, 0}, [](Clingo::WarningCode, char const *message) {}, 20}
 {
 
 }

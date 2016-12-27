@@ -110,6 +110,7 @@ PlogGroundProgramBuilder::PlogGroundProgramBuilder(GroundPlogBackend &out):out(o
 void PlogGroundProgramBuilder::end_step() {
 
     if(!rulesPassedToBackend) {
+
         /*
         std::cout << "TERMS:" << std::endl;
         for(auto c:atids) {
@@ -130,10 +131,6 @@ void PlogGroundProgramBuilder::end_step() {
             std::cout << c.first << " " << c.second << std::endl;
         }
         */
-
-
-
-
 
 
         for (auto rule:storedrules) {
@@ -291,8 +288,8 @@ void PlogGroundProgramBuilder::addObservationToBackend(const Clingo::Symbol &sym
 }
 
 void PlogGroundProgramBuilder::addActionToBackend(const Clingo::Symbol &symbol) {
-    std::pair<ATTID,ValueRep > at = atomFromSymbol(symbol);
-    out.action(at.first, at.second);
+    Atom_t at = getGroundPlogAtom(symbol);
+    out.action(at.attid, at.valid);
 
 }
 
@@ -324,29 +321,16 @@ void PlogGroundProgramBuilder::addAtomExternalToBackend(PlogGroundProgramBuilder
     // we need  to store the mapping from the pair <ATTID, AID> to ATOMS in Clingo
     const atom_t hsymbolid =  *rule.head.begin();
     Clingo::Symbol hsymbol = symbols[hsymbolid];
-    std::pair<ATTID , ValueRep > atom = atomFromSymbol(hsymbol);
+    Atom_t atom = getGroundPlogAtom(hsymbol);
     unsigned ex_atom_id = (unsigned) abs(*rule.body.begin());
-    out.atomExternal(atom.first, atom.second, ex_atom_id);
+    out.atomExternal(atom.attid, atom.valid, ex_atom_id);
 }
 
-
-std::pair<ATTID, ValueRep> PlogGroundProgramBuilder::atomFromSymbol(const Clingo::Symbol &symbol) {
-    Clingo::Symbol valsymb = symbol.arguments()[symbol.arguments().size()-1];
-    std::string att_str = symbol.name();
-    if(symbol.arguments().size()>1) att_str.push_back('(');
-    for(int i=0;i<symbol.arguments().size()-1;i++) {
-        att_str+=symbol.arguments()[i].to_string();
-    }
-    if(symbol.arguments().size()>1) att_str.push_back(')');
-    unsigned attid = insert(att_str, attids);
-    unsigned valid = insert(valsymb.to_string(), atids);
-    return {attid, valid};
-}
 
 void PlogGroundProgramBuilder::registerAtomInBackend(unsigned int &atom_id) {
     Clingo::Symbol hsymbol = symbols[atom_id];
-    std::pair<ATTID , ValueRep > atom = atomFromSymbol(hsymbol);
-    out.registerLiteral(atom_id, atom.first, atom.second, false);
+    Atom_t atom = getGroundPlogAtom(hsymbol);
+    out.registerLiteral(atom_id, atom.attid, atom.valid, false);
 }
 
 

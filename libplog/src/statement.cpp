@@ -142,6 +142,7 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
     std::vector<Clingo::AST::Statement> result;
     // generate a rule of the form head :- body, sort_atoms, ex_atom
     auto    fterm = term(head_);
+    // f_ is either random(a,p), or a = y
     Clingo::AST::Term f_ = termToClingoTerm(fterm.first);
     Clingo::AST::Literal f_l{defaultLoc, Clingo::AST::Sign::None, f_};
     Clingo::AST::Rule f_r{{defaultLoc, f_l}, gringobody(attdecls, sortDefVec)};
@@ -200,6 +201,7 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
         // find the list of possible values
         const USortExpr  & resSort = getResultSort(termName,attdecls);
         std::vector<Clingo::AST::Term> instances = resSort->generate(sortDefVec);
+        // add the rule add a(t,instance) :- ext(a(t,instance)) for every instance in intances
         for(const Clingo::AST::Term &y: instances) {
             std::vector<Clingo::AST::Term> argsc = getAttrArgs(aterm);
             argsc.push_back(y);
@@ -246,6 +248,8 @@ std::vector<Clingo::AST::BodyLiteral> Statement::getSortAtoms(const ULit & lit, 
     }
 
     FunctionTerm * fterm = dynamic_cast<FunctionTerm*>(lit->lt.get());
+    bool isRandom = attrName == "random";
+
     if(attrName == "random" || attrName == "pr" || attrName == "obs" || attrName == "do") {
         // take the term from the first argument!
         fterm = dynamic_cast<FunctionTerm*>(fterm->args[0].get());
@@ -253,7 +257,6 @@ std::vector<Clingo::AST::BodyLiteral> Statement::getSortAtoms(const ULit & lit, 
            attrName = fterm->name;
     }
 
-   // refactor common code:
     if(fterm) {
         std::vector<String> argSorts = findArgSorts(attrName, attdecls);
         const UTermVec  & targs = fterm->args;
@@ -266,13 +269,18 @@ std::vector<Clingo::AST::BodyLiteral> Statement::getSortAtoms(const ULit & lit, 
             Clingo::AST::BodyLiteral bodylit = make_body_lit(concat('_',sortName),args);
             result.push_back(bodylit);
         }
+
         // add the sort for the value:
-        std::vector<Clingo::AST::Term> args;
-        std::unique_ptr<Term> ut(lit->rt->clone());
-        args.push_back(termToClingoTerm(ut));
-        String sortName = argSorts[argSorts.size()-1];
-        Clingo::AST::BodyLiteral bodylit = make_body_lit(concat('_',sortName),args);
-        result.push_back(bodylit);
+        // note that there is no value for the rqandom atom, e.g, random(a,p),
+        // so we only need to do this if the atom is non-random
+        if(!isRandom) {
+            std::vector<Clingo::AST::Term> args;
+            std::unique_ptr<Term> ut(lit->rt->clone());
+            args.push_back(termToClingoTerm(ut));
+            String sortName = argSorts[argSorts.size() - 1];
+            Clingo::AST::BodyLiteral bodylit = make_body_lit(concat('_', sortName), args);
+            result.push_back(bodylit);
+        }
     }
     return result;
 }
