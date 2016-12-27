@@ -1,0 +1,10 @@
+sorts
+#s = {a,b,c}.
+attributes
+p:#s.
+
+statements
+
+random(p).
+obs(p,a).
+?p=a.

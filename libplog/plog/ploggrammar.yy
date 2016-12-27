@@ -402,7 +402,6 @@ cmp
 
 literal: term[l]  {  $$ = BUILDER.lit(@$,$l); }
         | term[l] cmp[rel] term[r] {$$ = BUILDER.lit(@$,$l, $rel, $r); }
-    ;
 
 e_literal: literal[l] { $$ = BUILDER.elit(@$,  $l, false);}
     |  NOT literal[l] { $$ = BUILDER.elit(@$,  $l, true); }

@@ -31,6 +31,15 @@ TEST(NEWVERSION, 5) {
     ASSERT_NEAR(run_plog("../../plog/plogapp/tests/rshort.plog"), 1.0/3.0, 1e-5);
 }
 
+TEST(NEWVERSION, 6) {
+    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/obs1.plog"), 1.0 , 1e-5);
+}
+
+
+TEST(NEWVERSION, 7) {
+    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/obs2.plog"), 0.0, 1e-5);
+}
+
 
 
 

@@ -246,7 +246,7 @@ std::vector<Clingo::AST::BodyLiteral> Statement::getSortAtoms(const ULit & lit, 
     }
 
     FunctionTerm * fterm = dynamic_cast<FunctionTerm*>(lit->lt.get());
-    if(attrName == "random" || attrName == "pr") {
+    if(attrName == "random" || attrName == "pr" || attrName == "obs" || attrName == "do") {
         // take the term from the first argument!
         fterm = dynamic_cast<FunctionTerm*>(fterm->args[0].get());
         if(fterm)
