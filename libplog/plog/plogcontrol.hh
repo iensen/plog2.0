@@ -140,7 +140,7 @@ public:
     // }}}2
 
     std::unique_ptr<GroundPlogBackend>                        out_;
-    Program                                                   prg_;
+    Plog::Program                                                   prg_;
     Defines                                                   defs_;
     std::unique_ptr<NonGroundProgramBuilder>   pb_;
     std::unique_ptr<PlogParser>                               parser_;

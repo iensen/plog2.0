@@ -9,7 +9,7 @@
 #include "statement.h"
 
 
-
+namespace Plog {
 
     class Program {
     public:
@@ -54,6 +54,7 @@
         UAttDeclVec attdecls_;
 
     };
+}
 
 
 #endif //PLOG_PROG_H

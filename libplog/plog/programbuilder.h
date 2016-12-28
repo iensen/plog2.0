@@ -30,7 +30,10 @@ using UTermVec  = Gringo::UTermVec ;
 using Location = Gringo::Location;
 using IdVec = std::vector<std::pair<Location, String>>;
 using Logger = Plog::Logger;
-class Program;
+
+namespace Plog {
+    class Program;
+}
 class Defines;
 
 enum IdVecUid           : unsigned { };
@@ -63,7 +66,7 @@ using VarVals          = std::unordered_map<String, Term::SVal>;
 class NonGroundProgramBuilder {
 
 public:
-    NonGroundProgramBuilder(Program &prg, Defines &defs);
+    NonGroundProgramBuilder(Plog::Program &prg, Defines &defs);
     IdVecUid idvec(IdVecUid uid, Location const &loc, String id);
     IdVecUid idvec();
 
@@ -140,7 +143,7 @@ public:
 
 
 private:
-    Program             &prg_;
+    Plog::Program             &prg_;
     Defines             &defs_;
     IdVecs              idvecs_;
     Terms               terms_;

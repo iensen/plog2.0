@@ -16,7 +16,7 @@ using FunctionTerm = Gringo::FunctionTerm;
 using VarTerm = Gringo::VarTerm;
 
 
-NonGroundProgramBuilder::NonGroundProgramBuilder(Program &prg, Defines &defs):prg_(prg)
+NonGroundProgramBuilder::NonGroundProgramBuilder(Plog::Program &prg, Defines &defs):prg_(prg)
         , defs_(defs)
 {
 
