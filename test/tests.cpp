@@ -67,6 +67,170 @@ TEST(NEWVERSION, 13) {
     ASSERT_NEAR(run_plog("../../plog/plogapp/tests/paper/monty3.plog"), 0.66666, 1e-5);
 }
 
+TEST(OLDVERSTION_NAIVE_BLOCKS, _5x1) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap5_1.plg",OldPlogMode::NAIVE), 0.4, 1e-5);
+}
+
+
+TEST(OLDVERSTION_NAIVE_BLOCKS, _5x2) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap5_2.plg",OldPlogMode::NAIVE), 0.0, 1e-5);
+}
+
+
+TEST(OLDVERSTION_NAIVE_BLOCKS, _5x3) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap5_3.plg",OldPlogMode::NAIVE), 0.0, 1e-5);
+}
+
+
+TEST(OLDVERSTION_NAIVE_BLOCKS, _10x1) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap10_1.plg",OldPlogMode::NAIVE), 0.6, 1e-5);
+}
+
+
+
+TEST(OLDVERSTION_NAIVE_BLOCKS, _10x2) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap10_2.plg",OldPlogMode::NAIVE), 0.266667, 1e-5);
+}
+
+
+
+TEST(OLDVERSTION_NAIVE_BLOCKS, _10x3) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap10_3.plg",OldPlogMode::NAIVE), 0.0833333, 1e-5);
+}
+
+
+TEST(OLDVERSTION_NAIVE_BLOCKS, _15x1) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap15_1.plg",OldPlogMode::NAIVE), 0.733333 , 1e-5);
+}
+
+
+
+TEST(OLDVERSTION_NAIVE_BLOCKS, _15x2) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap15_2.plg",OldPlogMode::NAIVE), 0.504762, 1e-5);
+}
+
+
+
+TEST(OLDVERSTION_NAIVE_BLOCKS, _15x3) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap15_3.plg",OldPlogMode::NAIVE), 0.318681, 1e-5);
+}
+
+
+TEST(OLDVERSTION_NAIVE_BLOCKS, _20x1) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap20_1.plg",OldPlogMode::NAIVE), 0.8, 1e-5);
+}
+
+
+
+TEST(OLDVERSTION_NAIVE_BLOCKS, _20x2) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap20_2.plg",OldPlogMode::NAIVE), 0.621053, 1e-5);
+}
+
+
+
+
+TEST(OLDVERSTION_NAIVE_BLOCKS, _20x3) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap20_3.plg",OldPlogMode::NAIVE), 0.454386, 1e-5);
+}
+
+
+
+
+TEST(OLDVERSTION_NAIVE_BLOCKS, _20x5) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap20_5.plg",OldPlogMode::NAIVE), 0.191692, 1e-5);
+}
+
+
+
+TEST(OLDVERSTION_NAIVE_BLOCKS, _20x7) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap20_7.plg",OldPlogMode::NAIVE), 0.0549278, 1e-5);
+}
+
+
+
+
+TEST(OLDVERSTION_DCO_BLOCKS, _5x1) {
+ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap5_1.plg",OldPlogMode::DCOOPTIMIZED), 0.4, 1e-5);
+}
+
+
+TEST(OLDVERSTION_DCO_BLOCKS, _5x2) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap5_2.plg",OldPlogMode::DCOOPTIMIZED), 0.0, 1e-5);
+}
+
+
+TEST(OLDVERSTION_DCO_BLOCKS, _5x3) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap5_3.plg",OldPlogMode::DCOOPTIMIZED), 0.0, 1e-5);
+}
+
+
+TEST(OLDVERSTION_DCO_BLOCKS, _10x1) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap10_1.plg",OldPlogMode::DCOOPTIMIZED), 0.6, 1e-5);
+}
+
+
+
+TEST(OLDVERSTION_DCO_BLOCKS, _10x2) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap10_2.plg",OldPlogMode::DCOOPTIMIZED), 0.266667, 1e-5);
+}
+
+
+
+TEST(OLDVERSTION_DCO_BLOCKS, _10x3) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap10_3.plg",OldPlogMode::DCOOPTIMIZED), 0.0833333, 1e-5);
+}
+
+
+TEST(OLDVERSTION_DCO_BLOCKS, _15x1) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap15_1.plg",OldPlogMode::DCOOPTIMIZED), 0.733333 , 1e-5);
+}
+
+
+
+TEST(OLDVERSTION_DCO_BLOCKS, _15x2) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap15_2.plg",OldPlogMode::DCOOPTIMIZED), 0.504762, 1e-5);
+}
+
+
+
+TEST(OLDVERSTION_DCO_BLOCKS, _15x3) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap15_3.plg",OldPlogMode::DCOOPTIMIZED), 0.318681, 1e-5);
+}
+
+
+TEST(OLDVERSTION_DCO_BLOCKS, _20x1) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap20_1.plg",OldPlogMode::DCOOPTIMIZED), 0.8, 1e-5);
+}
+
+
+
+TEST(OLDVERSTION_DCO_BLOCKS, _20x2) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap20_2.plg",OldPlogMode::DCOOPTIMIZED), 0.621053, 1e-5);
+}
+
+
+
+
+TEST(OLDVERSTION_DCO_BLOCKS, _20x3) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap20_3.plg",OldPlogMode::DCOOPTIMIZED), 0.454386, 1e-5);
+}
+
+
+
+
+TEST(OLDVERSTION_DCO_BLOCKS, _20x5) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap20_5.plg",OldPlogMode::DCOOPTIMIZED), 0.191692, 1e-5);
+}
+
+
+
+TEST(OLDVERSTION_DCO_BLOCKS, _20x7) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap20_7.plg",OldPlogMode::DCOOPTIMIZED), 0.0549278, 1e-5);
+}
+
+
+
+
 
 
 

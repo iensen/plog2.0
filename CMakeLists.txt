@@ -13,6 +13,13 @@ file(GLOB_RECURSE PLOG_SOURCES
         plogapp/src/groundplog/groundplog_app.cpp
         )
 
+file(GLOB_RECURSE OLD_PLOG_SOURCES
+        oldplog/*.cpp
+        )
+
+
+
+
 
 file(GLOB_RECURSE CLINGO_SOURCES
         clingo/liblp/src/*.cpp
@@ -41,6 +48,7 @@ include_directories(clingo/libprogram_opts)
 include_directories(clingo/libreify)
 include_directories(libgroundplog)
 include_directories(libplog)
+include_directories(oldplog)
 include_directories(/usr/include/python2.7)
 
 
@@ -63,5 +71,5 @@ TARGET_LINK_LIBRARIES(plog1  python2.7 tbb pthread dl)
 add_executable(ex ${EXAMPLE_MAIN_FILE} ${CLINGO_SOURCES})
 TARGET_LINK_LIBRARIES(ex  python2.7 tbb pthread dl)
 
-add_executable(tests    ${TEST_SOURCES} ${PLOG_SOURCES} ${CLINGO_SOURCES} test/utils.h)
+add_executable(tests   ${OLD_PLOG_SOURCES} ${TEST_SOURCES} ${PLOG_SOURCES} ${CLINGO_SOURCES}   test/utils.h)
 TARGET_LINK_LIBRARIES(tests  python2.7 tbb dl gtest pthread )

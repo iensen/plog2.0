@@ -8,8 +8,7 @@ include_directories(".")
 
 
 add_executable(plog
-    Plog.cpp
-    AnswerSet.cpp
+        AnswerSet.cpp
     Attribute.cpp
     Formula.cpp
     GroundLiteral.cpp

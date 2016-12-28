@@ -1,0 +1,104 @@
+%random block problem
+%This a model for the random placement of blocks,
+
+%which serve as obstacles, on the location of a map,
+
+%and the resulting accessiblility relation among the locations.
+
+%In this problem, there are 5 locations and one block a.
+
+
+
+#domain location(L;L1;L2;L3).
+#domain block(B;B1;B2).
+
+location={1..20}.
+block={1,2,3,4,5}.
+
+%The domain contains only one random attributes
+%which says the block is at some location
+
+place:location.
+
+%The grid is desribed by the relation leftof(location, location) and belowof(location, cation)
+
+% 1 -- 2 -- 3 -- 4 -- 5
+
+%      |    |    |	
+
+% 6--  7 -- 8 -- 9 -- 10
+
+%      |    |    | 
+
+% 11--12 --13 --14 -- 15
+
+%     |	    |    | 
+
+% 16--17 --18 --19 -- 20
+
+
+leftof(1,2). leftof(2,3). leftof(3,4). leftof(4,5). leftof(6,7). leftof(7,8). leftof(8,9). leftof(9,10).
+belowof(2,7). belowof(3,8). belowof(4,9).
+leftof(11,12). leftof(12,13). leftof(13,14). leftof(14,15).
+belowof(7,12). belowof(8,13). belowof(9,14).
+leftof(16,17). leftof(17,18). leftof(18,19). leftof(19,20).
+belowof(12,17). belowof(13,18). belowof(14,19).
+ 
+
+%blocks are randomly placed
+
+[r(B)] random(place(B)).
+
+
+invalid:-place(B1)=L1, place(B2)=L2, B1<B2, L1<=L2.
+invalid=false :- not invalid.
+
+%define the conection: connected(l1, l2). 
+
+%the relation connected is a symmetric  and transitive relation
+
+connected(L1,L2) :- connected(L2,L1),
+		    	L1<>L2.
+
+
+connected(L1,L3) :- connected(L1,L2),
+ 
+		    connected(L2,L3),
+
+		    L1<>L3.
+
+
+
+%defined by the graph and if neither location has a blcok
+
+connected(L1,L2) :- leftof(L1,L2),
+ 
+       		  not blocked(L1),
+ 
+       		  not blocked(L2).
+
+
+
+connected(L1,L2) :- belowof(L1,L2),
+
+       		  not blocked(L1), 
+
+       		  not blocked(L2).
+	
+	  
+		 
+
+connected(L1,L2)=false :- not connected(L1,L2).
+
+
+%if some location has the block, it is blocked
+
+blocked(L1):- place(B)=L1.
+
+q1 :- connected(1,20).
+
+%The endof the program
+
+?{q1}|obs(invalid=false).
+%{{connected(1,20)}}.
+
