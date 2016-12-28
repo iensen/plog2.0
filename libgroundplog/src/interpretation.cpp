@@ -78,7 +78,7 @@ bool Interpretation::decides(const std::vector<Lit_t> &body) const {
 }
 
 void Interpretation::increaseLevel() {
-   current_level++;
+   ++current_level;
 }
 
 void Interpretation::backtrackLastLevel() {

@@ -110,7 +110,6 @@ int str_to_int(std::string str) {
 // if it is of the form f(t1,..,tn), return f
 // if it is of the form a, return a
 Gringo::String getAttrName(const UTerm &term) {
-    std::cout.flush();
     String termName = "";
     FunctionTerm * faterm = (FunctionTerm*) term.get();
 
@@ -119,7 +118,8 @@ Gringo::String getAttrName(const UTerm &term) {
     }
     ValTerm *vaterm = (ValTerm*)term.get();
     if(( !faterm || faterm->args.size()==0) && vaterm) { // for some reason both casts work!
-        termName = vaterm->value.name();
+        if(vaterm->value.type()==Gringo::SymbolType::Fun)
+           termName = vaterm->value.name();
     }
     return termName;
 }

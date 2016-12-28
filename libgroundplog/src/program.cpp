@@ -117,11 +117,9 @@ namespace GroundPlog {
         }
 
         std::unordered_set<ATTID> ratts = getRandomAttributeTerms();
-
         std::unordered_set<ATTID> final_result;
-
-        std::set_difference(result.begin(), result.end(), ratts.begin(), ratts.end(),
-                            std::inserter(final_result, final_result.end()));
+        std::copy_if(result.begin(), result.end(), std::inserter(final_result,final_result.begin()),
+                     [&ratts] (int needle) { return ratts.find(needle) == ratts.end(); });
 
         return final_result;
     }
@@ -194,7 +192,6 @@ namespace GroundPlog {
                 answer *= defaultProb;
             }
         }
-
         return answer;
     }
 

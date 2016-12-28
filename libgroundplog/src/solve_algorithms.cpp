@@ -37,16 +37,21 @@ std::tuple<bool, double, double> GroundPlog::ExactDCOSolve::GetCompletionProb(Gr
     // check actions:
     for(const Action a: prg->actions) {
       if(I.getVal(a.attid)!=UNASSIGNED && I.getVal(a.attid)!=a.valid)
+          I.backtrackLastLevel();
           return std::tuple<bool, double, double> {true, 0, 0};
     }
     // check observations:
     for(const Observation o: prg->observations) {
         if(o.positive) {
-            if(I.getVal(o.attid)!=UNASSIGNED && I.getVal(o.attid)!=o.valid)
+            if(I.getVal(o.attid)!=UNASSIGNED && I.getVal(o.attid)!=o.valid) {
+                I.backtrackLastLevel();
                 return std::tuple<bool, double, double> {true, 0, 0};
+            }
         } else {
-            if(I.getVal(o.attid)!=UNASSIGNED && I.getVal(o.attid)==o.valid)
+            if(I.getVal(o.attid)!=UNASSIGNED && I.getVal(o.attid)==o.valid) {
+                I.backtrackLastLevel();
                 return std::tuple<bool, double, double> {true, 0, 0};
+            }
         }
     }
 
@@ -70,8 +75,10 @@ std::tuple<bool, double, double> GroundPlog::ExactDCOSolve::GetCompletionProb(Gr
     if(all_acts_and_obs_decided && I.getVal(prg->query.attid)!=UNASSIGNED) {
         double p = prg->Probability(I);
         if(I.guarantees(prg->query)) {
+             I.backtrackLastLevel();
              return std::tuple<bool, double, double> {true, p, p};
         } else {
+             I.backtrackLastLevel();
              return std::tuple<bool, double, double> {true, 0, p};
         }
     }
@@ -81,8 +88,10 @@ std::tuple<bool, double, double> GroundPlog::ExactDCOSolve::GetCompletionProb(Gr
         ATTID selected = heu.select(readyatts);
         readyatts.erase(selected);
         auto res = GetCompletionProbA(prg, cControl,I,dg,heu,heuv,selected);
-        if(std::get<0>(res))
+        if(std::get<0>(res)) {
+            I.backtrackLastLevel();
             return res;
+        }
     }
     // backtrack the extend assignment!
     I.backtrackLastLevel();
@@ -116,7 +125,7 @@ void GroundPlog::ExactDCOSolve::extend(Interpretation &i, GroundPlog::Program *p
         if (pr->clingo_to_plog_lit.find(abs(clitid)) != pr->clingo_to_plog_lit.end()) {
             Lit_t plogLit = pr->clingo_to_plog_lit[abs(clitid)];
             // we only care about positive literals:
-            if (!plogLit.classicNeg)
+            if (!plogLit.classicNeg && i.getVal(plogLit.attid)==UNASSIGNED)
                 i.assign(plogLit.attid, plogLit.valid);
         }
     }
@@ -159,14 +168,17 @@ std::unordered_set<ATTID> GroundPlog::ExactDCOSolve::DAT(const Interpretation &i
     std::unordered_set<ATTID> rat = RAT(i, pr);
     std::unordered_set<ATTID> ratP = pr->getRandomAttributeTerms();
     std::unordered_set<ATTID> leftrat;
-    std::set_difference(ratP.begin(), ratP.end(), rat.begin(), rat.end(),
-                        std::inserter(leftrat, leftrat.end()));
+    std::copy_if(ratP.begin(), ratP.end(), std::inserter(leftrat,leftrat.begin()),
+                 [&rat] (int needle) { return rat.find(needle) == rat.end(); });
+
     // run bfs from the difference:
     std::unordered_set<ATTID> covered_att = bfs(leftrat,dg);
     std::unordered_set<ATTID> all_att = pr->getNonRandomAttributeTerms();
     std::unordered_set<ATTID> result;
-    std::set_difference(all_att.begin(), all_att.end(), covered_att.begin(), covered_att.end(),
-                        std::inserter(result, result.end()));
+
+    std::copy_if(all_att.begin(), all_att.end(), std::inserter(result,result.begin()),
+                 [&covered_att] (int needle) { return covered_att.find(needle) == covered_att.end(); });
+
 
     return result;
 
@@ -174,7 +186,6 @@ std::unordered_set<ATTID> GroundPlog::ExactDCOSolve::DAT(const Interpretation &i
 
 std::unordered_set<unsigned int> GroundPlog::ExactDCOSolve::P(Interpretation &interpretation, GroundPlog::Program *pProgram,
                                                        GroundPlog::DepGraph *pGraph) {
-
     std::unordered_set<ATTID> ats = RAT(interpretation, pProgram);
     //std::cout << "RAT: " << ats.size() << std::endl;
     std::unordered_set<ATTID> datats = DAT(interpretation, pProgram, pGraph);

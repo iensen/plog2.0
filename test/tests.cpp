@@ -54,6 +54,19 @@ TEST(NEWVERSION, 10) {
 }
 
 
+TEST(NEWVERSION, 11) {
+    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/paper/monty1.plog"), 0.33333, 1e-5);
+}
+
+
+TEST(NEWVERSION, 12) {
+    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/paper/monty2.plog"), 0.0, 1e-5);
+}
+
+TEST(NEWVERSION, 13) {
+    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/paper/monty3.plog"), 0.66666, 1e-5);
+}
+
 
 
 

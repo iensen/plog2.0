@@ -5,6 +5,7 @@
 #include<plog/literal.h>
 #include<gringo/term.hh>
 #include<plog/input/attributedeclaration.h>
+#include<plog/input/utils.h>
 using Gringo::FunctionTerm;
 using Gringo::ValTerm;
 
@@ -24,36 +25,21 @@ UTerm &Literal::getVal() {
     return rt;
 }
 
-// TODO: can we somehow avoid dynamic cast?
-
 Gringo::String Literal::getAttrName() {
-
-    // if the term is a function symbol
-    FunctionTerm * fterm = dynamic_cast<FunctionTerm*>(lt.get());
-    if(fterm!= nullptr) {
-        return fterm->name;
-    }
-
-    //if the term is a valterm (constant)
-    ValTerm * vterm = dynamic_cast<ValTerm*>(lt.get());
-    if(vterm!= nullptr) {
-        return vterm->value.name();
-    }
-
-    return "";
+    return ::getAttrName(lt);
 }
 
 bool Literal::isRelational(const UAttDeclVec &attdecls) {
-    FunctionTerm * fterm = dynamic_cast<FunctionTerm*>(lt.get());
-    if(!fterm)
+
+    String attrName = getAttrName();
+    if(attrName == "")
         return true;
     for(const UAttDecl &decl: attdecls) {
-        if(decl->attname == fterm->name) {
+        if(decl->attname == attrName) {
             return false;
         }
     }
     return true;
-
 }
 
 ELiteral::ELiteral(ULit lit, bool neg):lit(std::move(lit)),neg(neg){}

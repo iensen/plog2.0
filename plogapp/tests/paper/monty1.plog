@@ -1,0 +1,28 @@
+
+sorts
+
+#boolean={true, false}.
+#doors={1,2,3}. 
+
+attributes
+
+prize: #doors.
+open: #doors.
+selected: #doors.
+can_open: #doors -> #boolean.
+
+statements
+
+random(prize).
+random (selected).
+obs(selected,1).
+
+random (open, can_open).
+can_open(D)=false:- selected=D.
+can_open(D)=false:- prize=D.
+can_open(D) :- not can_open(D)=false.
+
+obs(open,2).
+
+
+? prize=1.

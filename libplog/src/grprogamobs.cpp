@@ -34,6 +34,7 @@ void PlogGroundProgramBuilder::rule(bool choice, AtomSpan headats, LiteralSpan b
 // question: why is it i need to include the namespace here? Is it C++ bug?
 void PlogGroundProgramBuilder::output_atom(Clingo::Symbol symbol, Clingo::atom_t atom) {
 
+    //std::cout << "ATOM ID: " << atom << " SYMBOL: " << symbol.to_string() << std::endl;
     std::string sname = symbol.name();
     if (sname.length()>=2 && sname[0]=='_' && isalpha(sname[1])) { // this is a sort fact!
         // we need to say that the sort contains the term
@@ -131,7 +132,6 @@ void PlogGroundProgramBuilder::end_step() {
             std::cout << c.first << " " << c.second << std::endl;
         }
         */
-
 
         for (auto rule:storedrules) {
             addRuleToBackend(rule);
