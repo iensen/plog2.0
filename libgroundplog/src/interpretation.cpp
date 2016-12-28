@@ -83,8 +83,8 @@ void Interpretation::increaseLevel() {
 
 void Interpretation::backtrackLastLevel() {
     while(level[trail.back()]==current_level) {
-        trail.pop_back();
         values[trail.back()] = UNASSIGNED;
+        trail.pop_back();
     }
     --current_level;
 }

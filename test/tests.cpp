@@ -67,6 +67,12 @@ TEST(NEWVERSION, 13) {
     ASSERT_NEAR(run_plog("../../plog/plogapp/tests/paper/monty3.plog"), 0.66666, 1e-5);
 }
 
+
+TEST(NEWVERSION, 14) {
+    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/rsort.plog"), 0.111111, 1e-5);
+}
+
+
 TEST(OLDVERSTION_NAIVE_BLOCKS, _5x1) {
     ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap5_1.plg",OldPlogMode::NAIVE), 0.4, 1e-5);
 }
@@ -236,5 +242,6 @@ TEST(OLDVERSTION_DCO_BLOCKS, _20x7) {
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
+    ::testing::GTEST_FLAG(filter) = "NEWVERSION*";
     return RUN_ALL_TESTS();
 }

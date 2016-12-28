@@ -12,11 +12,23 @@ Range::Range(UTerm &&from, UTerm &&to):from(std::move(from)), to(std::move(to)) 
 
 
 std::vector<Clingo::AST::Term> Range::generate( const USortDefVec &sortDefVec) {
-    throw "not implemented";
+    bool undefined;
+    Gringo::Logger log;
+
+    int n_from = from->toNum(undefined,log);
+    int n_to =  to->toNum(undefined,log);
+
+    std::vector<Clingo::AST::Term> result;
+    for(int i=n_from;i<=n_to;i++) {
+        Clingo::Symbol sym = Clingo::Number(i);
+        result.push_back({defaultLoc,sym});
+    }
+    return result;
+
 }
 
 std::string Range::toString() const{
-    return std::__cxx11::string();
+    throw "not implemented yet";
 }
 
 Concatenation::Concatenation(USortExprVec vec):sexprvec(std::move(vec)) {

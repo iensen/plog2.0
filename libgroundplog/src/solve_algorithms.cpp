@@ -30,26 +30,22 @@ std::tuple<bool, double, double> GroundPlog::ExactDCOSolve::GetCompletionProb(Gr
                                                                               const AttributeSelectionHeuristic & heu,
                                                                               const ValueSelectionHeuristic & heuv
 ) {
-    I.increaseLevel();
     extend(I, prg, cControl, dg);
     // check if any of the value checking axioms is falsified:
 
     // check actions:
     for(const Action a: prg->actions) {
       if(I.getVal(a.attid)!=UNASSIGNED && I.getVal(a.attid)!=a.valid)
-          I.backtrackLastLevel();
           return std::tuple<bool, double, double> {true, 0, 0};
     }
     // check observations:
     for(const Observation o: prg->observations) {
         if(o.positive) {
             if(I.getVal(o.attid)!=UNASSIGNED && I.getVal(o.attid)!=o.valid) {
-                I.backtrackLastLevel();
                 return std::tuple<bool, double, double> {true, 0, 0};
             }
         } else {
             if(I.getVal(o.attid)!=UNASSIGNED && I.getVal(o.attid)==o.valid) {
-                I.backtrackLastLevel();
                 return std::tuple<bool, double, double> {true, 0, 0};
             }
         }
@@ -75,26 +71,23 @@ std::tuple<bool, double, double> GroundPlog::ExactDCOSolve::GetCompletionProb(Gr
     if(all_acts_and_obs_decided && I.getVal(prg->query.attid)!=UNASSIGNED) {
         double p = prg->Probability(I);
         if(I.guarantees(prg->query)) {
-             I.backtrackLastLevel();
              return std::tuple<bool, double, double> {true, p, p};
         } else {
-             I.backtrackLastLevel();
              return std::tuple<bool, double, double> {true, 0, p};
         }
     }
 
     std::unordered_set<ATTID> readyatts = prg->getReadyAtts(I);
+
     while(!readyatts.empty()) {
         ATTID selected = heu.select(readyatts);
         readyatts.erase(selected);
         auto res = GetCompletionProbA(prg, cControl,I,dg,heu,heuv,selected);
         if(std::get<0>(res)) {
-            I.backtrackLastLevel();
             return res;
         }
     }
     // backtrack the extend assignment!
-    I.backtrackLastLevel();
     return std::tuple<bool, double, double>{false,0.0,0.0};
 }
 
@@ -245,9 +238,10 @@ GroundPlog::ExactDCOSolve::GetCompletionProbA(GroundPlog::Program *prg, Clingo::
     while(!pvals.empty()) {
         ValueRep selectedVal = heuv.select(pvals);
         pvals.erase(selectedVal);
+        I.increaseLevel();
         I.assign(selectedATT,selectedVal);
         std::tuple<bool, double, double> comp = GetCompletionProb(prg,cControl,I,dg,heu,heuv);
-        I.assign(selectedATT,UNASSIGNED); // backtrack this assignment immediately
+        I.backtrackLastLevel();
         if(!std::get<0>(comp)) {
             return std::tuple<bool, double, double>{false,0,0};
         }

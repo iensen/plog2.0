@@ -131,12 +131,13 @@ void PlogGroundProgramBuilder::end_step() {
         for(auto c:sortids) {
             std::cout << c.first << " " << c.second << std::endl;
         }
-        */
 
+        */
         for (auto rule:storedrules) {
             addRuleToBackend(rule);
             addAttributeMapToBackend();
         }
+
 
 
 
