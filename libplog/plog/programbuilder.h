@@ -58,8 +58,8 @@ using SortExprVecs     = Indexed<USortExprVec, SortExprVecUid>;
 using VarSortExprs     = Indexed<UVarSortExpr, VarSortExprUid>;
 using VarSortExprVecs  = Indexed<UVarSortExprVec, VarSortExprVecUid >;
 using Conditions       = Indexed<UCond, CondUid>;
-using Literals         = Indexed<ULit, LitUid >;
-using Bodies           = Indexed<ULitVec, BdLitVecUid >;
+using Literals         = Indexed<Plog::ULit, LitUid >;
+using Bodies           = Indexed<Plog::ULitVec, BdLitVecUid >;
 using Probabilities    = Indexed<UProb, ProbUid>;
 using VarVals          = std::unordered_map<String, Term::SVal>;
 

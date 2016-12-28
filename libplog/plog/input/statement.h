@@ -27,9 +27,9 @@ using Gringo::Input::UBodyAggrVec ;
 using Gringo::Input::UBodyAggr;
 
 struct Statement : Gringo::Printable, Gringo::Locatable {
-    Statement(ULit &&query);
-    Statement(ULit &&head, ULitVec &&body);
-    Statement(ULit &&head, ULitVec &&body,UProb && prob);
+    Statement(Plog::ULit &&query);
+    Statement(Plog::ULit &&head, Plog::ULitVec &&body);
+    Statement(Plog::ULit &&head, Plog::ULitVec &&body,UProb && prob);
 
     virtual void print(std::ostream &out) const;
     virtual void check(Logger &log) const;
@@ -43,9 +43,9 @@ struct Statement : Gringo::Printable, Gringo::Locatable {
 private:
     Clingo::AST::ComparisonOperator getComparisonOpFromRelation(Gringo::Relation rel);
 
-    Clingo::AST::BodyLiteral  gringobodyexlit(ULit &lit,const UAttDeclVec &attdecls);
+    Clingo::AST::BodyLiteral  gringobodyexlit(Plog::ULit &lit,const UAttDeclVec &attdecls);
     std::vector<Clingo::AST::BodyLiteral> gringobody(const UAttDeclVec &attdecls, const USortDefVec &sortDefVec);
-    std::pair<Gringo::UTerm,bool> term(ULit & lit);
+    std::pair<Gringo::UTerm,bool> term(Plog::ULit & lit);
 
     std::unordered_set<std::string> getVariables();
     std::unordered_set<std::string> getVariables(const UTerm &term);
@@ -55,11 +55,11 @@ private:
     std::vector<Clingo::AST::Statement> ruleToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec);
 
     static int rule_id;
-    ULit     head_;
-    ULitVec  body_;
+    Plog::ULit     head_;
+    Plog::ULitVec  body_;
     UProb probability_;
     StatementType type_;
-    std::vector<Clingo::AST::BodyLiteral> getSortAtoms(const ULit &lit,const USortDefVec &sortDefVec,const UAttDeclVec & attdecls);
+    std::vector<Clingo::AST::BodyLiteral> getSortAtoms(const Plog::ULit &lit,const USortDefVec &sortDefVec,const UAttDeclVec & attdecls);
     std::vector<Clingo::AST::BodyLiteral> getSortAtoms(const USortDefVec &sortDefVec,const UAttDeclVec & attdecl);
     static  std::vector<String> findArgSorts(String attName, const UAttDeclVec & attdecls);
     Clingo::AST::Term make_external_term();

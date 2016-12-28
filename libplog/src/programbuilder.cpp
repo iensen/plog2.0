@@ -149,32 +149,32 @@ TermUid NonGroundProgramBuilder::boolterm(bool val) {
 LitUid NonGroundProgramBuilder::lit(Location const &loc, String id, TermVecUid tvec) {
     TermUid lt  = term(DefaultLocation(),id,tvec);
     TermUid rt = boolterm(true);
-    return lits_.insert(make_locatable<Literal>(loc, Relation::EQ, terms_.erase(lt),terms_.erase(rt)));
+    return lits_.insert(make_locatable<Plog::Literal>(loc, Relation::EQ, terms_.erase(lt),terms_.erase(rt)));
 }
 
 LitUid NonGroundProgramBuilder::lit(Location const &loc, String id, TermVecUid tvec, TermUid tid) {
     TermUid lt  = term(DefaultLocation(),id,tvec);
-    return lits_.insert(make_locatable<Literal>(loc, Relation::EQ, terms_.erase(lt),terms_.erase(tid)));
+    return lits_.insert(make_locatable<Plog::Literal>(loc, Relation::EQ, terms_.erase(lt),terms_.erase(tid)));
 
 }
 
 LitUid NonGroundProgramBuilder::lit(Location const &loc, String id, TermUid tid) {
     TermUid lt  = term(DefaultLocation(),id);
-    return lits_.insert(make_locatable<Literal>(loc, Relation::EQ, terms_.erase(lt),terms_.erase(tid)));
+    return lits_.insert(make_locatable<Plog::Literal>(loc, Relation::EQ, terms_.erase(lt),terms_.erase(tid)));
 
 }
 
 LitUid NonGroundProgramBuilder::lit(Location const &loc, Symbol id) {
     TermUid lt  = term(DefaultLocation(),id);
     TermUid rt = boolterm(true);
-    return lits_.insert(make_locatable<Literal>(loc, Relation::EQ, terms_.erase(lt),terms_.erase(rt)));
+    return lits_.insert(make_locatable<Plog::Literal>(loc, Relation::EQ, terms_.erase(lt),terms_.erase(rt)));
 
 }
 
 
 LitUid NonGroundProgramBuilder::lit(Location const &loc, Symbol id, TermUid tid) {
     TermUid lt  = term(DefaultLocation(),id);
-    return lits_.insert(make_locatable<Literal>(loc, Relation::EQ, terms_.erase(lt),terms_.erase(tid)));
+    return lits_.insert(make_locatable<Plog::Literal>(loc, Relation::EQ, terms_.erase(lt),terms_.erase(tid)));
 
 }
 
@@ -185,17 +185,17 @@ LitUid NonGroundProgramBuilder::lit(Location const &loc, String att_name, String
     TermUid lt  = term(DefaultLocation(),String("random"),termvec(att_name,range_name));
     std::cout << "LOL"<<range_name << std::endl;
 
-    return lits_.insert(make_locatable<Literal>(loc, Relation::EQ, terms_.erase(lt),terms_.erase(boolterm(true))));
+    return lits_.insert(make_locatable<Plog::Literal>(loc, Relation::EQ, terms_.erase(lt),terms_.erase(boolterm(true))));
 
 }
 
 LitUid NonGroundProgramBuilder::lit(Location const &loc, TermUid t) {
-    return lits_.insert(make_locatable<Literal>(loc, Relation::EQ, terms_.erase(t),terms_.erase(boolterm(true))));
+    return lits_.insert(make_locatable<Plog::Literal>(loc, Relation::EQ, terms_.erase(t),terms_.erase(boolterm(true))));
 
 }
 
 LitUid NonGroundProgramBuilder::lit(Location const &loc, TermUid t1, Relation rel, TermUid t2) {
-    return lits_.insert(make_locatable<Literal>(loc, rel, terms_.erase(t1),terms_.erase(t2)));
+    return lits_.insert(make_locatable<Plog::Literal>(loc, rel, terms_.erase(t1),terms_.erase(t2)));
 }
 
 
@@ -207,7 +207,7 @@ LitUid NonGroundProgramBuilder::lit(bool type) {
 
 
 LitUid NonGroundProgramBuilder::elit(Location const &loc, LitUid lit, bool negative) {
-    return lits_.insert(make_locatable<ELiteral>(loc, lits_.erase(lit),negative));
+    return lits_.insert(make_locatable<Plog::ELiteral>(loc, lits_.erase(lit),negative));
 }
 
 TermVecUid NonGroundProgramBuilder::termvec(String el1, String el2) {

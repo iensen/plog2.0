@@ -29,14 +29,14 @@ int Statement::rule_id = 0;
 
 
 
-Statement::Statement(ULit &&head, ULitVec &&body):head_(std::move(head)),body_(std::move(body)),type_(StatementType::RULE){
+Statement::Statement(Plog::ULit &&head, Plog::ULitVec &&body):head_(std::move(head)),body_(std::move(body)),type_(StatementType::RULE){
 }
 
-Statement::Statement(ULit &&head, ULitVec &&body, UProb &&prob):head_(std::move(head)),body_(std::move(body)),probability_(std::move(prob)),type_(StatementType::PR_ATOM){
+Statement::Statement(Plog::ULit &&head, Plog::ULitVec &&body, UProb &&prob):head_(std::move(head)),body_(std::move(body)),probability_(std::move(prob)),type_(StatementType::PR_ATOM){
 
 }
 
-Statement::Statement(ULit &&query):head_(std::move(query)),type_(StatementType::QUERY) {
+Statement::Statement(Plog::ULit &&query):head_(std::move(query)),type_(StatementType::QUERY) {
 }
 
 void Statement::print(std::ostream &out) const {
@@ -65,7 +65,7 @@ Statement::~Statement() {
 // for a term of the form term rel term, where term is not con
 // structed from an attribute term, return {term rel term, true}
 // to do: get rid of this and construct clingo terms directly
-std::pair<Gringo::UTerm,bool>  Statement::term(ULit & lit) {
+std::pair<Gringo::UTerm,bool>  Statement::term(Plog::ULit & lit) {
         if (FunctionTerm *fterm = dynamic_cast<FunctionTerm *>(lit->lt.get())) {
             String name = fterm->name;
             UTermVec &args = fterm->args;
@@ -239,7 +239,7 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
 }
 
 // do not pass e-literal here!
-std::vector<Clingo::AST::BodyLiteral> Statement::getSortAtoms(const ULit & lit, const USortDefVec &sortDefVec,const UAttDeclVec & attdecls) {
+std::vector<Clingo::AST::BodyLiteral> Statement::getSortAtoms(const Plog::ULit & lit, const USortDefVec &sortDefVec,const UAttDeclVec & attdecls) {
     // add assert that it is not an e-literal
     std::vector<Clingo::AST::BodyLiteral> result;
     String attrName = lit->getAttrName();
@@ -303,8 +303,8 @@ std::vector<Clingo::AST::BodyLiteral> Statement::gringobody(const UAttDeclVec &a
 }
 
 
-Clingo::AST::BodyLiteral Statement::gringobodyexlit(ULit &lit, const UAttDeclVec &attdecls) {
-    ELiteral *elit = dynamic_cast<ELiteral *>(lit.get());
+Clingo::AST::BodyLiteral Statement::gringobodyexlit(Plog::ULit &lit, const UAttDeclVec &attdecls) {
+    Plog::ELiteral *elit = dynamic_cast<Plog::ELiteral *>(lit.get());
 
     if (!elit->isRelational(attdecls)) {
         std::pair<Gringo::UTerm, bool> termb = term(elit->lit); //3
@@ -333,7 +333,7 @@ std::unordered_set<std::string> Statement::getVariables() {
     result.insert(hrtvars.begin(), hrtvars.end());
     // add variables from the body
     for(const auto& lit:body_) {
-        ELiteral* elit = dynamic_cast<ELiteral*>(lit.get());
+        Plog::ELiteral* elit = dynamic_cast<Plog::ELiteral*>(lit.get());
         auto blvarsl = getVariables(elit->lit->lt);
         auto blvarsr = getVariables(elit->lit->rt);
         result.insert(blvarsl.begin(), blvarsl.end());
@@ -384,9 +384,9 @@ std::vector<Clingo::AST::BodyLiteral>
 Statement::getSortAtoms(const USortDefVec &sortDefVec, const UAttDeclVec &attdecls) {
     std::vector<Clingo::AST::BodyLiteral> resvec = getSortAtoms(head_, sortDefVec, attdecls);
     // add sorts for the body:
-    for(const ULit& blit:body_) {
+    for(const Plog::ULit& blit:body_) {
         if(!blit->isRelational(attdecls)) {
-            ELiteral *elit = dynamic_cast<ELiteral *>(blit.get());
+            Plog::ELiteral *elit = dynamic_cast<Plog::ELiteral *>(blit.get());
             std::vector<Clingo::AST::BodyLiteral> litSortAtoms = getSortAtoms(elit->lit, sortDefVec, attdecls);
             resvec.insert(resvec.end(), litSortAtoms.begin(), litSortAtoms.end());
         }
