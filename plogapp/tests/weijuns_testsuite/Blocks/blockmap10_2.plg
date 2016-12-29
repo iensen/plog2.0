@@ -1,0 +1,106 @@
+%random block problem
+%This a model for the random placement of blocks,
+
+%which serve as obstacles, on the location of a map,
+
+%and the resulting accessiblility relation among the locations.
+
+%In this problem, there are 5 locations and one block a.
+
+sorts
+
+#location= 1..10.
+#block={1,2}.
+#bool = {true, false}.
+%The domain contains only one random attributes
+%which says the block is at some location
+attributes
+
+place:#block -> #location.
+leftof: #location, #location -> #bool.
+belowof: #location, #location -> #bool.
+invalid: #bool.
+connected: #location, #location ->#bool.
+blocked: #location -> #bool.
+
+
+statements
+
+
+
+%The grid is desribed by the relation leftof(location, location) and belowof(location, cation)
+
+% 1 -- 2 -- 3 -- 4 -- 5
+
+%      |    |	 |	
+
+% 6--  7 -- 8 -- 9 -- 10
+
+
+
+leftof(1,2). leftof(2,3). leftof(3,4). leftof(4,5). leftof(6,7). leftof(7,8). leftof(8,9). leftof(9,10).
+belowof(2,7). belowof(3,8). belowof(4,9).
+
+
+ 
+%%leftof(3,5). leftof(6,7). leftof(9,10). leftof(12,13). leftof(15,9).
+%%belowof(2,3). belowof(14,6). belowof(15,11). belowof(7,9). belowof(9,12).
+%%belowof(4,5). belowof(5,8). belowof(8,10).
+
+
+%blocks are randomly placed
+
+random(place(B)).
+
+
+invalid:-place(B1)=L1, place(B2)=L2, B1<B2, L1<=L2.
+invalid=false:- not invalid.
+
+%define the conection: connected(l1, l2). 
+
+%the relation connected is a symmetric  and transitive relation
+
+connected(L1,L2) :- connected(L2,L1),
+		    	L1!=L2.
+
+
+connected(L1,L3) :- connected(L1,L2),
+ 
+		    connected(L2,L3),
+
+		    L1!=L3.
+
+
+
+%defined by the graph and if neither location has a blcok
+
+connected(L1,L2) :- leftof(L1,L2),
+ 
+       		  not blocked(L1),
+ 
+       		  not blocked(L2).
+
+
+
+connected(L1,L2) :- belowof(L1,L2),
+
+       		  not blocked(L1), 
+
+       		  not blocked(L2).
+	
+	  
+		 
+
+connected(L1,L2)=false :- not connected(L1,L2).
+
+
+%if some location has the block, it is blocked
+
+blocked(L1):- place(B)=L1.
+
+%The endof the program
+obs(invalid, false).
+
+? connected(1,10).
+%{{connected(1,5)}}.
+

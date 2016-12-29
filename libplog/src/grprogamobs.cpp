@@ -140,11 +140,9 @@ void PlogGroundProgramBuilder::end_step() {
 
 
 
-
         // add the value for true
         out.registerTrueAtId(insert("true", atids));
         rulesPassedToBackend = true;
-
     }
 
 }

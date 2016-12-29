@@ -78,7 +78,7 @@ std::tuple<bool, double, double> GroundPlog::ExactDCOSolve::GetCompletionProb(Gr
     }
 
     std::unordered_set<ATTID> readyatts = prg->getReadyAtts(I);
-
+    //std:: cout << readyatts.size() << std::endl;
     while(!readyatts.empty()) {
         ATTID selected = heu.select(readyatts);
         readyatts.erase(selected);
@@ -192,6 +192,7 @@ std::unordered_set<unsigned int> GroundPlog::ExactDCOSolve::P(Interpretation &in
 
 GroundPlog::Clingo_Result
 GroundPlog::ExactDCOSolve::call_clingo(Clingo::Control *clingoCtrl, std::unordered_set<unsigned> activeRules) {
+    //std::cout <<"CLINGO CALLED" << std::endl;
     // assign externals:
     Clingo::SymbolicAtoms ats = clingoCtrl->symbolic_atoms();
 
