@@ -91,7 +91,9 @@ std::tuple<bool, double, double> GroundPlog::ExactDCOSolve::GetCompletionProb(Gr
     return std::tuple<bool, double, double>{false,0.0,0.0};
 }
 
-ClingoModelRep convertModelToRep(const Clingo::Model &m, Clingo::Control *cControl) {
+
+/*
+ClingoModelRep modelToASPIfs(const Clingo::Model &m, Clingo::Control *cControl) {
     //std::cout <<"MODEL HERE:"<< m << std::endl;
     ClingoModelRep result;
     Clingo::SymbolicAtoms ats = cControl->symbolic_atoms();
@@ -105,6 +107,21 @@ ClingoModelRep convertModelToRep(const Clingo::Model &m, Clingo::Control *cContr
     }
     return result;
 }
+ */
+
+
+
+
+ClingoModelRep modelToASPIfs(const Clingo::Model &m, Clingo::Control *cControl) {
+    ClingoModelRep result;
+    const Clingo::SymbolVector &atvec = m.symbols();
+    for (const Clingo::Symbol &s : atvec) {
+        auto at = cControl->symbolic_atoms().find(s);
+        result.push_back(at->literal());
+    }
+    return result;
+}
+
 
 
 void GroundPlog::ExactDCOSolve::extend(Interpretation &i, GroundPlog::Program *pr, Clingo::Control *cControl, DepGraph *dg) {
@@ -208,7 +225,7 @@ GroundPlog::ExactDCOSolve::call_clingo(Clingo::Control *clingoCtrl, std::unorder
     // find the first model:
     Clingo::SolveIteratively solveit = clingoCtrl->solve_iteratively();
     Clingo::Model m1 = solveit.next();
-    ClingoModelRep mr = convertModelToRep(m1,clingoCtrl);
+    ClingoModelRep mr = modelToASPIfs(m1, clingoCtrl);
     Clingo::Model m2 = solveit.next();
     solveit.close();
     // assign the externals back to FREE:
