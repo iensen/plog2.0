@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.3)
 project(plog)
 #project(clingo)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3 -pg")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 
 file(GLOB_RECURSE PLOG_SOURCES
@@ -17,6 +17,8 @@ file(GLOB_RECURSE OLD_PLOG_SOURCES
         oldplog/*.cpp
         )
 
+get_filename_component(full_path_Plog_cpp ${CMAKE_CURRENT_SOURCE_DIR}/oldplog/Plog.cpp ABSOLUTE)
+list(REMOVE_ITEM OLD_PLOG_SOURCES "${full_path_Plog_cpp}")
 
 
 

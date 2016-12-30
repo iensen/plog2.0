@@ -1,13 +1,23 @@
-#domain card(C;C1;C2).
-#domain kind(K;K1;K2).
-#domain step(S;S1;S2).
 
-kc:kind.
-draw:card.
+sorts
 
-step={1..5}.
-kind={1..5}.
-card={1..20}.
+#step= 1..5.
+#kind= 1..5.
+#card= 1..20.
+#bool = {true, false}.
+
+attributes
+
+kc: #card->#kind.
+draw: #step ->#card.
+invalid:#bool.
+pair: #kind,#step->#bool.
+pair_of_kind: #kind -> #bool.
+morepair: #kind->#bool.
+singlepair:#bool.
+doublepair:#bool.
+
+statements
 
 kc(1)=1. kc(2)=2. kc(3)=3. kc(4)=4. 
 kc(5)=1. kc(6)=2. kc(7)=3. kc(8)=4. 
@@ -15,17 +25,22 @@ kc(9)=1. kc(10)=2. kc(11)=3. kc(12)=4.
 kc(13)=1. kc(14)=2. kc(15)=3. kc(16)=4.
 kc(17)=1. kc(18)=2. kc(19)=3. kc(20)=4.
 
-
-
-[dr(S)] random(draw(S)).
+random(draw(S)).
 
 invalid :- draw(S1)=C1, draw(S2)=C2,S1<S2,C1<=C2.
 invalid=false :- not invalid.
 
 pair(K,S1) :- kc(C1)=K, kc(C2)=K, draw(S2)=C2, draw(S1)=C1, S1<S2.
 morepair(K) :- pair(K,S1), pair(K,S2), S1<S2.
-pair(K) :- pair(K,S), not morepair(K).
-doublepair :- pair(K1), pair(K2), K1<K2.
-singlepair :- pair(K), not doublepair.
+pair_of_kind(K) :- pair(K,S), not morepair(K).
+doublepair :- pair_of_kind(K1), pair_of_kind(K2), K1<K2.
+singlepair :- pair_of_kind(K), not doublepair.
 
-?{singlepair}|obs(invalid=false).
+obs(invalid,false).
+
+? singlepair.
+
+
+
+
+

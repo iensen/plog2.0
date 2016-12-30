@@ -122,6 +122,20 @@ TEST(OLDVERSION_NAIVE_BLOCKS, _20x3) {
     ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap20_3.plg",OldPlogMode::NAIVE), 0.454386, 1e-5);
 }
 
+TEST(OLDVERSION_DCO_BLOCKS, _20x1) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap20_1.plg",OldPlogMode::DCOOPTIMIZED), 0.8, 1e-5);
+}
+
+
+TEST(OLDVERSION_DCO_BLOCKS, _20x2) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap20_2.plg",OldPlogMode::DCOOPTIMIZED), 0.621053, 1e-5);
+}
+
+TEST(OLDVERSION_DCO_BLOCKS, _20x3) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap20_3.plg",OldPlogMode::DCOOPTIMIZED), 0.454386, 1e-5);
+}
+
+
 
 
 
@@ -286,6 +300,23 @@ TEST(NEWVERSION_BLOCKS, _10x3) {
 }
 
 
+TEST(NEWVERSION_BLOCKS, _20x1) {
+    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Blocks/blockmap20_1.plg"), 0.8, 1e-5);
+}
+
+TEST(NEWVERSION_BLOCKS, _20x2) {
+    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Blocks/blockmap20_2.plg"), 0.621053, 1e-5);
+}
+
+TEST(NEWVERSION_BLOCKS, _20x3) {
+    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Blocks/blockmap20_3.plg"), 0.454386, 1e-5);
+}
+
+
+
+
+
+
 TEST(NEWVERSION_BLOCKS, _15x1) {
     ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Blocks/blockmap15_1.plg"), 0.733333 , 1e-5);
 }
@@ -299,8 +330,38 @@ TEST(NEWVERSION_POKER, _3x3) {
 }
 
 
+TEST(NEWVERSION_POKER, _3x4) {
+    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Poker/poker_3_4.txt"), 0.514286, 1e-5);
+}
+
+TEST(NEWVERSION_POKER, _3x5) {
+    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Poker/poker_3_5.txt"), 0.526316, 1e-5);
+}
+
+
+
+TEST(NEWVERSION_POKER, _5x3) {
+    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Poker/poker_5_3.txt"), 0.545455, 1e-5);
+}
+
+
+TEST(NEWVERSION_POKER, _5x4) {
+    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Poker/poker_5_4.txt"), 0.417582, 1e-5);
+}
+
+TEST(NEWVERSION_POKER, _5x5) {
+    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Poker/poker_5_5.txt"), 0.399897, 1e-5);
+}
+
+
+
+
+
+
+
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    ::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._3x4";
+    ::testing::GTEST_FLAG(filter) = "OLDVERSION_NAIVE_POKER*";
     return RUN_ALL_TESTS();
 }
