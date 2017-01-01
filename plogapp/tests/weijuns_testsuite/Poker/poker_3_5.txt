@@ -1,4 +1,3 @@
-
 sorts
 
 #step= 1..3.
@@ -39,8 +38,3 @@ singlepair :- pair_of_kind(K), not doublepair.
 obs(invalid,false).
 
 ? singlepair.
-
-
-
-
-

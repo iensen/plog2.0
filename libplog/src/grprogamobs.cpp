@@ -112,6 +112,7 @@ void PlogGroundProgramBuilder::end_step() {
 
     if(!rulesPassedToBackend) {
 
+
         /*
         std::cout << "TERMS:" << std::endl;
         for(auto c:atids) {
@@ -131,8 +132,10 @@ void PlogGroundProgramBuilder::end_step() {
         for(auto c:sortids) {
             std::cout << c.first << " " << c.second << std::endl;
         }
-
         */
+
+
+
         for (auto rule:storedrules) {
             addRuleToBackend(rule);
             addAttributeMapToBackend();

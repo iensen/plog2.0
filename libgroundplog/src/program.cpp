@@ -99,8 +99,11 @@ namespace GroundPlog {
         // add attribute terms from regular rules
         // note that looking at heads is sufficient
         std::unordered_set<ATTID> result;
-        for (RegularRule r: rules) {
+        for (const RegularRule &r: rules) {
             result.insert(r.head.attid);
+            for(const auto &c : r.body) {
+                result.insert(c.attid);
+            }
         }
 
         //add attribute terms from observations

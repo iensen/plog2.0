@@ -10,7 +10,7 @@
 sorts
 
 #location= 1..20.
-#block={1,2,3,4,5}.
+#block={1,2,3,4}.
 #bool = {true, false}.
 %The domain contains only one random attributes
 %which says the block is at some location
@@ -29,24 +29,7 @@ statements
 
 
 
-%The grid is desribed by the relation leftof(location, location) and belowof(location, cation)
-
-% 1 -- 2 -- 3 -- 4 -- 5
-
-%      |    |    |	
-
-% 6--  7 -- 8 -- 9 -- 10
-
-%      |    |    | 
-
-% 11--12 --13 --14 -- 15
-
-%     |	    |    | 
-
-% 16--17 --18 --19 -- 20
-
-leftof(1,2). leftof(2,3). leftof(3,4). leftof(4,5). leftof(6,7). 
-leftof(7,8). leftof(8,9). leftof(9,10).
+leftof(1,2). leftof(2,3). leftof(3,4). leftof(4,5). leftof(6,7). leftof(7,8). leftof(8,9). leftof(9,10).
 belowof(2,7). belowof(3,8). belowof(4,9).
 leftof(11,12). leftof(12,13). leftof(13,14). leftof(14,15).
 belowof(7,12). belowof(8,13). belowof(9,14).
@@ -109,6 +92,6 @@ blocked(L1):- place(B)=L1.
 %The endof the program
 obs(invalid, false).
 
-? connected(1,5).
+? connected(1,20).
 %{{connected(1,5)}}.
 

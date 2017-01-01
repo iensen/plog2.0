@@ -34,7 +34,7 @@ bool Interpretation::guarantees(const Lit_t &lit) const {
     if(lit.classicNeg && !lit.defaultNeg)
         return getVal(lit.attid)!=UNASSIGNED && getVal(lit.attid)!=lit.valid && getVal(lit.attid)!=UNDEFINED;
     if(lit.defaultNeg && !lit.classicNeg)
-        return getVal(lit.attid) !=UNASSIGNED && getVal(lit.attid)!=lit.valid;
+        return getVal(lit.attid) !=UNASSIGNED && getVal(lit.attid)!=lit.valid || is_impossible_val(lit.attid,lit.valid);
     if(lit.classicNeg && lit.defaultNeg)
         return getVal(lit.attid) == UNDEFINED || getVal(lit.attid) == lit.valid;
 }
@@ -48,14 +48,17 @@ bool Interpretation::guarantees(const std::vector<Lit_t> &body) const {
 
 bool Interpretation::falsifies(const Lit_t &lit) const {
     if(!lit.classicNeg && !lit.defaultNeg) {
-        return getVal(lit.attid)!=UNASSIGNED && getVal(lit.attid)!=lit.valid;
+        return getVal(lit.attid)!=UNASSIGNED && getVal(lit.attid)!=lit.valid || is_impossible_val(lit.attid,lit.valid);
     }
+
     if(lit.classicNeg && !lit.defaultNeg) {
         return getVal(lit.attid)==lit.valid || getVal(lit.attid) == UNDEFINED;
     }
+
     if(!lit.classicNeg && lit.defaultNeg) {
         return getVal(lit.attid) == lit.valid;
     }
+
     if(lit.classicNeg && lit.defaultNeg) {
         return getVal(lit.attid)!=UNASSIGNED && getVal(lit.attid)!=lit.valid && getVal(lit.attid)!=UNDEFINED;
     }
@@ -82,10 +85,21 @@ void Interpretation::increaseLevel() {
 }
 
 void Interpretation::backtrackLastLevel() {
+
+    // backtrack regular assignments:
     while(level[trail.back()]==current_level) {
         values[trail.back()] = UNASSIGNED;
         trail.pop_back();
     }
+
+    //backtrack impossible assignments:
+    while(levelOnImposVals.size()>0 && levelOnImposVals.back()==current_level) {
+        const auto& back = trailOnImposVals.back();
+        imposVals[back.first].erase(back.second);
+        trailOnImposVals.pop_back();
+        levelOnImposVals.pop_back();
+    }
+
     --current_level;
 }
 
@@ -93,6 +107,24 @@ void Interpretation::grow(unsigned index) {
       if(index>=values.size()) {
           values.resize(2 * index + 1,UNASSIGNED);
           level.resize(2*index+1);
+          imposVals.resize(2*index+1);
       }
+}
+
+
+// question: when every value become impossible, should we make the attribute undefined!?
+void Interpretation::make_impossible(ATTID attid, ValueRep val) {
+    grow(attid);
+    imposVals[attid].insert(val);
+    levelOnImposVals.emplace_back(current_level);
+    trailOnImposVals.emplace_back(std::make_pair(attid,val));
+}
+
+bool Interpretation::is_impossible_val(ATTID attid, ValueRep val) const{
+    if(attid >= imposVals.size())
+        return false;
+    else
+        return imposVals[attid].find(val) != imposVals[attid].end();
+
 }
 

@@ -1,0 +1,18 @@
+sorts
+#bool = {true, false}.
+
+attributes
+
+a:#bool.
+b:#bool.
+c:#bool.
+d:#bool.
+
+statements
+
+random(a).
+random(b).
+c:- a,b.
+c = false:- not c = true.
+d :- c,a,b.
+?d.

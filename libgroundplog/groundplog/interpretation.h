@@ -17,9 +17,15 @@ const ValueRep UNDEFINED = std::numeric_limits<ValueRep>::max();
 const ValueRep UNASSIGNED = std::numeric_limits<ValueRep>::max()-1;
 
 class Interpretation {
+
     std::vector<ValueRep> values;
     std::vector<unsigned> level;
     std::vector<ATTID > trail;
+
+    std::vector<std::unordered_set<ValueRep > > imposVals;
+    std::vector<std::pair<ATTID,ValueRep>> trailOnImposVals;
+    std::vector<unsigned > levelOnImposVals;
+
     unsigned current_level = 0;
 public:
     void assign(ATTID attid,ValueRep val);
@@ -31,6 +37,10 @@ public:
     bool guarantees(const std::vector<Lit_t> &body) const ;
     bool falsifies(const std::vector<Lit_t> &body) const ;
     bool decides(const std::vector<Lit_t> &body) const ;
+
+    void make_impossible(ATTID attid, ValueRep val);
+    bool is_impossible_val(ATTID attid, ValueRep val) const;
+
     void increaseLevel();
     void backtrackLastLevel();
 private:
