@@ -151,6 +151,8 @@ void GroundPlog::ExactDCOSolve::extend(Interpretation &i, GroundPlog::Program *p
 
 
 */
+
+
 void GroundPlog::ExactDCOSolve::extend(Interpretation &i, GroundPlog::Program *pr, Clingo::Control *cControl, DepGraph *dg) {
 
     // avoid calling clingo if unnecessary!
@@ -158,11 +160,9 @@ void GroundPlog::ExactDCOSolve::extend(Interpretation &i, GroundPlog::Program *p
     std::unordered_set<ATTID> rPr = pr->getRandomAttributeTerms();
     //std::cout << ids.size() << std::endl;
     std::unordered_set<ATTID> att_unclear;
-    bool need_to_search = true;
-    int iter = 0;
 
-    std::unordered_set<ATTID> impos_candidates;
-    std::unordered_set<ATTID> pos_candidates;
+    x:
+    bool need_to_search = true;
 
     while(need_to_search) {
         need_to_search = false;
@@ -207,12 +207,16 @@ void GroundPlog::ExactDCOSolve::extend(Interpretation &i, GroundPlog::Program *p
                 i.assign(a, UNDEFINED);
                 need_to_search = true;
             }
-
         }
+
     }
 
+    bool need = AtMost(pr,i,ids);
+    if(need) goto x;
+
+
     for(const RegularRule &r: pr->rules) {
-        if (ids.find(r.head.attid) != ids.end() && !i.guarantees(r.body) && !i.falsifies(r.body) && i.getVal(r.head.attid)==UNASSIGNED)
+        if (ids.find(r.head.attid) != ids.end() && i.getVal(r.head.attid)==UNASSIGNED)
             att_unclear.insert(r.head.attid);
     }
 
@@ -222,11 +226,13 @@ void GroundPlog::ExactDCOSolve::extend(Interpretation &i, GroundPlog::Program *p
     // check that everything from datt is there
     bool all_dats_assigned = true;
     for(ATTID a: ids) {
-        if(i.getVal(a)==UNASSIGNED && att_unclear.find(a)!=att_unclear.end())
+        if(i.getVal(a)==UNASSIGNED && att_unclear.find(a)!=att_unclear.end()) {
+            //std::cout <<"AAAA:" << a << std::endl;
             all_dats_assigned = false;
+        }
     }
     if(!all_dats_assigned) {
-        //std::cout << "AAAA" << std::endl;
+        std::cout << "AAAA" << std::endl;
         std::unordered_set<unsigned> P_I = P(i, pr, dg);
         Clingo_Result m = call_clingo(cControl, P_I);
         if (!m.unique_model)
@@ -288,6 +294,8 @@ std::unordered_set<ATTID> GroundPlog::ExactDCOSolve::DAT(const Interpretation &i
                  [&rat] (int needle) { return rat.find(needle) == rat.end(); });
 
     // run bfs from the difference:
+    // find all attribute terms which depend on at least one of the random attribute terms
+    // not decided in given interpretation i
     std::unordered_set<ATTID> covered_att = bfs(leftrat,dg);
     std::unordered_set<ATTID> all_att = pr->getNonRandomAttributeTerms();
     std::unordered_set<ATTID> result;
@@ -347,7 +355,6 @@ GroundPlog::ExactDCOSolve::call_clingo(Clingo::Control *clingoCtrl, std::unorder
         // here we have exactly one model m1
         return Clingo_Result{true, mr};
     }
-
 }
 
 
@@ -374,4 +381,49 @@ GroundPlog::ExactDCOSolve::GetCompletionProbA(GroundPlog::Program *prg, Clingo::
 
     }
     return std::tuple<bool, double, double>{true, satsum, totalsum};
+}
+
+bool GroundPlog::ExactDCOSolve::AtMost(GroundPlog::Program *prg, Interpretation &I, const std::unordered_set<ATTID> &cur_dat) {
+    // compute the fixed point G from page 43 of Weijun's dissertation
+    //I.increaseLevel();
+    std::unordered_map<ATTID, std::unordered_set<ValueRep > > posibVals;
+    bool iteration_needed = true;
+    std::unordered_set<size_t> ruleFired;
+    while(iteration_needed) {
+        iteration_needed = false;
+        for(size_t i=0;i< prg->rules.size();i++) {
+            const RegularRule &r = prg->rules[i];
+            if(cur_dat.find(r.head.attid) != cur_dat.end()) {
+                if(I.weakly_satisfies(r.body, posibVals) && I.getVal(r.head.attid) == UNASSIGNED && ruleFired.find(i) == ruleFired.end() && !I.is_impossible_val(r.head.attid, r.head.valid)) {
+                    ruleFired.insert(i);
+                    iteration_needed = true;
+                    posibVals[r.head.attid].insert(r.head.valid);
+                }
+            }
+        }
+    }
+
+    bool something_assigned = false;
+
+    for(ATTID id:cur_dat) {
+        {
+            if (I.getVal(id) == UNASSIGNED) {
+                 if(posibVals.find(id)==posibVals.end()) {
+                     something_assigned = true;
+                    // std::cout <<"MADE_UNDEF:" << id << std::endl;
+                     I.assign(id,UNDEFINED);
+                 } else {
+                     const std::unordered_set<ValueRep > &all_vals = prg->getAttValues(id);
+                     for(const ValueRep val:all_vals) {
+                         if(std::find(posibVals[id].begin(),posibVals[id].end(),val)==posibVals[id].end() && !I.is_impossible_val(id,val)) {
+                             something_assigned = true;
+                             //std::cout <<"MADE_OMPOS:" << id << " "<<val << std::endl;
+                             I.make_impossible(id,val);
+                         }
+                     }
+                 }
+            }
+        }
+    }
+    return something_assigned;
 }

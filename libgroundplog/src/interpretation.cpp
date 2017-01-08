@@ -2,6 +2,8 @@
 // Created by evgenii on 12/16/16.
 //
 
+
+#include <map>
 #include "groundplog/interpretation.h"
 
 std::vector<ATTID> Interpretation::getAllAssignAtts() const {
@@ -12,6 +14,14 @@ std::vector<ATTID> Interpretation::getAllAssignAtts() const {
     }
     return result;
 }
+
+unsigned Interpretation::getLevel(const ATTID attid) const {
+    if(attid >= level.size())
+        return UNASSIGNED;
+    else
+        return level[attid];
+}
+
 
 ValueRep Interpretation::getVal(const ATTID attid) const {
     if(attid >= values.size())
@@ -45,6 +55,30 @@ bool Interpretation::guarantees(const std::vector<Lit_t> &body) const {
             return false;
     return true;
 }
+
+bool Interpretation::satisfied_by_posvals(const Lit_t &lit, const std::unordered_map<ATTID, std::unordered_set<ValueRep>> &pvmap) const{
+    // this assumes lit doesn't have default negation.
+    if(!lit.classicNeg) {
+        return pvmap.find(lit.attid)!=pvmap.end() && pvmap.at(lit.attid).find(lit.valid)!=pvmap.at(lit.attid).end();
+    } else {
+        return pvmap.find(lit.attid) != pvmap.end() && (pvmap.at(lit.attid).size()>1 || *pvmap.at(lit.attid).begin() != lit.valid);
+    }
+}
+
+bool
+Interpretation::weakly_satisfies(const std::vector<Lit_t> &body, const std::unordered_map<ATTID, std::unordered_set<ValueRep>> &pvmap) const {
+    for(const Lit_t &lit: body) {
+        std::unordered_set<ValueRep > pv;
+        if(pvmap.find(lit.attid)!=pvmap.end()) {
+            pv = pvmap.at(lit.attid);
+        }
+        if(!lit.defaultNeg && !guarantees(lit) && !satisfied_by_posvals(lit,pvmap)
+           || lit.defaultNeg && falsifies(lit))
+            return false;
+    }
+    return true;
+}
+
 
 bool Interpretation::falsifies(const Lit_t &lit) const {
     if(!lit.classicNeg && !lit.defaultNeg) {
@@ -87,7 +121,7 @@ void Interpretation::increaseLevel() {
 void Interpretation::backtrackLastLevel() {
 
     // backtrack regular assignments:
-    while(level[trail.back()]==current_level) {
+    while(!trail.empty() && level[trail.back()]==current_level) {
         values[trail.back()] = UNASSIGNED;
         trail.pop_back();
     }
@@ -106,7 +140,7 @@ void Interpretation::backtrackLastLevel() {
 void Interpretation::grow(unsigned index) {
       if(index>=values.size()) {
           values.resize(2 * index + 1,UNASSIGNED);
-          level.resize(2*index+1);
+          level.resize(2*index+1, UNASSIGNED);
           imposVals.resize(2*index+1);
       }
 }

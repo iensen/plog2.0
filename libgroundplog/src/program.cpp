@@ -334,6 +334,8 @@ namespace GroundPlog {
 
     }
 
+
+
     std::unordered_set<ValueRep> Program::getPossibleValuesFor(ATTID attid, Interpretation &interpretation) {
         // this assumes the attribute is ready!
         if (isDisabled(attid, interpretation)) {
@@ -366,5 +368,64 @@ namespace GroundPlog {
 
     void Program::storeatttoatmap(unsigned int attid, unsigned int aid) {
         atfromatt[attid] = aid;
+    }
+
+    std::unordered_set<ValueRep> Program::getAttValues(unsigned int attid) {
+        return val_candidates[attid];
+    }
+
+    void Program::finalize() {
+        // fill candidate values
+        val_candidates.resize(att_count);
+
+        // from regular rules:
+        for(const RegularRule &r:rules) {
+            val_candidates[r.head.attid].insert(r.head.valid);
+            for(auto body_el:r.body) {
+                val_candidates[body_el.attid].insert(body_el.valid);
+            }
+         }
+
+        // from random selection rules:
+        for(const RandomRule &r:randomrules) {
+            // get attribute term from the head:
+            // for every random selection rule random(a,p) :- B
+            // add p(X) -> true as a val candidate for every X in the range of a
+            AId atid = atfromatt[r.head.first];
+            unsigned int range_sort_id = a_ranges[atid];
+            const std::vector<unsigned int> vals = sort_elems[range_sort_id];
+            for(ValueRep val: vals) {
+                ATTID dyn_range_att = dynRangeAtt[Dyn_Range_Atom{r.head.second,val}];
+                val_candidates[dyn_range_att].insert(TRUE_ID);
+            }
+            for(auto body_el:r.body) {
+                val_candidates[body_el.attid].insert(body_el.valid);
+            }
+        }
+
+        // from pr-atoms
+        for (const PrAtom &prat:pratoms) {
+            val_candidates[prat.head.attid].insert(prat.head.valid);
+            for(auto body_el:prat.body) {
+                val_candidates[body_el.attid].insert(body_el.valid);
+            }
+        }
+
+        // from query
+        val_candidates[query.attid].insert(query.valid);
+
+        // from observations
+        for(const Observation &obs:observations) {
+            val_candidates[obs.attid].insert(obs.valid);
+        }
+
+        // from actions:
+        for(const Action &act : actions) {
+            val_candidates[act.attid].insert(act.valid);
+        }
+    }
+
+    void Program::registerTotalAttNum(size_t att_count) {
+          this->att_count = att_count;
     }
 }

@@ -61,6 +61,11 @@ namespace GroundPlog {
                                                                   const AttributeSelectionHeuristic & heu,
                                                                   const ValueSelectionHeuristic & heuv,
                                                                   ATTID selectedATT);
+
+        static bool AtMost                                        (GroundPlog::Program *prg, Interpretation &I,
+                                                                   const std::unordered_set<ATTID> &cur_dat);
+
+
     };
 }
 

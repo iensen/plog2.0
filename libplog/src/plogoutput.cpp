@@ -64,3 +64,11 @@ void GroundPlogBackend::atttoat(unsigned attid, unsigned aid) {
     if (auto p = prg()) { p->storeatttoatmap(attid,aid);}
 }
 
+void GroundPlogBackend::finalize() {
+    if (auto p = prg()) { p->finalize();}
+}
+
+void GroundPlogBackend::registerTotalAttNumber(size_t num) {
+    if (auto p = prg()) { p->registerTotalAttNum(num);}
+}
+

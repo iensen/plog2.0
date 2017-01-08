@@ -392,6 +392,6 @@ TEST(NEWVERSION_POKER, _5x5) {
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    ::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS*";
+    ::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS._20x5";
     return RUN_ALL_TESTS();
 }

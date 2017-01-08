@@ -8,6 +8,7 @@
 #include<vector>
 #include<groundplog/program_types.h>
 #include<limits>
+#include <unordered_map>
 
 using GroundPlog::ATTID ;
 using GroundPlog::ValueRep ;
@@ -35,6 +36,7 @@ public:
     bool falsifies (const Lit_t &lit) const;
     bool decides (const Lit_t &lit) const;
     bool guarantees(const std::vector<Lit_t> &body) const ;
+    bool weakly_satisfies(const std::vector<Lit_t> &body, const std::unordered_map<ATTID, std::unordered_set<ValueRep>> &map) const;
     bool falsifies(const std::vector<Lit_t> &body) const ;
     bool decides(const std::vector<Lit_t> &body) const ;
 
@@ -45,6 +47,8 @@ public:
     void backtrackLastLevel();
 private:
     void grow(unsigned index);
+    bool satisfied_by_posvals(const Lit_t &, const std::unordered_map<ATTID, std::unordered_set<ValueRep>>& ) const;
+    unsigned int getLevel(const ATTID attid) const;
 };
 
 

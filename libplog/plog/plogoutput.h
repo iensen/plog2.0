@@ -37,6 +37,8 @@ public:
     void registerDynRangeAtom(unsigned a_id, unsigned arg_id, unsigned att_id);
     void registerTrueAtId(unsigned true_id);
     void atttoat(unsigned attid, unsigned aid);
+    void finalize();
+    void registerTotalAttNumber(size_t num);
 
 private:
     GroundPlog::Program* prg();

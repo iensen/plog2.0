@@ -44,7 +44,8 @@ namespace GroundPlog {
         std::unordered_map<clingo_atom_t, Lit_t> clingo_to_plog_lit;
         std::unordered_map<Dyn_Range_Atom, ATTID> dynRangeAtt;
         std::unordered_map<ATTID, AId > atfromatt;
-
+        std::vector<std::unordered_set<ValueRep > > val_candidates;
+        size_t att_count;
         Program();
         ~Program();
 
@@ -126,11 +127,13 @@ namespace GroundPlog {
 
         void addAction(unsigned int att_id, unsigned int val_id);
 
-
+        void finalize();
         // checking properties of a progeam:
 
         bool isRandom(ATTID attid) ;
 
+
+        std::unordered_set<ValueRep>  getAttValues(unsigned int attid);
         std::unordered_set<ATTID> getRandomAttributeTerms();
         std::unordered_set<ATTID> getNonRandomAttributeTerms();
         std::unordered_set<unsigned> getExternalsForSubprogramConstructedFrom(const std::unordered_set<ATTID> &atts);
@@ -149,6 +152,8 @@ namespace GroundPlog {
         std::unordered_set<ValueRep> getPossibleValuesFor(ATTID attid, Interpretation &interpretation);
 
         void storeatttoatmap(unsigned int attid, unsigned int aid);
+
+        void registerTotalAttNum(size_t att_count);
 
     private:
         Program(const Program &);

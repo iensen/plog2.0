@@ -132,7 +132,9 @@ void PlogGroundProgramBuilder::end_step() {
         for(auto c:sortids) {
             std::cout << c.first << " " << c.second << std::endl;
         }
-        */
+         */
+
+
 
 
 
@@ -145,6 +147,8 @@ void PlogGroundProgramBuilder::end_step() {
 
         // add the value for true
         out.registerTrueAtId(insert("true", atids));
+        out.registerTotalAttNumber(attids.size());
+        out.finalize();
         rulesPassedToBackend = true;
     }
 

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.3)
 project(plog)
 #project(clingo)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3 -pg")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3 ")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 
 file(GLOB_RECURSE PLOG_SOURCES
@@ -57,6 +57,7 @@ include_directories(/usr/include/python2.7)
 
 set(CLINGO_MAIN_FILE  clingo/app/clingo/src/main.cc)
 set(PLOG_MAIN_FILE    plogapp/src/main.cpp)
+set(OLDPLOG_MAIN_FILE    oldplog/Plog.cpp)
 set(EXAMPLE_MAIN_FILE clingo/examples/cpp/groundobs.cpp)
 
 add_definitions(-DWITH_THREADS=1)
@@ -75,3 +76,7 @@ TARGET_LINK_LIBRARIES(ex  python2.7 tbb pthread dl)
 
 add_executable(tests   ${OLD_PLOG_SOURCES} ${TEST_SOURCES} ${PLOG_SOURCES} ${CLINGO_SOURCES}   test/utils.h)
 TARGET_LINK_LIBRARIES(tests  python2.7 tbb dl gtest pthread )
+
+add_executable(wplog ${OLD_PLOG_SOURCES} ${OLDPLOG_MAIN_FILE})
+
+

@@ -1,0 +1,57 @@
+%random block problem
+%This a model for the random placement of blocks,
+
+%which serve as obstacles, on the location of a map,
+
+%and the resulting accessiblility relation among the locations.
+
+%In this problem, there are 5 locations and one block a.
+
+sorts
+
+#location= 1..2.
+#block={1}.
+#bool = {true, false}.
+%The domain contains only one random attributes
+%which says the block is at some location
+attributes
+
+place:#block -> #location.
+leftof: #location, #location -> #bool.
+belowof: #location, #location -> #bool.
+invalid: #bool.
+connected: #location, #location ->#bool.
+blocked: #location -> #bool.
+
+%The grid is desribed by the relation leftof(location, location) and belowof(location, cation)
+
+% 1 -- 2 -- 3
+
+%      |    |
+
+%      4 -- 5
+
+statements
+
+
+
+connected(1,2) :- connected(2,1).
+connected(2,1) :- connected(1,2).
+connected(1,2)=false :- not connected(1,2).
+
+
+%connected(1,2) :- not blocked(1).
+%blocked(1).
+ 
+
+
+
+%if some location has the block, it is blocked
+
+
+%The endof the program
+%obs(invalid, false).
+
+? connected(1,2).
+%{{connected(1,5)}}.
+

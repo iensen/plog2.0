@@ -109,6 +109,6 @@ blocked(L1):- place(B)=L1.
 %The endof the program
 obs(invalid, false).
 
-? connected(1,5).
+? connected(1,20).
 %{{connected(1,5)}}.
 
