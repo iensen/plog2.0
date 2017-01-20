@@ -134,7 +134,7 @@ Gringo::SolveResult PlogControl::solve() {
     if(!res.is_dco) {
         fprintf(stderr, "ERROR: the program is not strongly causally ordered\n");
     } else {
-        printf("answer: %lf\n", res.prob);
+        printf("answer: %f\n", res.prob);
     }
 }
 
