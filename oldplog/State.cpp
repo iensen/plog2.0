@@ -281,17 +281,15 @@ bool State::UpClosure()
     int pre_val;
     SetUpped(true);
     stack< pair<int, int> > stk_1, stk_2;
-    this->Show(false,false,true);
+
     //list<GroundRule*>::iterator itr;
     //ist<GroundLiteral*>::iterator itrg;
     GroundLiteral *gl;
     //pair<int, int> p(aid, value);
     //cout<<"up close"<<endl;
     while(AtMost(stk_1)){
-		this->Show(false,false,true);
     if(stk_1.empty()) return true;
     while(!stk_1.empty()){
-		this->Show(false,false,true);
 	    //cout<<gl->name<<" "<<stack.front().second<<endl;
 	    id=stk_1.top().first;
 	    val=stk_1.top().second;
@@ -312,9 +310,7 @@ bool State::UpClosure()
 	        if(!UpdateRule_5(gl, stk_1, stk_2)) return false;
         }
         else if(pre_val==UNKNOWN && val==FALSE){
-			this->Show(false, false, true);
-			aval[id]=val;
-			this->Show(false, false, true);
+            aval[id]=val;
 	        if(!(UpdateRule_2(gl, stk_1, stk_2) &&
                  UpdateRule_4(gl, stk_1, stk_2))) return false;
 	        // UpdateRule_10(gl, stk_1, stk_2);

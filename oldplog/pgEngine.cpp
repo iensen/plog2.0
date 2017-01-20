@@ -116,15 +116,13 @@ void pgEngine::Run()
 		    cin>>i;
         }
 		states.pop_front();
-		s->Show(false, false, true);
+		//s->Show(false, false, true);
 		status=s->Satisify(vecLit, true);
 		if(debug_level==112) cout<<"status "<<status<<endl;
 		if(status==TRUE){
 			ans.push_front(s);
 			TOTAL+=s->prob;
-            s->Show(false, false, true);
-
-            if(debug_level==111){
+			if(debug_level==111){
                 s->Show(false, false, true);
                 int i;
                 cin>>i;
@@ -248,9 +246,7 @@ void pgEngine::Query_1()
         }
   	    while(!states.empty()){
 			s=states.front();
-            s->Show(false, false, true);
 			states.pop_front();
-
 			//Check whether all the formula are known
 			//itr_fml=lstFormula.begin();
 			//expand=false;
