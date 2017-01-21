@@ -174,8 +174,8 @@ namespace GroundPlog {
                 if (I.getVal(a) == UNASSIGNED) {
                     for (unsigned i : prg->attRules[a]) {
                         const RegularRule &r = prg->rules[i];
-                        if (I.weakly_satisfies(r.body, posibVals) && I.getVal(r.head.attid) == UNASSIGNED &&
-                            ruleFired.find(i) == ruleFired.end() && !I.is_impossible_val(r.head.attid, r.head.valid)) {
+                        if (!regRuleBodyFalsified[i] &&
+                            ruleFired.find(i) == ruleFired.end() && !I.is_impossible_val(r.head.attid, r.head.valid) && I.weakly_satisfies(r.body, posibVals) ) {
                             ruleFired.insert(i);
                             iteration_needed = true;
                             posibVals[r.head.attid].insert(r.head.valid);

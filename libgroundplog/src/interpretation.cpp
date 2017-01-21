@@ -73,10 +73,10 @@ namespace GroundPlog {
     Interpretation::weakly_satisfies(const std::vector<Lit_t> &body,
                                      const std::unordered_map<ATTID, std::unordered_set<ValueRep>> &pvmap) const {
         for (const Lit_t &lit: body) {
-            std::unordered_set<ValueRep> pv;
-            if (pvmap.find(lit.attid) != pvmap.end()) {
-                pv = pvmap.at(lit.attid);
-            }
+            //std::unordered_set<ValueRep> pv;
+            //if (pvmap.find(lit.attid) != pvmap.end()) {
+            //    pv = pvmap.at(lit.attid);
+            //}
             if (!lit.defaultNeg && !guarantees(lit) && !satisfied_by_posvals(lit, pvmap)
                 || lit.defaultNeg && falsifies(lit))
                 return false;
