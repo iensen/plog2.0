@@ -1,0 +1,189 @@
+% Model for a triplex steer-by-wire control system.
+
+
+% *Objects*
+
+battery = {batteryA, batteryB}.
+processor = {processor1, processor2, processor3}.
+steering_sensor = {steering_sensor1, steering_sensor2, steering_sensor3}.
+wheel_sensor = {wheel_sensor1, wheel_sensor2, wheel_sensor3}.
+motor_controller = {motor_controller1, motor_controller2}.
+two_of_three_voter = {two_of_three_voter1, two_of_three_voter2}.
+% device = processor + motor + sensor.
+device = {processor1, processor2, processor3,
+          motor_controller1, motor_controller2,
+          steering_sensor1, steering_sensor2, steering_sensor3,
+          wheel_sensor1, wheel_sensor2, wheel_sensor3}.
+% component = battery + processor3 + steering_sensor + wheel_sensor +
+%                     + motor_controller + two_of_three_voter.
+component = {batteryA, batteryB,
+             processor1, processor2, processor3,
+             steering_sensor1, steering_sensor2, steering_sensor3,
+             wheel_sensor1, wheel_sensor2, wheel_sensor3,
+             motor_controller1, motor_controller2,
+             two_of_three_voter1, two_of_three_voter2}.
+component_status =  {intact, detectedBroken, silentBroken}.
+boolean = {true,false}.
+
+%*Variables*
+
+#domain processor(Processor; Processor1; Processor2).
+#domain two_of_three_voter(Voter).
+#domain motor_controller(Motor_controller).
+#domain steering_sensor(Steering_sensor; Steering_sensor1; Steering_sensor2).
+#domain wheel_sensor(Wheel_sensor; Wheel_sensor1; Wheel_sensor2).
+#domain component(Component; Component1; Component2; Component3; Component3; Component4; Component5).
+#domain battery(Battery).
+
+ 
+
+% *Relations*
+
+% **Specified**
+
+connected: component, component -> boolean.
+powered:   device -> boolean.
+status: component -> component_status.
+operational: component -> boolean.
+system_failure: boolean.
+
+% **Introduced for modeling purposes**
+
+broken : component -> boolean.
+valid_world: boolean.
+
+% *Rules*
+
+% **Connections**
+
+connected(batteryA, processor1).
+connected(batteryA, processor2).
+connected(batteryA, steering_sensor1).
+connected(batteryA, steering_sensor2).
+connected(batteryA, wheel_sensor1).
+connected(batteryA, wheel_sensor2).
+connected(batteryA, motor_controller1).
+
+connected(batteryB, processor2).
+connected(batteryB, processor3).
+connected(batteryB, streering_sensor2).
+connected(batteryB, streering_sensor3).
+connected(batteryB, wheel_sensor2).
+connected(batteryB, wheel_sensor3).
+connected(batteryB, motor_controller2).
+
+% Processors 1, 2, and 3 are each connected to each two-of-three-voter. 
+connected(Processor,Voter).
+
+% Voter n is connected to motor-controler n for n in {1,2}.
+connected(Voter, Motor_controller).
+
+% Each sensor is connected to each processor.
+connected(Steering_sensor, Processor).
+connected(Wheel_sensor, Processor).
+
+% commutativity.
+% connected(Component1, Component2) :- connected(Component2, Component1).
+
+% *Power*
+
+% A component is powered if and only if
+% it is connected to an operational battery.
+powered(Component) :- connected(Battery,Component), operational(Battery).
+powered(Component) = false :- not powered(Component) = true.
+
+% *Component status*
+
+
+% Components may be broken, with the following probabilities: 
+% i. battery:  1E-6
+% ii. processor:  5E-7
+% iii. motor controler : 1E-7
+% iv. voter: 1E-7
+% v. wheel sensor:   1E-7
+% vi. steering sensor:  2E-6
+
+[r_broken(Component)] random(broken(Component)).
+[r_broken(Component)] pr(broken(Battery) = true ) = 1/1000000.
+[r_broken(Component)] pr(broken(Processor) = true ) = 5/10000000.
+[r_broken(Component)] pr(broken(Motor_controller) = true ) = 1/10000000.
+[r_broken(Component)] pr(broken(Voter) = true ) = 1/10000000.
+[r_broken(Component)] pr(broken(Wheel_sensor ) = true ) = 1/10000000.
+[r_broken(Component)] pr(broken(Steering_sensor ) = true ) = 2/1000000.
+
+% Upon a detectable breakage, a component enters a detectedBroken
+% or silentBroken state. 
+%broken_state(detectedBroken).
+%broken_state(silentBroken).
+
+%[r_brokenState(Component)] random(status(Component):{State : broken_state(State) = true}) :-
+%                                                 broken(Component) = true,valid_world = true.
+
+% 90% of breakages are detectable.
+
+%[r_brokenState(Component)] pr(status(Component) = detectedBroken |  broken(Component) = true)=9/10.
+
+
+% *Component Operation*
+
+% All componnets are normally operational
+operational(Component) = true :- not operational(Component) = false.
+
+% Any processor, battery, motor controler, or sensor which is not powered
+% is not operational.
+operational(Processor) = false :- powered(Processor) = false.
+operational(Motor_controller) = false :- powered(Motor_controller) = false.
+operational(Steering_sensor) = false :- powered(Steering_sensor) = false.
+operational(Wheel_sensor) = false :- powered(Wheel_sensor) = false.
+
+% Any component that is broken, either silently or detectably, is not operational.
+
+operational(Component) = false :- broken(Component) = true.
+
+
+% If two of the three processors connected to a two-of-three voter
+% is non-operational, the voter is non-operational
+
+operational(Voter) = false :- connected(Voter, Processor1), connected(Voter, Processor2),
+                              operational(Processor1) = false, Processor2 <> Processor1,
+                              operational(Processor2) = false.
+
+
+% *System failure*
+
+% System failure occurs if either motor controler is operational,
+system_failure :- operational(Motor_controller) = false.
+
+% System failure occurs if a majority of wheel sensors is non-operational
+system_failure :- operational(Wheel_sensor1)=false, operational(Wheel_sensor2)=false,
+                 Wheel_sensor2 <> Wheel_sensor1.
+
+
+% System failure occure if a majority of steering sensors is non-operational. 
+system_failure :- operational(Steering_sensor1)=false, 
+                  operational(Steering_sensor2)=false,
+                  Steering_sensor2 <> Steering_sensor1.
+
+% we only consider possible worlds where system fails or no more than four components fail 
+valid_world = false:- broken(Component1) = true,
+                      broken(Component2) = true,
+                      broken(Component3)= true,
+                      broken(Component4) = true,
+                      broken(Component5) = true,
+                      Component1<>Component2, Component1<>Component3,
+                      Component1<>Component4, Component1<>Component5,
+                      Component2<>Component3, Component2<>Component4,
+                      Component2<>Component5, Component3<>Component4,
+                      Component3<>Component5, Component4<>Component5.
+
+valid_world = true :- not valid_world = false.
+
+
+
+% *Queries*
+
+% Probability of failure
+
+?{system_failure = true } | obs(valid_world = true).                                       
+
+

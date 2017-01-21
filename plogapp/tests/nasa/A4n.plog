@@ -17,10 +17,25 @@ attributes
 
 broken : #component -> #boolean.
 lessthan5broken :#boolean.
+is_battery: #battery -> #boolean.
+is_processor: #processor -> #boolean.
+is_motor_controller: #motor_controller -> #boolean.
+is_voter: #two_of_three_voter -> #boolean.
+is_wheel_sensor: #wheel_sensor ->#boolean.
+is_steering_sensor: #steering_sensor -> #boolean.
+
 
 % *Rules*
 
 statements
+
+is_battery(B).
+is_processor(P).
+is_motor_controller(MC).
+is_voter(V).
+is_wheel_sensor(W).
+is_steering_sensor(S).
+
 % *Component status*
 % Components may be broken, with the following probabilities: 
 % i. battery:  1E-6
@@ -31,12 +46,12 @@ statements
 % vi. steering sensor:  2E-6
 
  random(broken(Component)).
- pr(broken(Battery) = true) = 1/1000000.
- pr(broken(Processor) = true) = 5/10000000. 
- pr(broken(Motor_controller) = true) = 1/10000000.
- pr(broken(Voter) = true) = 1/10000000.
- pr(broken(Wheel_sensor ) = true ) = 1/10000000.
- pr(broken(Steering_sensor ) = true ) = 2/1000000.
+ pr(broken(B) = true|is_battery(B)) = 1/2.
+ pr(broken(P) = true|is_processor(P)) = 1/2. 
+ pr(broken(MC) = true|is_motor_controller(MC)) = 1/2.
+ pr(broken(V) = true|is_voter(V)) = 1/2.
+ pr(broken(W) = true |is_wheel_sensor(W)) = 1/2.
+ pr(broken(S) = true|is_steering_sensor(S) ) = 1/2.
 
 
 lessthan5broken = false:- broken(Component1) = true,

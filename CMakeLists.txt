@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.3)
 project(plog)
 #project(clingo)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3 ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11  -O3")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 
 file(GLOB_RECURSE PLOG_SOURCES
@@ -55,8 +55,8 @@ include_directories(/usr/include/python2.7)
 
 
 
-set(CLINGO_MAIN_FILE  clingo/app/clingo/src/main.cc)
-set(PLOG_MAIN_FILE    plogapp/src/main.cpp)
+set(CLINGO_MAIN_FILE  clingo/app/clingo/src/main.cc libgroundplog/groundplog/state.h)
+set(PLOG_MAIN_FILE    plogapp/src/main.cpp libgroundplog/src/state.cpp)
 set(OLDPLOG_MAIN_FILE    oldplog/Plog.cpp)
 set(EXAMPLE_MAIN_FILE clingo/examples/cpp/groundobs.cpp)
 

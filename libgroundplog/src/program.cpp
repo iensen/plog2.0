@@ -79,11 +79,7 @@ namespace GroundPlog {
     }
 
     bool Program::isRandom(ATTID aid) {
-        for (RandomRule r: randomrules) {
-            if (r.head.first == aid)
-                return true;
-        }
-        return false;
+        return isRandomAtt[aid];
     }
 
     std::unordered_set<ATTID> Program::getRandomAttributeTerms() {
@@ -101,7 +97,7 @@ namespace GroundPlog {
         std::unordered_set<ATTID> result;
         for (const RegularRule &r: rules) {
             result.insert(r.head.attid);
-            for(const auto &c : r.body) {
+            for (const auto &c : r.body) {
                 result.insert(c.attid);
             }
         }
@@ -115,46 +111,50 @@ namespace GroundPlog {
         result.insert(query.attid);
 
         // add the attribute terms from the dynamic range atoms:
-        for(const auto &dynatt:dynRangeAtt) {
+        for (const auto &dynatt:dynRangeAtt) {
             result.insert(dynatt.second);
         }
 
         std::unordered_set<ATTID> ratts = getRandomAttributeTerms();
         std::unordered_set<ATTID> final_result;
-        std::copy_if(result.begin(), result.end(), std::inserter(final_result,final_result.begin()),
-                     [&ratts] (int needle) { return ratts.find(needle) == ratts.end(); });
+        std::copy_if(result.begin(), result.end(), std::inserter(final_result, final_result.begin()),
+                     [&ratts](int needle) { return ratts.find(needle) == ratts.end(); });
 
         return final_result;
     }
 
     std::unordered_set<unsigned>
-    Program::getExternalsForSubprogramConstructedFrom(const std::unordered_set<ATTID> &atts) {
+    Program::getExternalsForSubprogramConstructedFrom(const std::vector<ATTID> &atts) {
+        std::unordered_set<unsigned> attsset(atts.begin(), atts.end());
         std::unordered_set<unsigned> result;
 
         for (int i = 0; i < rules.size(); i++) {
-            if (rules[i].constructedFrom(atts))
+            if (rules[i].constructedFrom(attsset))
                 result.insert(ruleExternals[i]);
         }
 
         for (int i = 0; i < randomrules.size(); i++) {
-            if (randomrules[i].constructedFrom(atts))
+            if (randomrules[i].constructedFrom(attsset))
                 result.insert(randomRuleExternals[i]);
         }
 
-        for(int i=0;i<pratoms.size();i++) {
-            if(pratoms[i].constructedFrom(atts))
+        for (int i = 0; i < pratoms.size(); i++) {
+            if (pratoms[i].constructedFrom(attsset))
                 result.insert(prAtomExternals[i]);
         }
 
         return result;
     }
 
-    std::unordered_set<unsigned> Program::getExternalsForAtomsFrom(const Interpretation &i) {
+    std::unordered_set<unsigned> Program::getExternalsForAtomsFrom(const Interpretation &i) const {
         std::unordered_set<unsigned> result;
         // rewrite to iterators:
         std::vector<ATTID> atts = i.getAllAssignAtts();
-        for (const ATTID &attid:atts) {
-            result.insert(atom_to_external[Atom_t{attid, i.getVal(attid)}]);
+        for (const ATTID attid:atts) {
+            if (atom_to_external.find(Atom_t{attid, i.getVal(attid)}) !=
+                atom_to_external.end()) // remove this in future:
+                // when redundant attribute terms will be removed
+                result.insert(atom_to_external.at(Atom_t{attid, i.getVal(attid)}));
         }
         return result;
     }
@@ -167,28 +167,28 @@ namespace GroundPlog {
         clingo_to_plog_lit[clingo_lit_id] = Lit_t{att_id, val_id, false, !pos};
     }
 
-    double Program::Probability(Interpretation &I) {
+    double Program::Probability(const Interpretation &I) {
         double answer = 1.0;
-        std::vector<ATTID > atts =I.getAllAssignAtts();
-        for(ATTID at : atts) {
-            if(!isRandom(at))
+        std::vector<ATTID> atts = I.getAllAssignAtts();
+        for (ATTID at : atts) {
+            if (!isRandom(at))
                 continue;
-            if(I.getVal(at)==UNDEFINED)
+            if (I.getVal(at) == UNDEFINED)
                 continue;
             double others_prob = 0.0;
             double prob = -1.0;
             int others_prob_ct = 0;
             for (const PrAtom pr: pratoms) {
                 if (pr.head.attid == at && I.guarantees(pr.body)) {
-                    if(pr.head.valid == I.getVal(at)) {
+                    if (pr.head.valid == I.getVal(at)) {
                         prob = pr.prob;
                     } else {
                         others_prob += pr.prob;
                         ++others_prob_ct;
-                       }
+                    }
                 }
             }
-            if(prob>-0.5)
+            if (prob > -0.5)
                 answer *= prob;
             else { // default probability!
                 double defaultProb = (1 - others_prob) / (getPossibleValuesFor(at, I).size() - others_prob_ct);
@@ -198,15 +198,6 @@ namespace GroundPlog {
         return answer;
     }
 
-    std::unordered_set<ATTID> Program::getReadyAtts(const Interpretation &I) {
-        std::unordered_set<ATTID> result;
-        // optimize this not to look for every one?
-        for (RandomRule r: randomrules) {
-            if (isReady(r.head.first, I))
-                result.insert(r.head.first);
-        }
-        return result;
-    }
 
     bool Program::isReady(ATTID attid, const Interpretation &I) {
         return isDisabled(attid, I) || isActive(attid, I);
@@ -234,7 +225,7 @@ namespace GroundPlog {
             }
             return true;
         } else {
-           return false;
+            return false;
         }
     }
 
@@ -283,8 +274,8 @@ namespace GroundPlog {
                 if (I.guarantees(r.body)) {
                     // check that for every y in the range of a, p(y) is decided:
                     // and that for at least one y p(y) is guaranteed!
-                    bool all_decided,at_least_one_guaranteed;
-                    if(r.head.second!=UNASSIGNED) {
+                    bool all_decided, at_least_one_guaranteed;
+                    if (r.head.second != UNASSIGNED) {
                         AId atid = atfromatt[r.head.first];
                         unsigned int range_sort_id = a_ranges[atid];
                         all_decided = true;
@@ -301,7 +292,7 @@ namespace GroundPlog {
                         }
                     }
 
-                    if (r.head.second==UNASSIGNED || all_decided && at_least_one_guaranteed) {
+                    if (r.head.second == UNASSIGNED || all_decided && at_least_one_guaranteed) {
                         if (foundRuleType != RuleType::None)
                             return false;
                         foundRuleType = RuleType::Random;
@@ -312,15 +303,15 @@ namespace GroundPlog {
         }
 
         // check regular rules:
-        for (RegularRule &r : rules) {
-            if (r.head.attid == attid) {
-                if (I.guarantees(r.body)) {
-                    if (foundRuleType != RuleType::None)
-                        return false;
-                    foundRuleType = RuleType::Regular;
-                    rg = &r;
-                }
+        for (const unsigned &i : attRules[attid]) {
+            RegularRule &r = rules[i];
+            if (I.guarantees(r.body)) {
+                if (foundRuleType != RuleType::None)
+                    return false;
+                foundRuleType = RuleType::Regular;
+                rg = &r;
             }
+
         }
 
         switch (foundRuleType) {
@@ -335,8 +326,7 @@ namespace GroundPlog {
     }
 
 
-
-    std::unordered_set<ValueRep> Program::getPossibleValuesFor(ATTID attid, Interpretation &interpretation) {
+    std::unordered_set<ValueRep> Program::getPossibleValuesFor(ATTID attid, const Interpretation &interpretation) {
         // this assumes the attribute is ready!
         if (isDisabled(attid, interpretation)) {
             return {UNDEFINED};
@@ -346,7 +336,7 @@ namespace GroundPlog {
             if (RandomRule *r = dynamic_cast<RandomRule *>(rr)) {
                 unsigned int range_sort_id = a_ranges[atfromatt[r->head.first]];
                 for (unsigned y: sort_elems[range_sort_id]) {
-                    if(r->head.second!=UNASSIGNED) {
+                    if (r->head.second != UNASSIGNED) {
                         ATTID attid = dynRangeAtt[{r->head.second, y}];
                         if (interpretation.guarantees(Lit_t(attid, TRUE_ID, false, false))) {
                             result.insert(y);
@@ -374,31 +364,43 @@ namespace GroundPlog {
         return val_candidates[attid];
     }
 
+
     void Program::finalize() {
+        fill_vall_candidates();
+        build_att_occur_map();
+        fill_is_random_map();
+        build_random_rule_ranges_map();
+    }
+
+    void Program::registerTotalAttNum(size_t att_count) {
+        this->att_count = att_count;
+    }
+
+    void Program::fill_vall_candidates() {
         // fill candidate values
         val_candidates.resize(att_count);
 
         // from regular rules:
-        for(const RegularRule &r:rules) {
+        for (const RegularRule &r:rules) {
             val_candidates[r.head.attid].insert(r.head.valid);
-            for(auto body_el:r.body) {
+            for (auto body_el:r.body) {
                 val_candidates[body_el.attid].insert(body_el.valid);
             }
-         }
+        }
 
         // from random selection rules:
-        for(const RandomRule &r:randomrules) {
+        for (const RandomRule &r:randomrules) {
             // get attribute term from the head:
             // for every random selection rule random(a,p) :- B
             // add p(X) -> true as a val candidate for every X in the range of a
             AId atid = atfromatt[r.head.first];
             unsigned int range_sort_id = a_ranges[atid];
             const std::vector<unsigned int> vals = sort_elems[range_sort_id];
-            for(ValueRep val: vals) {
-                ATTID dyn_range_att = dynRangeAtt[Dyn_Range_Atom{r.head.second,val}];
+            for (ValueRep val: vals) {
+                ATTID dyn_range_att = dynRangeAtt[Dyn_Range_Atom{r.head.second, val}];
                 val_candidates[dyn_range_att].insert(TRUE_ID);
             }
-            for(auto body_el:r.body) {
+            for (auto body_el:r.body) {
                 val_candidates[body_el.attid].insert(body_el.valid);
             }
         }
@@ -406,7 +408,7 @@ namespace GroundPlog {
         // from pr-atoms
         for (const PrAtom &prat:pratoms) {
             val_candidates[prat.head.attid].insert(prat.head.valid);
-            for(auto body_el:prat.body) {
+            for (auto body_el:prat.body) {
                 val_candidates[body_el.attid].insert(body_el.valid);
             }
         }
@@ -415,17 +417,78 @@ namespace GroundPlog {
         val_candidates[query.attid].insert(query.valid);
 
         // from observations
-        for(const Observation &obs:observations) {
+        for (const Observation &obs:observations) {
             val_candidates[obs.attid].insert(obs.valid);
         }
 
         // from actions:
-        for(const Action &act : actions) {
+        for (const Action &act : actions) {
             val_candidates[act.attid].insert(act.valid);
+        }
+
+    }
+
+    void Program::build_att_occur_map() {
+        prAtBodies.assign(att_count, {});
+        randomRuleBodies.assign(att_count, {});
+        regularRuleBodies.assign(att_count, {});
+        attRules.assign(att_count, {});
+        attRandomRules.assign(att_count, {});
+        std::unordered_set<ATTID> was;
+        for (int i = 0; i < pratoms.size(); i++) {
+            const PrAtom &pr = pratoms[i];
+            for (const auto &body_el:  pr.body) {
+                if(was.find(body_el.attid)==was.end())
+                prAtBodies[body_el.attid].push_back(i);
+                was.insert(body_el.attid);
+            }
+            was.clear();
+        }
+
+
+        for (int i = 0; i < rules.size(); i++) {
+            const RegularRule &r = rules[i];
+            for (const auto &body_el:  r.body) {
+                if(was.find(body_el.attid)==was.end())
+                regularRuleBodies[body_el.attid].push_back(i);
+                was.insert(body_el.attid);
+            }
+            was.clear();
+            attRules[rules[i].head.attid].push_back(i);
+        }
+
+
+        for (int i = 0; i < randomrules.size(); i++) {
+            const RandomRule &r = randomrules[i];
+            for (const auto &body_el:  r.body) {
+                if(was.find(body_el.attid)==was.end())
+                randomRuleBodies[body_el.attid].push_back(i);
+                was.insert(body_el.attid);
+            }
+            was.clear();
+            attRandomRules[r.head.first].push_back(i);
         }
     }
 
-    void Program::registerTotalAttNum(size_t att_count) {
-          this->att_count = att_count;
+    void Program::fill_is_random_map() {
+        isRandomAtt.assign(att_count, false);
+        for (const RandomRule &r :randomrules) {
+            isRandomAtt[r.head.first] = true;
+        }
+    }
+
+    void Program::build_random_rule_ranges_map() {
+        dynRangeAttFor.assign(att_count,{});
+        for (int i = 0; i < randomrules.size(); i++) {
+            const RandomRule &r = randomrules[i];
+            unsigned int range_sort_id = a_ranges[atfromatt[r.head.first]];
+            for (unsigned y: sort_elems[range_sort_id]) {
+                if (r.head.second != UNASSIGNED) {
+                    ATTID attid = dynRangeAtt[{r.head.second, y}];
+                    dynRangeAttFor[attid].push_back(i);
+                }
+            }
+        }
     }
 }
+

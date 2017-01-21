@@ -14,12 +14,12 @@
 #include "attribute_selection_heuristic.h"
 #include "value_selection_heuristic.h"
 #include <unordered_set>
+#include "state.h"
 
 
 using ClingoModelRep= std::vector<clingo_literal_t>;
 
 namespace GroundPlog {
-
 
     struct Clingo_Result {
         bool unique_model;
@@ -41,31 +41,18 @@ namespace GroundPlog {
     public:
         ExactDCOSolve(){};
         virtual SolveResult run(Program *pr, Clingo::Control *pControl) override;
-        static void extend(Interpretation &i, GroundPlog::Program *pr, Clingo::Control *cControl, DepGraph *dg);
-        static std::unordered_set<ATTID> RAT(const Interpretation &i, Program *pr);
-        static std::unordered_set<ATTID> DAT(const Interpretation &i, GroundPlog::Program *pr, DepGraph *dg);
+        static void extend(GroundPlog::State &S, Clingo::Control *cControl);
         static std::unordered_set<ATTID> bfs(const std::unordered_set<ATTID> &init,DepGraph *dg);
-        static std::unordered_set<unsigned int> P(Interpretation &interpretation, Program *pProgram, DepGraph *pGraph);
+        static std::unordered_set<unsigned int> P(const State &S);
         static Clingo_Result call_clingo(Clingo::Control *c, std::unordered_set<unsigned> activeRules);
-        static std::tuple<bool, double, double> GetCompletionProb(GroundPlog::Program *prg,
+        static std::tuple<bool, double, double> GetCompletionProb(GroundPlog::State &S,
                                                                   Clingo::Control *cControl,
-                                                                  Interpretation &I,
-                                                                  DepGraph *dg,
                                                                   const AttributeSelectionHeuristic & heu,
                                                                   const ValueSelectionHeuristic & heuv);
 
-        static std::tuple<bool, double, double> GetCompletionProbA(GroundPlog::Program *prg,
-                                                                  Clingo::Control *cControl,
-                                                                  Interpretation &I,
-                                                                  DepGraph *dg,
-                                                                  const AttributeSelectionHeuristic & heu,
-                                                                  const ValueSelectionHeuristic & heuv,
-                                                                  ATTID selectedATT);
-
-        static bool AtMost                                        (GroundPlog::Program *prg, Interpretation &I,
-                                                                   const std::unordered_set<ATTID> &cur_dat);
-
-
+        static std::tuple<bool, double, double> GetCompletionProbA(State &S,Clingo::Control *cControl,
+                                                                   const AttributeSelectionHeuristic &heu,
+                                                                   const ValueSelectionHeuristic &heuv, ATTID selectedATT);
     };
 }
 

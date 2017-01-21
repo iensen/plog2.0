@@ -1,0 +1,67 @@
+% Model for a triplex steer-by-wire control system.
+
+
+% *Objects*
+battery = {b1,b2}.
+processor = {p1,p2,p3}.
+motor_controller = {mc1,mc2}.
+steering_sensor = {ss1, ss2, ss3}.
+wheel_sensor = {ws1, ws2, ws3}.
+two_of_three_voter = {v1, v2}.
+component = {b1,b2,p1,p2,p3,mc1,mc2,ss1,ss2,ss3,ws1,ws2,ws3,v1,v2}.
+boolean = {true,false}.
+
+%*Variables*
+#domain component(Component;Component1;Component2;Component3;Component4;Component5). 
+#domain processor(Processor).
+#domain two_of_three_voter(Voter).
+#domain motor_controller(Motor_controller).
+#domain steering_sensor(Steering_sensor).
+#domain wheel_sensor(Wheel_sensor).
+#domain battery(Battery).
+
+
+% *Relations*
+broken : component -> boolean.
+lessthan5broken :boolean.
+
+% *Rules*
+
+
+% *Component status*
+% Components may be broken, with the following probabilities: 
+% i. battery:  1E-6
+% ii. processor:  5E-7
+% iii. motor controler : 1E-7
+% iv. voter: 1E-7
+% v. wheel sensor:   1E-7
+% vi. steering sensor:  2E-6
+
+[r_broken(Component)] random(broken(Component)).
+[r_broken(Component)] pr(broken(Battery) = true) = 1/1000000.
+[r_broken(Component)] pr(broken(Processor) = true) = 5/10000000.
+[r_broken(Component)] pr(broken(Motor_controller) = true) = 1/10000000.
+[r_broken(Component)] pr(broken(Voter) = true) = 1/10000000.
+[r_broken(Component)] pr(broken(Wheel_sensor ) = true ) = 1/10000000.
+[r_broken(Component)] pr(broken(Steering_sensor ) = true ) = 2/1000000.
+
+
+lessthan5broken = false:- broken(Component1) = true,
+                      broken(Component2) = true,
+                      broken(Component3)= true,
+                      broken(Component4) = true,
+                      broken(Component5) = true,
+                      Component1<>Component2, Component1<>Component3,
+                      Component1<>Component4, Component1<>Component5,
+                      Component2<>Component3, Component2<>Component4,
+                      Component2<>Component5, Component3<>Component4,
+                      Component3<>Component5, Component4<>Component5.
+
+lessthan5broken = true :- not lessthan5broken = false.
+% *Queries*
+
+% Probability of failure
+
+?{lessthan5broken = true }.                                       
+
+

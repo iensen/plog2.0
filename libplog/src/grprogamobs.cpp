@@ -113,7 +113,7 @@ void PlogGroundProgramBuilder::end_step() {
     if(!rulesPassedToBackend) {
 
 
-        /*
+     /*
         std::cout << "TERMS:" << std::endl;
         for(auto c:atids) {
             std::cout << c.first << " " << c.second << std::endl;
@@ -132,7 +132,7 @@ void PlogGroundProgramBuilder::end_step() {
         for(auto c:sortids) {
             std::cout << c.first << " " << c.second << std::endl;
         }
-         */
+  */
 
 
 

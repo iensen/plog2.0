@@ -128,6 +128,37 @@ TEST(OLDVERSION_NAIVE_BLOCKS, _20x4) {
 
 
 
+TEST(OLDVERSION_NAIVE_NASA, _l4) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/NASA/A4_prmod.plog",OldPlogMode::NAIVE), 0.059235, 1e-5);
+}
+
+
+
+TEST(OLDVERSION_NAIVE_NASA, _fgl4) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/NASA/Fprmod.plog",OldPlogMode::NAIVE), 0.905719, 1e-5);
+}
+
+TEST(OLDVERSION_NAIVE_NASA, _fgl4rdn) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/NASA/Fprmod2.plog",OldPlogMode::NAIVE), 0.905719, 1e-5);
+}
+
+
+
+TEST(NEWVERSION_NASA, _l4) {
+    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/nasa/A4n.plog"), 0.059235, 1e-5);
+}
+
+
+TEST(NEWVERSION_NASA, _fgl4) {
+    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/nasa/F.plog"), 0.905719, 1e-5);
+}
+
+TEST(NEWVERSION_NASA, _fgl4rdn) {
+    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/nasa/F2.plog"), 0.905719, 1e-5);
+}
+
+
+
 TEST(OLDVERSION_DCO_BLOCKS, _20x1) {
     ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap20_1.plg",OldPlogMode::DCOOPTIMIZED), 0.8, 1e-5);
 }
@@ -392,6 +423,6 @@ TEST(NEWVERSION_POKER, _5x5) {
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    ::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS._20x5";
+    ::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS._*";
     return RUN_ALL_TESTS();
 }

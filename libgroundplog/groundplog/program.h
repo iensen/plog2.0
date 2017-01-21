@@ -15,6 +15,7 @@
 #include <unordered_map>
 #include <clingo.h>
 #include "interpretation.h"
+#include<groundplog/state.h>
 
 namespace GroundPlog {
     using Clasp::ConstString;
@@ -25,6 +26,7 @@ namespace GroundPlog {
     typedef std::pair<Id_t, ConstString>    ShowPair;
 
     class Program  {
+        friend State;
 
         ValueRep  TRUE_ID;
 
@@ -118,41 +120,36 @@ namespace GroundPlog {
         // ------------------------------------------------------------------------
         //@}
         void addAttributeMap(std::vector<unsigned int> vector);
-
         void addSortElem(unsigned int i, unsigned int i1);
-
         void addAtRangeSort(unsigned int a_id, unsigned int sort_id);
-
         void addObservation(unsigned int att_id, unsigned int val_id, bool positive);
-
         void addAction(unsigned int att_id, unsigned int val_id);
-
+        void fill_vall_candidates();
         void finalize();
         // checking properties of a progeam:
-
         bool isRandom(ATTID attid) ;
-
-
         std::unordered_set<ValueRep>  getAttValues(unsigned int attid);
         std::unordered_set<ATTID> getRandomAttributeTerms();
         std::unordered_set<ATTID> getNonRandomAttributeTerms();
-        std::unordered_set<unsigned> getExternalsForSubprogramConstructedFrom(const std::unordered_set<ATTID> &atts);
-        std::unordered_set<unsigned> getExternalsForAtomsFrom(const Interpretation &i);
+        std::unordered_set<unsigned> getExternalsForSubprogramConstructedFrom(const std::vector<ATTID> &atts);
+        std::unordered_set<unsigned> getExternalsForAtomsFrom(const Interpretation &i) const;
+        std::vector<std::vector<unsigned > > prAtBodies;
+        std::vector<std::vector<unsigned > > regularRuleBodies;
+        std::vector<std::vector<unsigned > > randomRuleBodies;
+        std::vector<std::vector<unsigned > > attRules;
+        std::vector<std::vector<unsigned > > attRandomRules;
 
+        std::vector<std::vector<unsigned > > dynRangeAttFor;
+        std::vector<std::unordered_set<ATTID>> randomRulesRangeAtts;
+
+        std::vector<char> isRandomAtt;
         void addAtomExternal(unsigned int att_id, unsigned int val_id, unsigned int ex_atom_id);
         void registerLiteral(unsigned int att_id, unsigned int val_id, bool pos, unsigned clingo_at_id);
-
-        double Probability(Interpretation &I);
-        std::unordered_set<ATTID> getReadyAtts(const Interpretation &I);
-
+        double Probability(const Interpretation &I);
         void registerDynRangeAtom(unsigned int a_id, unsigned int arg_id, unsigned int att_id);
-
         void registerTrueAtId(unsigned int true_id);
-
-        std::unordered_set<ValueRep> getPossibleValuesFor(ATTID attid, Interpretation &interpretation);
-
+        std::unordered_set<ValueRep> getPossibleValuesFor(ATTID attid, const Interpretation &interpretation);
         void storeatttoatmap(unsigned int attid, unsigned int aid);
-
         void registerTotalAttNum(size_t att_count);
 
     private:
@@ -174,6 +171,11 @@ namespace GroundPlog {
         Rule* findUniqueActiveRuleFor(ATTID attid, const Interpretation &I);
 
 
+        void build_att_occur_map();
+
+        void fill_is_random_map();
+
+        void build_random_rule_ranges_map();
     };
 }
 #endif //PLOG_PROGRAM_H

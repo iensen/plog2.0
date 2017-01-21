@@ -1,0 +1,112 @@
+battery(batteryA).
+battery(batteryB).
+processor(processor1).
+processor(processor2).
+processor(processor3).
+steering_sensor(steering_sensor1).
+steering_sensor(steering_sensor2).
+steering_sensor(steering_sensor3).
+wheel_sensor(wheel_sensor1).
+wheel_sensor(wheel_sensor2).
+wheel_sensor(wheel_sensor3).
+motor_controller(motor_controller1).
+motor_controller(motor_controller2).
+two_of_three_voter(two_of_three_voter1).
+two_of_three_voter(two_of_three_voter2).
+device(processor1).
+device(processor2).
+device(processor3).
+device(motor_controller1).
+device(motor_controller2).
+device(steering_sensor1).
+device(steering_sensor2).
+device(steering_sensor3).
+device(wheel_sensor1).
+device(wheel_sensor2).
+device(wheel_sensor3).
+component_status(intact).
+component_status(detectedBroken).
+component_status(silentBroken).
+component(batteryA).
+component(batteryB).
+component(processor1).
+component(processor2).
+component(processor3).
+component(steering_sensor1).
+component(steering_sensor2).
+component(steering_sensor3).
+component(wheel_sensor1).
+component(wheel_sensor2).
+component(wheel_sensor3).
+component(motor_controller1).
+component(motor_controller2).
+component(two_of_three_voter1).
+component(two_of_three_voter2).
+boolean(true).
+boolean(false).
+#domain processor(Processor).
+#domain processor(Processor1).
+#domain processor(Processor2).
+#domain two_of_three_voter(Voter).
+#domain motor_controller(Motor_controller).
+#domain steering_sensor(Steering_sensor).
+#domain steering_sensor(Steering_sensor1).
+#domain steering_sensor(Steering_sensor2).
+#domain wheel_sensor(Wheel_sensor).
+#domain wheel_sensor(Wheel_sensor1).
+#domain wheel_sensor(Wheel_sensor2).
+#domain component(Component).
+#domain component(Component1).
+#domain component(Component2).
+#domain component(Component3).
+#domain component(Component3).
+#domain component(Component4).
+#domain component(Component5).
+#domain battery(Battery).
+connected(batteryA,processor1,true).
+connected(batteryA,processor2,true).
+connected(batteryA,steering_sensor1,true).
+connected(batteryA,steering_sensor2,true).
+connected(batteryA,wheel_sensor1,true).
+connected(batteryA,wheel_sensor2,true).
+connected(batteryA,motor_controller1,true).
+connected(batteryB,processor2,true).
+connected(batteryB,processor3,true).
+connected(batteryB,streering_sensor2,true).
+connected(batteryB,streering_sensor3,true).
+connected(batteryB,wheel_sensor2,true).
+connected(batteryB,wheel_sensor3,true).
+connected(batteryB,motor_controller2,true).
+connected(Processor,Voter,true).
+connected(Voter,Motor_controller,true).
+connected(Steering_sensor,Processor,true).
+connected(Wheel_sensor,Processor,true).
+powered(Component,true):-connected(Battery,Component,true),operational(Battery,true).
+powered(Component,false):-not powered(Component,true).
+1{broken(Component,X_):boolean(X_)}1:-not intervene(broken(Component)).
+pd(r_broken(Component),broken(Component,X_)):-not intervene(broken(Component)),boolean(X_).
+show broken(Component,X_).
+pa(r_broken(Component),broken(Battery,true),di_(1,2)).
+pa(r_broken(Component),broken(Processor,true),di_(1,2)).
+pa(r_broken(Component),broken(Motor_controller,true),di_(1,2)).
+pa(r_broken(Component),broken(Voter,true),di_(1,2)).
+pa(r_broken(Component),broken(Wheel_sensor,true),di_(1,2)).
+pa(r_broken(Component),broken(Steering_sensor,true),di_(1,2)).
+operational(Component,true):-not operational(Component,false).
+operational(Processor,false):-powered(Processor,false).
+operational(Motor_controller,false):-powered(Motor_controller,false).
+operational(Steering_sensor,false):-powered(Steering_sensor,false).
+operational(Wheel_sensor,false):-powered(Wheel_sensor,false).
+operational(Component,false):-broken(Component,true).
+operational(Voter,false):-connected(Voter,Processor1,true),connected(Voter,Processor2,true),operational(Processor1,false),neq(Processor2,Processor1),operational(Processor2,false).
+system_failure(true):-operational(Motor_controller,false).
+system_failure(true):-operational(Wheel_sensor1,false),operational(Wheel_sensor2,false),neq(Wheel_sensor2,Wheel_sensor1).
+system_failure(true):-operational(Steering_sensor1,false),operational(Steering_sensor2,false),neq(Steering_sensor2,Steering_sensor1).
+valid_world(false):-broken(Component1,true),broken(Component2,true),broken(Component3,true),broken(Component4,true),broken(Component5,true),neq(Component1,Component2),neq(Component1,Component3),neq(Component1,Component4),neq(Component1,Component5),neq(Component2,Component3),neq(Component2,Component4),neq(Component2,Component5),neq(Component3,Component4),neq(Component3,Component5),neq(Component4,Component5).
+valid_world(true):-not valid_world(false).
+:- not valid_world(true).
+
+hide.
+show pd(X,Y).
+show pa(X,Y,Z).
+show system_failure(true).

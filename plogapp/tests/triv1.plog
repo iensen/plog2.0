@@ -4,6 +4,7 @@ sorts
 
 attributes
 p: #boolean.
+q: #boolean.
 
 
 statements
