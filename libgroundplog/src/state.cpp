@@ -6,6 +6,7 @@
 #include <iostream>
 
 namespace GroundPlog {
+
     void State::assignRandom(ATTID attid, ValueRep val) {
         I.assign(attid, val);
         RAT.push_back(attid);
@@ -167,29 +168,36 @@ namespace GroundPlog {
         std::unordered_map<ATTID, std::unordered_set<ValueRep> > posibVals;
         bool iteration_needed = true;
         std::unordered_set<size_t> ruleFired;
-
+        std::vector<ATTID> last_dat_unassigned;
+        for(ATTID a : last_dat) {
+            if(I.getVal(a)==UNASSIGNED) {
+                last_dat_unassigned.push_back(a);
+            }
+        }
+        //int iterations = 0;
         while (iteration_needed) {
+          //  ++iterations;
             iteration_needed = false;
-            for (ATTID a: last_dat) {
-                if (I.getVal(a) == UNASSIGNED) {
+            for (ATTID a: last_dat_unassigned) {
                     for (unsigned i : prg->attRules[a]) {
                         const RegularRule &r = prg->rules[i];
                         if (!regRuleBodyFalsified[i] &&
-                            ruleFired.find(i) == ruleFired.end() && !I.is_impossible_val(r.head.attid, r.head.valid) && I.weakly_satisfies(r.body, posibVals) ) {
+                            ruleFired.find(i) == ruleFired.end() &&  I.weakly_satisfies(r.body, posibVals) ) {
                             ruleFired.insert(i);
                             iteration_needed = true;
                             posibVals[r.head.attid].insert(r.head.valid);
                         }
-                    }
+
                 }
             }
         }
 
+        //std::cout << iterations << std::endl;
         bool something_assigned = false;
 
-        for (ATTID id:last_dat) {
+        for (ATTID id:last_dat_unassigned) {
             {
-                if (I.getVal(id) == UNASSIGNED) {
+
                     if (posibVals.find(id) == posibVals.end()) {
                         something_assigned = true;
                         // std::cout <<"MADE_UNDEF:" << id << std::endl;
@@ -208,7 +216,7 @@ namespace GroundPlog {
                         }
                     }
                 }
-            }
+
         }
         return something_assigned;
 
