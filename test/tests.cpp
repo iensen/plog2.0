@@ -295,6 +295,11 @@ TEST(OLDVERSION_NAIVE_POKER, _5x5) {
 
 
 
+TEST(OLDVERSION_NAIVE_POKER, _5x6) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/Poker/poker_5_6.txt",OldPlogMode::NAIVE), 0.547344, 1e-5);
+}
+
+
 
 TEST(OLDVERSION_DCO_POKER, _5x3) {
     ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/Poker/poker_5_3.txt",OldPlogMode::DCOOPTIMIZED), 0.454544, 1e-5);
@@ -308,6 +313,18 @@ TEST(OLDVERSION_DCO_POKER, _5x4) {
 TEST(OLDVERSION_DCO_POKER, _5x5) {
     ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/Poker/poker_5_5.txt",OldPlogMode::DCOOPTIMIZED), 0.399897, 1e-5);
 }
+
+
+TEST(OLDVERSION_DCO_POKER, _5x6) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/Poker/poker_5_6.txt",OldPlogMode::DCOOPTIMIZED), 0.547344, 1e-5);
+}
+
+
+//TEST(OLDVERSION_DCO_POKER, _5x4x36) {
+//    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/Poker/poker_5_4_36.txt",OldPlogMode::DCOOPTIMIZED), 0.547344, 1e-5);
+//}
+
+
 
 
 
@@ -407,6 +424,10 @@ TEST(NEWVERSION_POKER, _5x5) {
     ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Poker/poker_5_5.txt"), 0.399897, 1e-5);
 }
 
+TEST(NEWVERSION_POKER, _5x6) {
+    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Poker/poker_5_6.txt"), 0.547344, 1e-5);
+}
+
 
 
 
@@ -417,6 +438,11 @@ TEST(NEWVERSION_POKER, _5x5) {
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS._*";
-    ::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._*";
+    //::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._*";
+    //::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._l4";
+    //::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._fgl4";
+     ::testing::GTEST_FLAG(filter) = "OLDVERSION_DCO_POKER._5x4x36";
+     //::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._5x6";
+
     return RUN_ALL_TESTS();
 }

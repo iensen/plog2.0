@@ -1,0 +1,60 @@
+
+sorts
+
+#step= 1..5.
+#kind= 1..6.
+#card= 1..30.
+#bool = {true, false}.
+
+attributes
+
+kc: #card->#kind.
+draw: #step ->#card.
+invalid:#bool.
+pair: #kind,#step->#bool.
+pair_of_kind: #kind -> #bool.
+morepair: #kind->#bool.
+singlepair:#bool.
+doublepair:#bool.
+
+statements
+
+kc(1)=1. kc(2)=2. kc(3)=3. kc(4)=4. 
+kc(5)=1. kc(6)=2. kc(7)=3. kc(8)=4. 
+kc(9)=1. kc(10)=2. kc(11)=3. kc(12)=4. 
+kc(13)=1. kc(14)=2. kc(15)=3. kc(16)=4.
+kc(17)=1. kc(18)=2. kc(19)=3. kc(20)=4.
+
+kc(21) = 5.
+kc(22) = 5.
+kc(23) = 5.
+kc(24) = 5.
+kc(25) = 5.
+
+
+kc(26) = 6.
+kc(27) = 6.
+kc(28) = 6.
+kc(29) = 6.
+kc(30) = 6.
+
+
+random(draw(S)).
+
+invalid :- draw(S1)=C1, draw(S2)=C2,S1<S2,C1<=C2.
+invalid=false :- not invalid.
+
+pair(K,S1) :- kc(C1)=K, kc(C2)=K, draw(S2)=C2, draw(S1)=C1, S1<S2.
+morepair(K) :- pair(K,S1), pair(K,S2), S1<S2.
+pair_of_kind(K) :- pair(K,S), not morepair(K).
+doublepair :- pair_of_kind(K1), pair_of_kind(K2), K1<K2.
+singlepair :- pair_of_kind(K), not doublepair.
+
+obs(invalid,false).
+
+? singlepair.
+
+
+
+
+

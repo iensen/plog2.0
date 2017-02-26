@@ -29,7 +29,7 @@ namespace GroundPlog {
         std::vector<unsigned> level;
         std::vector<ATTID> trail;
 
-        std::vector<std::unordered_set<ValueRep> > imposVals;
+        std::vector<std::vector<char>> imposVals;
         std::vector<std::pair<ATTID, ValueRep>> trailOnImposVals;
         std::vector<unsigned> levelOnImposVals;
 
@@ -49,8 +49,12 @@ namespace GroundPlog {
 
         bool guarantees(const std::vector<Lit_t> &body) const;
 
+     //   bool weakly_satisfies(const std::vector<Lit_t> &body,
+     //                         const std::unordered_map<ATTID, std::unordered_set<ValueRep>> &map) const;
+
         bool weakly_satisfies(const std::vector<Lit_t> &body,
-                              const std::unordered_map<ATTID, std::unordered_set<ValueRep>> &map) const;
+                                         const std::vector<std::vector<char>> &pvmap) const;
+
 
         bool falsifies(const std::vector<Lit_t> &body) const;
 
@@ -64,10 +68,15 @@ namespace GroundPlog {
 
         void backtrackLastLevel();
 
+        Interpretation(const GroundPlog::Program&);
+
     private:
         void grow(unsigned index);
 
-        bool satisfied_by_posvals(const Lit_t &, const std::unordered_map<ATTID, std::unordered_set<ValueRep>> &) const;
+       // bool satisfied_by_posvals(const Lit_t &, const std::unordered_map<ATTID, std::unordered_set<ValueRep>> &) const;
+
+        bool satisfied_by_posvals(const Lit_t &lit,
+                                                 const std::vector<std::vector<char>> &pvmap) const;
 
         unsigned int getLevel(const ATTID attid) const;
     };

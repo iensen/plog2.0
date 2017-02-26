@@ -77,6 +77,8 @@ namespace  GroundPlog {
         std::vector<unsigned> randomRuleBodyFalsifiedTrail;
         std::vector<unsigned> randomRuleBodyFalsifiedTrailLevel;
 
+        std::vector<std::vector<char> > posibVals;
+
 
         // this will backtrack together with falsified arrays (once we backtrack the falsified, increase the counter of he head)!
         std::unordered_map<std::pair<ATTID ,ValueRep >, int> pvCounter;
@@ -89,9 +91,8 @@ namespace  GroundPlog {
 
 
     public:
-        State() {};
+        State(GroundPlog::DepGraph *dg, GroundPlog::Program *pr);
         unsigned LastLevelUndecidedCount();
-        void init(GroundPlog::DepGraph *dg, GroundPlog::Program *pr);
         void assignRandom(ATTID attid, ValueRep val);
         void assignNonRandom(ATTID attid, ValueRep val);
         ValueRep getValue(ATTID attid);
@@ -120,6 +121,8 @@ namespace  GroundPlog {
         void initBodyFalsifiedFlags();
 
         void initPvCounter();
+
+        void initInterpretation();
 
         void backTrackRandomAssignment();
 

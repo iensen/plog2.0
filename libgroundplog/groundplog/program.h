@@ -176,8 +176,6 @@ namespace GroundPlog {
 
         void registerTotalAttNum(size_t att_count);
 
-        void registerBoolSortId(unsigned int bool_sort_id);
-
     private:
         Program(const Program &);
 
@@ -211,6 +209,7 @@ namespace GroundPlog {
 
         ValueRep getRewrittenValue(ATTID attid, ValueRep oldval);
 
+        void sort_regular_rules();
     };
 }
 #endif //PLOG_PROGRAM_H

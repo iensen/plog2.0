@@ -11,8 +11,7 @@
 
 GroundPlog::SolveResult GroundPlog::ExactDCOSolve::run(GroundPlog::Program *prg, Clingo::Control *cControl) {
     dg = new DepGraph(prg);
-    State s;
-    s.init(dg,prg);
+    State s(dg,prg);
     AttributeSelectionHeuristic ash;
     ValueSelectionHeuristic vhs;
     auto p = GetCompletionProb(s, cControl, ash, vhs);

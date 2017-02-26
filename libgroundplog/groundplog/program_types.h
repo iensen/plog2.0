@@ -65,6 +65,7 @@ namespace GroundPlog {
         Atom_t head;
         std::vector<Lit_t> body;
         bool constructedFrom(const std::unordered_set<ATTID> &atts);
+        unsigned countPositiveBodyLiterals() const ;
     };
 
     struct RandomRule:public Rule {

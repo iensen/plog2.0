@@ -163,6 +163,18 @@ namespace GroundPlog {
         return ct;
     }
 
+    std::unordered_map<ATTID, std::unordered_set<ValueRep>> toMap(std::vector<std::vector<char>> v, std::vector<ATTID> last_dat) {
+        std::unordered_map<ATTID, std::unordered_set<ValueRep>> result;
+        for(int i: last_dat) {
+            for(int j=0; j < v[i].size();j++) {
+                if(v[i][j])
+                    result[i].insert(j);
+            }
+        }
+        return result;
+    };
+
+    /*
     bool GroundPlog::State::AtMost() {
         std::vector<ATTID> last_dat = getLastLevelDAT();
         std::unordered_map<ATTID, std::unordered_set<ValueRep> > posibVals;
@@ -198,7 +210,7 @@ namespace GroundPlog {
         for (ATTID id:last_dat_unassigned) {
             {
 
-                    if (posibVals.find(id) == posibVals.end()) {
+                    if (posibVals.find(id) == posibVals.end() && I.getVal(id)!=UNDEFINED) {
                         something_assigned = true;
                         // std::cout <<"MADE_UNDEF:" << id << std::endl;
                         I.assign(id, UNDEFINED);
@@ -221,6 +233,83 @@ namespace GroundPlog {
         return something_assigned;
 
     }
+     */
+
+    bool GroundPlog::State::AtMost() {
+        std::vector<ATTID> last_dat = getLastLevelDAT();
+        //std::unordered_map<ATTID, std::unordered_set<ValueRep> > posibVals;
+        for(const ATTID at : last_dat) {
+            posibVals[at].assign(prg->val_candidates_vects[at].size(), false);
+        }
+
+        bool iteration_needed = true;
+        std::unordered_set<size_t> ruleFired;
+        std::vector<ATTID> last_dat_unassigned;
+        for(ATTID a : last_dat) {
+            if(I.getVal(a)==UNASSIGNED) {
+                last_dat_unassigned.push_back(a);
+            }
+        }
+        //int iterations = 0;
+        while (iteration_needed) {
+             // ++iterations;
+            iteration_needed = false;
+            for (ATTID a: last_dat_unassigned) {
+                for (unsigned i : prg->attRules[a]) {
+                    const RegularRule &r = prg->rules[i];
+                    if (!regRuleBodyFalsified[i] &&
+                        ruleFired.find(i) == ruleFired.end() &&  I.weakly_satisfies(r.body, posibVals) ) {
+                        ruleFired.insert(i);
+                        iteration_needed = true;
+                        posibVals[r.head.attid][r.head.valid] = true;
+                    }
+
+                }
+            }
+        }
+
+        //std::cout << iterations << std::endl;
+        bool something_assigned = false;
+
+        for (ATTID id:last_dat_unassigned) {
+
+            const size_t valCount = prg->getAttValuesCount(id);
+            bool hasPosibValueForId = false;
+
+            for(ValueRep val = 0 ; val < valCount; val++) {
+                if(posibVals[id][val])
+                    hasPosibValueForId = true;
+            }
+
+            if (!hasPosibValueForId) {
+                something_assigned = true;
+                // std::cout <<"MADE_UNDEF:" << id << std::endl;
+                I.assign(id, UNDEFINED);
+                propagateAssignment(id, UNDEFINED, false);
+            }
+            else {
+                for (ValueRep val = 0; val < valCount; val++) {
+                    if (!posibVals[id][val] && !I.is_impossible_val(id, val)) {
+                        something_assigned = true;
+                        //std::cout <<"MADE_OMPOS:" << id << " "<<val << std::endl;
+                        I.make_impossible(id, val);
+                        propagateAssignment(id, val, true);
+                    }
+                    if (posibVals[id][val]) {
+                        hasPosibValueForId = true;
+                    }
+                }
+            }
+
+
+        }
+
+
+        return something_assigned;
+
+    }
+
+
 
     const Interpretation &GroundPlog::State::getI() const {
         return I;
@@ -287,19 +376,6 @@ namespace GroundPlog {
         return result;
     }
 
-
-    void GroundPlog::State::init(GroundPlog::DepGraph *dg, GroundPlog::Program *pr) {
-        this->prg = pr;
-        this->depGraph = dg;
-        currentLevel = 0;
-        initRandomDeps();
-        initUndecidedRuleCounter();
-        initBodyTrueLitCounters();
-        initBodyFalsifiedFlags();
-        initPvCounter();
-        initReadyRandomAttributeTerms();
-        initDynRangeDecidedAttCounter();
-    }
 
     void GroundPlog::State::initUndecidedRuleCounter() {
         UNDECIDEDRULECOUNTER.assign(prg->att_count, 0);
@@ -603,6 +679,27 @@ namespace GroundPlog {
                 }
             }
         }
+
+    }
+
+    void State::initInterpretation() {
+
+    }
+
+    State::State(GroundPlog::DepGraph *dg, GroundPlog::Program *pr):I(*pr) {
+        this->prg = pr;
+        this->depGraph = dg;
+        currentLevel = 0;
+        posibVals.assign(pr->att_count,{});
+        initRandomDeps();
+        initUndecidedRuleCounter();
+        initBodyTrueLitCounters();
+        initBodyFalsifiedFlags();
+        initPvCounter();
+        initReadyRandomAttributeTerms();
+        initDynRangeDecidedAttCounter();
+        initInterpretation();
+
 
     }
 }

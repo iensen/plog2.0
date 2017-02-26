@@ -361,6 +361,9 @@ namespace GroundPlog {
 
 
     void Program::finalize() {
+
+        //sort_regular_rules();
+
         fill_vall_candidates();
         fill_val_candidates_vects();
         rewrite_att_vals();
@@ -368,6 +371,7 @@ namespace GroundPlog {
         build_att_occur_map();
         fill_is_random_map();
         build_random_rule_ranges_map();
+
     }
 
     void Program::registerTotalAttNum(size_t att_count) {
@@ -563,6 +567,13 @@ namespace GroundPlog {
         if (a_ranges.size() <= a_id)
             a_ranges.resize(a_id + 1);
         a_ranges[a_id] = sort_id;
+    }
+
+    void Program::sort_regular_rules() {
+           std::sort(rules.begin(), rules.end(), [](const RegularRule & r1, const RegularRule & r2) -> bool
+           {
+               return r1.body.size()<r2.body.size();
+           });
     }
 
 }

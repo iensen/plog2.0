@@ -13,6 +13,16 @@ bool GroundPlog::RegularRule::constructedFrom(const std::unordered_set<GroundPlo
     return true;
 }
 
+unsigned GroundPlog::RegularRule::countPositiveBodyLiterals() const {
+    unsigned countPosBodyLit = 0;
+    for(const Lit_t lit:body) {
+        if(!lit.defaultNeg)
+            ++countPosBodyLit;
+
+    }
+    return countPosBodyLit;
+}
+
 bool GroundPlog::RandomRule::constructedFrom(const std::unordered_set<GroundPlog::ATTID> &atts) {
     if(atts.find(head.first) == atts.end())
         return false;

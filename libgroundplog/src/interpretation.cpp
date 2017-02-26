@@ -4,6 +4,7 @@
 
 
 #include <map>
+#include <groundplog/program.h>
 #include "groundplog/interpretation.h"
 namespace GroundPlog {
     std::vector<ATTID> Interpretation::getAllAssignAtts() const {
@@ -57,6 +58,8 @@ namespace GroundPlog {
         return true;
     }
 
+    // rewrite this as well
+    /*
     bool Interpretation::satisfied_by_posvals(const Lit_t &lit,
                                               const std::unordered_map<ATTID, std::unordered_set<ValueRep>> &pvmap) const {
         // this assumes lit doesn't have default negation.
@@ -67,8 +70,26 @@ namespace GroundPlog {
             return pvmap.find(lit.attid) != pvmap.end() &&
                    (pvmap.at(lit.attid).size() > 1 || *pvmap.at(lit.attid).begin() != lit.valid);
         }
+    }*/
+
+
+    // rewrite this as well
+    bool Interpretation::satisfied_by_posvals(const Lit_t &lit,
+                                              const std::vector<std::vector<char>> &pvmap) const {
+        // this assumes lit doesn't have default negation.
+        if (!lit.classicNeg) {
+            return pvmap[lit.attid][lit.valid];
+        } else {
+            for(size_t valid = 0 ; valid < pvmap[lit.attid].size(); valid++) {
+                if(valid != lit.valid && pvmap[lit.attid][valid])
+                    return true;
+            }
+            return false;
+        }
     }
 
+
+    /*
     bool
     Interpretation::weakly_satisfies(const std::vector<Lit_t> &body,
                                      const std::unordered_map<ATTID, std::unordered_set<ValueRep>> &pvmap) const {
@@ -78,7 +99,25 @@ namespace GroundPlog {
                 return false;
         }
         return true;
+    }*/
+
+
+
+    bool
+    Interpretation::weakly_satisfies(const std::vector<Lit_t> &body,
+                                     const std::vector<std::vector<char>> &pvmap) const {
+        for (const Lit_t &lit: body) {
+            if (!lit.defaultNeg && !guarantees(lit) && !satisfied_by_posvals(lit, pvmap)
+                || lit.defaultNeg && falsifies(lit))
+                return false;
+        }
+        return true;
     }
+
+
+
+
+
 
 
     bool Interpretation::falsifies(const Lit_t &lit) const {
@@ -132,7 +171,7 @@ namespace GroundPlog {
         //backtrack impossible assignments:
         while (levelOnImposVals.size() > 0 && levelOnImposVals.back() == current_level) {
             const auto &back = trailOnImposVals.back();
-            imposVals[back.first].erase(back.second);
+            imposVals[back.first][back.second] = false;
             trailOnImposVals.pop_back();
             levelOnImposVals.pop_back();
         }
@@ -144,7 +183,6 @@ namespace GroundPlog {
         if (index >= values.size()) {
             values.resize(2 * index + 1, UNASSIGNED);
             level.resize(2 * index + 1, UNASSIGNED);
-            imposVals.resize(2 * index + 1);
         }
     }
 
@@ -152,7 +190,7 @@ namespace GroundPlog {
 // question: when every value become impossible, should we make the attribute undefined!?
     void Interpretation::make_impossible(ATTID attid, ValueRep val) {
         grow(attid);
-        imposVals[attid].insert(val);
+        imposVals[attid][val] = true;
         levelOnImposVals.emplace_back(current_level);
         trailOnImposVals.emplace_back(std::make_pair(attid, val));
     }
@@ -161,8 +199,16 @@ namespace GroundPlog {
         if (attid >= imposVals.size())
             return false;
         else
-            return imposVals[attid].find(val) != imposVals[attid].end();
+            return imposVals[attid][val] ;
 
+    }
+
+    Interpretation::Interpretation(const GroundPlog::Program &pr) {
+        // init vector for impossible values
+        imposVals.resize(pr.att_count);
+        for(size_t att = 0; att< pr.att_count ; att++) {
+            imposVals[att].resize(pr.val_candidates_vects[att].size());
+        }
     }
 
 }
