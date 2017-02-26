@@ -204,8 +204,8 @@ namespace GroundPlog {
                         I.assign(id, UNDEFINED);
                         propagateAssignment(id,UNDEFINED,false);
                     } else {
-                        const std::unordered_set<ValueRep> &all_vals = prg->getAttValues(id);
-                        for (const ValueRep val:all_vals) {
+                        const size_t valCount = prg->getAttValuesCount(id); //error
+                        for (ValueRep val=0; val < valCount;val++) {
                             if (std::find(posibVals[id].begin(), posibVals[id].end(), val) == posibVals[id].end() &&
                                 !I.is_impossible_val(id, val)) {
                                 something_assigned = true;

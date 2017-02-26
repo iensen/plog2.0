@@ -58,16 +58,11 @@ namespace GroundPlog {
         this->attmap = vector;
     }
 
+
     void Program::addSortElem(unsigned int sort_id, unsigned int sort_elem_id) {
         if (sort_elems.size() <= sort_id)
             sort_elems.resize(sort_id + 1, {});
         sort_elems[sort_id].push_back(sort_elem_id);
-    }
-
-    void Program::addAtRangeSort(unsigned int a_id, unsigned int sort_id) {
-        if (a_ranges.size() <= a_id)
-            a_ranges.resize(a_id + 1);
-        a_ranges[a_id] = sort_id;
     }
 
     void Program::addObservation(unsigned int att_id, unsigned int val_id, bool positive) {
@@ -280,13 +275,13 @@ namespace GroundPlog {
                         unsigned int range_sort_id = a_ranges[atid];
                         all_decided = true;
                         at_least_one_guaranteed = false;
-                        for (unsigned y: sort_elems[range_sort_id]) {
-                            ATTID attid = dynRangeAtt[{r.head.second, y}];
+                        for (ValueRep v: sort_elems[range_sort_id]) {
+                            ATTID attid = dynRangeAtt[{r.head.second, v}];
                             if (I.getVal(attid) == UNASSIGNED) {
                                 all_decided = false;
                                 break;
                             }
-                            if (I.guarantees(Lit_t(attid, TRUE_ID, false, false))) {
+                            if (I.guarantees(Lit_t(attid, getRewrittenValue(attid,TRUE_ID), false, false))) {
                                 at_least_one_guaranteed = true;
                             }
                         }
@@ -335,10 +330,10 @@ namespace GroundPlog {
             Rule *rr = findUniqueActiveRuleFor(attid, interpretation);
             if (RandomRule *r = dynamic_cast<RandomRule *>(rr)) {
                 unsigned int range_sort_id = a_ranges[atfromatt[r->head.first]];
-                for (unsigned y: sort_elems[range_sort_id]) {
+                for (ValueRep  y=0;y<sort_elems[range_sort_id].size();y++) {
                     if (r->head.second != UNASSIGNED) {
-                        ATTID attid = dynRangeAtt[{r->head.second, y}];
-                        if (interpretation.guarantees(Lit_t(attid, TRUE_ID, false, false))) {
+                        ATTID attid =  dynRangeAtt[{r->head.second, val_candidates_vects[r->head.first][y]}];
+                        if (interpretation.guarantees(Lit_t(attid, getRewrittenValue(attid,TRUE_ID), false, false))) {
                             result.insert(y);
                         }
                     } else {
@@ -360,13 +355,16 @@ namespace GroundPlog {
         atfromatt[attid] = aid;
     }
 
-    std::unordered_set<ValueRep> Program::getAttValues(unsigned int attid) {
-        return val_candidates[attid];
+    size_t Program::getAttValuesCount(unsigned int attid) {
+        return val_candidates[attid].size();
     }
 
 
     void Program::finalize() {
         fill_vall_candidates();
+        fill_val_candidates_vects();
+        rewrite_att_vals();
+
         build_att_occur_map();
         fill_is_random_map();
         build_random_rule_ranges_map();
@@ -393,12 +391,14 @@ namespace GroundPlog {
             // get attribute term from the head:
             // for every random selection rule random(a,p) :- B
             // add p(X) -> true as a val candidate for every X in the range of a
+            // also add y as a val candidate for a
             AId atid = atfromatt[r.head.first];
             unsigned int range_sort_id = a_ranges[atid];
-            const std::vector<unsigned int> vals = sort_elems[range_sort_id];
-            for (ValueRep val: vals) {
-                ATTID dyn_range_att = dynRangeAtt[Dyn_Range_Atom{r.head.second, val}];
+             for (ValueRep val:  sort_elems[range_sort_id]) {
+                ATTID dyn_range_att = dynRangeAtt[{r.head.second, val}];;
                 val_candidates[dyn_range_att].insert(TRUE_ID);
+                val_candidates[r.head.first].insert(val);
+
             }
             for (auto body_el:r.body) {
                 val_candidates[body_el.attid].insert(body_el.valid);
@@ -482,13 +482,88 @@ namespace GroundPlog {
         for (int i = 0; i < randomrules.size(); i++) {
             const RandomRule &r = randomrules[i];
             unsigned int range_sort_id = a_ranges[atfromatt[r.head.first]];
-            for (unsigned y: sort_elems[range_sort_id]) {
+            for (unsigned y = 0 ; y < sort_elems[range_sort_id].size();y++) {
                 if (r.head.second != UNASSIGNED) {
-                    ATTID attid = dynRangeAtt[{r.head.second, y}];
+                    ATTID attid = dynRangeAtt[{r.head.second, val_candidates_vects[r.head.first][y]}];
                     dynRangeAttFor[attid].push_back(i);
                 }
             }
         }
     }
+
+
+
+    void Program::fill_val_candidates_vects() {
+        val_candidates_vects.assign(val_candidates.size(),{});
+        for(int i=0;i<val_candidates.size();i++) {
+            for(const ValueRep v: val_candidates[i]) {
+                val_candidates_vects[i].push_back(v);
+            }
+        }
+    }
+
+    void Program::rewrite_att_vals() {
+        // rewrite regular rules:
+        for(RegularRule &r : rules) {
+            r.head.valid = getRewrittenValue(r.head.attid,r.head.valid);
+            for(Lit_t &lit:r.body) {
+                lit.valid = getRewrittenValue(lit.attid, lit.valid);
+            }
+        }
+
+        // rewrite random selection rules:
+        for(RandomRule &r : randomrules) {
+            for(Lit_t &lit:r.body) {
+                lit.valid = getRewrittenValue(lit.attid, lit.valid);
+            }
+        }
+        // rewrite observation:
+        for(Observation &o : observations) {
+            o.valid= getRewrittenValue(o.attid, o.valid);
+        }
+        // rewrite actions:
+        for(Action &a: actions) {
+            a.valid = getRewrittenValue(a.attid, a.valid);
+        }
+
+        // rewrite pr-atoms:
+        for(PrAtom &pa: pratoms) {
+            pa.head.valid = getRewrittenValue(pa.head.attid, pa.head.valid);
+            for(Lit_t &lit:pa.body) {
+                lit.valid = getRewrittenValue(lit.attid, lit.valid);
+            }
+        }
+
+        // rewrite query:
+        query.valid = getRewrittenValue(query.attid, query.valid);
+
+        // rewrite atom_to_external map
+        std::unordered_map<Atom_t,unsigned > new_atom_to_external;
+        for(auto &ae: atom_to_external) {
+            new_atom_to_external[Atom_t{ae.first.attid,getRewrittenValue(ae.first.attid,ae.first.valid)}] = ae.second;
+        }
+        atom_to_external = new_atom_to_external;
+
+
+        // rewrite clingo_to_plog_lit map:
+        for(auto &mentr : clingo_to_plog_lit) {
+            mentr.second.valid = getRewrittenValue(mentr.second.attid,mentr.second.valid);
+        }
+    }
+
+    ValueRep Program::getRewrittenValue(ATTID attid, ValueRep oldval) {
+        for(size_t i=0;i<val_candidates_vects[attid].size();i++) {
+            if(val_candidates_vects[attid][i]==oldval)
+                return (uint32) i;
+        }
+        return (uint32) val_candidates_vects[attid].size();
+    }
+
+    void Program::addAtRangeSort(unsigned int a_id, unsigned int sort_id) {
+        if (a_ranges.size() <= a_id)
+            a_ranges.resize(a_id + 1);
+        a_ranges[a_id] = sort_id;
+    }
+
 }
 

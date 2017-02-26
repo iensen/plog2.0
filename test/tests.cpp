@@ -236,9 +236,6 @@ TEST(OLDVERSION_NAIVE_BLOCKS, _15x2) {
 }
 
 
-
-
-
 TEST(OLDVERSION_DCO_BLOCKS, _15x1) {
     ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap15_1.plg",OldPlogMode::DCOOPTIMIZED), 0.733333 , 1e-5);
 }
@@ -374,10 +371,6 @@ TEST(OLDVERSION_DCO_BLOCKS, _20x5) {
     ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap20_5.plg",OldPlogMode::DCOOPTIMIZED), 0.191692, 1e-5);
 }
 
-
-
-
-
 TEST(NEWVERSION_BLOCKS, _15x1) {
     ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Blocks/blockmap15_1.plg"), 0.733333 , 1e-5);
 }
@@ -423,6 +416,7 @@ TEST(NEWVERSION_POKER, _5x5) {
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    ::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS._*";
+    //::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS._*";
+    ::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._*";
     return RUN_ALL_TESTS();
 }
