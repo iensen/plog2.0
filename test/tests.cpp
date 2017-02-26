@@ -437,11 +437,11 @@ TEST(NEWVERSION_POKER, _5x6) {
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    //::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS._*";
+    //::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS.*";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._*";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._l4";
-    //::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._fgl4";
-     ::testing::GTEST_FLAG(filter) = "OLDVERSION_DCO_POKER._5x4x36";
+    ::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._fgl4";
+    // ::testing::GTEST_FLAG(filter) = "OLDVERSION_DCO_POKER._5x4x36";
      //::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._5x6";
 
     return RUN_ALL_TESTS();

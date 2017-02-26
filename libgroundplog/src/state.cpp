@@ -257,9 +257,10 @@ namespace GroundPlog {
             for (ATTID a: last_dat_unassigned) {
                 for (unsigned i : prg->attRules[a]) {
                     const RegularRule &r = prg->rules[i];
-                    if (!regRuleBodyFalsified[i] &&
-                        ruleFired.find(i) == ruleFired.end() &&  I.weakly_satisfies(r.body, posibVals) ) {
-                        ruleFired.insert(i);
+
+                    if (!regRuleBodyFalsified[i] && !posibVals[a][r.head.valid]
+                        &&  I.weakly_satisfies(r.body, posibVals) ) {
+                        //ruleFired.insert(i);
                         iteration_needed = true;
                         posibVals[r.head.attid][r.head.valid] = true;
                     }
@@ -277,11 +278,13 @@ namespace GroundPlog {
             bool hasPosibValueForId = false;
 
             for(ValueRep val = 0 ; val < valCount; val++) {
-                if(posibVals[id][val])
+                if(posibVals[id][val]) {
                     hasPosibValueForId = true;
+                    break;
+                }
             }
 
-            if (!hasPosibValueForId) {
+            if (!hasPosibValueForId && I.getVal(id)==UNASSIGNED) {
                 something_assigned = true;
                 // std::cout <<"MADE_UNDEF:" << id << std::endl;
                 I.assign(id, UNDEFINED);
@@ -294,9 +297,6 @@ namespace GroundPlog {
                         //std::cout <<"MADE_OMPOS:" << id << " "<<val << std::endl;
                         I.make_impossible(id, val);
                         propagateAssignment(id, val, true);
-                    }
-                    if (posibVals[id][val]) {
-                        hasPosibValueForId = true;
                     }
                 }
             }
