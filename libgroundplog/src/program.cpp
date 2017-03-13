@@ -170,6 +170,13 @@ namespace GroundPlog {
                 continue;
             if (I.getVal(at) == UNDEFINED)
                 continue;
+
+
+            Rule *r = findUniqueActiveRuleFor(at, I);
+
+            if(!dynamic_cast<RandomRule*> (r) )
+                continue;
+
             double others_prob = 0.0;
             double prob = -1.0;
             int others_prob_ct = 0;

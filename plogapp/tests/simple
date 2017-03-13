@@ -1,0 +1,32 @@
+
+sorts
+#boolean={true,false}. 
+#patch={p1,p2}.
+#day=1..20.
+
+
+attributes
+
+hidden_in:#patch.
+found:#day->#boolean.
+look: #day->#patch.
+
+statements
+
+
+random(hidden_in).
+
+random(found(2))  :- hidden_in=p1.
+found(2)=false :- hidden_in = p2.
+
+pr(found(2)) = 2/10.
+
+
+
+
+?found(2). 
+
+%?hidden_in=p1. 
+
+
+

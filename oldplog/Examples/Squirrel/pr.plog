@@ -1,0 +1,47 @@
+boolean={true,false}. %for some reason prolog does not include built in sorts
+patch={p1,p2}.
+day={1..20}.
+#domain day(D).
+#domain patch(P).
+
+hidden_in:patch.
+found:day->boolean.
+look: day->patch.
+[r1] random(hidden_in).
+[r2(D)] random(found(D))  :-hidden_in=P, look(D)=P.
+found(D)=false:-not found(D).
+
+[r1] pr(hidden_in=p1)=8/10.
+[r2(D)] pr(found(D))=2/10.
+
+%FIRST SCENARIO:
+%look(1)=p1.
+%?{found(1)}.
+
+%SECOND SCENARIO:
+look(1)=p1.
+look(2)=p1.
+look(3)=p1.
+look(4)=p1.
+look(5)=p1.
+look(6)=p1.
+look(7)=p1.
+look(8)=p1.
+look(9)=p1.
+look(10)=p1.
+look(11)=p1.
+look(12)=p1.
+look(13)=p1.
+look(14)=p1.
+look(15)=p1.
+look(16)=p1.
+look(17)=p1.
+look(18)=p1.
+look(19)=p1.
+look(20)=p1.
+
+?{found(15)} | obs(found(1)=false).
+
+
+
+

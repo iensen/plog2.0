@@ -256,9 +256,9 @@ std::vector<Clingo::AST::BodyLiteral> Statement::getSortAtoms(const Plog::ULit &
         if(fterm)
            attrName = fterm->name;
     }
+    std::vector<String> argSorts = findArgSorts(attrName, attdecls);
 
     if(fterm) {
-        std::vector<String> argSorts = findArgSorts(attrName, attdecls);
         const UTermVec  & targs = fterm->args;
         for(int i=0; i< argSorts.size()-1;i++) {
             // for now assume attribute declaration may only contain sort names.
@@ -269,19 +269,20 @@ std::vector<Clingo::AST::BodyLiteral> Statement::getSortAtoms(const Plog::ULit &
             Clingo::AST::BodyLiteral bodylit = make_body_lit(concat('_',sortName),args);
             result.push_back(bodylit);
         }
-
-        // add the sort for the value:
-        // note that there is no value for the rqandom atom, e.g, random(a,p),
-        // so we only need to do this if the atom is non-random
-        if(!isRandom) {
-            std::vector<Clingo::AST::Term> args;
-            std::unique_ptr<Term> ut(lit->rt->clone());
-            args.push_back(termToClingoTerm(ut));
-            String sortName = argSorts[argSorts.size() - 1];
-            Clingo::AST::BodyLiteral bodylit = make_body_lit(concat('_', sortName), args);
-            result.push_back(bodylit);
-        }
     }
+
+    // add the sort for the value:
+    // note that there is no value for the rqandom atom, e.g, random(a,p),
+    // so we only need to do this if the atom is non-random
+    if(!isRandom) {
+        std::vector<Clingo::AST::Term> args;
+        std::unique_ptr<Term> ut(lit->rt->clone());
+        args.push_back(termToClingoTerm(ut));
+        String sortName = argSorts[argSorts.size() - 1];
+        Clingo::AST::BodyLiteral bodylit = make_body_lit(concat('_', sortName), args);
+        result.push_back(bodylit);
+    }
+
     return result;
 }
 

@@ -295,8 +295,13 @@ TEST(OLDVERSION_NAIVE_POKER, _5x5) {
 
 
 
+
 TEST(OLDVERSION_NAIVE_POKER, _5x6) {
     ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/Poker/poker_5_6.txt",OldPlogMode::NAIVE), 0.547344, 1e-5);
+}
+
+TEST(OLDVERSION_NAIVE_POKER, _5x4x36) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/Poker/poker_5_4_36.txt",OldPlogMode::NAIVE), 0.372804, 1e-5);
 }
 
 
@@ -327,33 +332,6 @@ TEST(OLDVERSION_DCO_POKER, _5x6) {
 
 
 
-
-TEST(NEWVERSION_BLOCKS, _5x1) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Blocks/blockmap5_1.plg"), 0.4, 1e-5);
-}
-
-
-TEST(NEWVERSION_BLOCKS, _5x2) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Blocks/blockmap5_2.plg"), 0.0, 1e-5);
-}
-
-
-TEST(NEWVERSION_BLOCKS, _5x3) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Blocks/blockmap5_3.plg"), 0.0, 1e-5);
-}
-
-
-TEST(NEWVERSION_BLOCKS, _10x1) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Blocks/blockmap10_1.plg"), 0.6, 1e-5);
-}
-
-TEST(NEWVERSION_BLOCKS, _10x2) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Blocks/blockmap10_2.plg"), 0.266667, 1e-5);
-}
-
-TEST(NEWVERSION_BLOCKS, _10x3) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Blocks/blockmap10_3.plg"), 0.0833333, 1e-5);
-}
 
 
 TEST(NEWVERSION_BLOCKS, _20x1) {
@@ -388,26 +366,6 @@ TEST(OLDVERSION_DCO_BLOCKS, _20x5) {
     ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap20_5.plg",OldPlogMode::DCOOPTIMIZED), 0.191692, 1e-5);
 }
 
-TEST(NEWVERSION_BLOCKS, _15x1) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Blocks/blockmap15_1.plg"), 0.733333 , 1e-5);
-}
-
-TEST(NEWVERSION_BLOCKS, _15x2) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Blocks/blockmap15_2.plg"), 0.504762 , 1e-5);
-}
-
-TEST(NEWVERSION_POKER, _3x3) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Poker/poker_3_3.txt"), 0.490909, 1e-5);
-}
-
-
-TEST(NEWVERSION_POKER, _3x4) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Poker/poker_3_4.txt"), 0.514286, 1e-5);
-}
-
-TEST(NEWVERSION_POKER, _3x5) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Poker/poker_3_5.txt"), 0.526316, 1e-5);
-}
 
 
 
@@ -428,6 +386,28 @@ TEST(NEWVERSION_POKER, _5x6) {
     ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Poker/poker_5_6.txt"), 0.547344, 1e-5);
 }
 
+TEST(NEWVERSION_POKER, _5x4x36) {
+    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Poker/poker_5_4_36.txt"), 0.372804, 1e-5);
+}
+
+
+TEST(OLDVERSION_NAIVE_SQ, _1) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/Squirrel/pr.plog",OldPlogMode::NAIVE),0.152380, 1e-4);
+}
+
+
+
+TEST(OLDVERSION_DCO_SQ, _1) {
+    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/Squirrel/pr.plog", OldPlogMode::DCOOPTIMIZED), 0.152380, 1e-4);
+}
+
+
+TEST(NEWVERSION_SQ, _1) {
+    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/squirrel.plog"), 0.152380, 1e-4);
+}
+
+
+
 
 
 
@@ -437,12 +417,16 @@ TEST(NEWVERSION_POKER, _5x6) {
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    //::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS.*";
-    //::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._*";
+    ::testing::GTEST_FLAG(filter) = "*_SQ*";
+
+    //::testing::GTEST_FLAG(filter) = "OLDVERSION_SQ*";
+    //  ::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS._20x5*";
+    //::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._5x4x36*";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._l4";
-    ::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._fgl4";
-    // ::testing::GTEST_FLAG(filter) = "OLDVERSION_DCO_POKER._5x4x36";
+   // ::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._fgl4";
+    // ::testing::GTEST_FLAG(filter) = "OLDVERSION_NAIVE_POKER._*";
      //::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._5x6";
+   // ::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._fgl4rdn";
 
     return RUN_ALL_TESTS();
 }
