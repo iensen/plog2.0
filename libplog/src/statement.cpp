@@ -272,9 +272,8 @@ std::vector<Clingo::AST::BodyLiteral> Statement::getSortAtoms(const Plog::ULit &
     }
 
     // add the sort for the value:
-    // note that there is no value for the rqandom atom, e.g, random(a,p),
-    // so we only need to do this if the atom is non-random
-    if(!isRandom) {
+    // note that there is no value for random, do and obs  atoms,
+    if(!isRandom && attrName != "obs" && attrName != "do") {
         std::vector<Clingo::AST::Term> args;
         std::unique_ptr<Term> ut(lit->rt->clone());
         args.push_back(termToClingoTerm(ut));

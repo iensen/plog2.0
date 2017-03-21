@@ -82,8 +82,13 @@ namespace GroundPlog {
         //std::queue<std::tuple<ATTID,ValueRep ,bool> > Q;
 
         for (unsigned idx : prg->regularRuleBodies[attid]) {
+            ATTID headatt = prg->rules[idx].head.attid;
+            //if(I.getVal(headatt) != UNASSIGNED && !prg->isRandomAtt[headatt] && I.getLevel(headatt)<currentLevel);
+            //    continue;
+
             for (const Lit_t &lit: prg->rules[idx].body) {
-                ATTID headatt = prg->rules[idx].head.attid;
+
+
                 ValueRep headattval = prg->rules[idx].head.valid;
                 if (lit.attid == attid && (!is_impossible || (is_impossible && lit.valid == val))) {
                     if (I.guarantees(lit)) {
