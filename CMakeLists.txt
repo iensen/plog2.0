@@ -66,7 +66,7 @@ add_definitions(-DWITH_PYTHON)
 
 
 add_executable(clingo1 ${CLINGO_MAIN_FILE} ${CLINGO_SOURCES})
-TARGET_LINK_LIBRARIES(clingo  python2.7 tbb pthread dl)
+TARGET_LINK_LIBRARIES(clingo1  python2.7 tbb pthread dl)
 
 add_executable(plog1  ${PLOG_SOURCES} ${CLINGO_SOURCES} ${PLOG_MAIN_FILE})
 TARGET_LINK_LIBRARIES(plog1  python2.7 tbb pthread dl)
