@@ -87,11 +87,9 @@ namespace GroundPlog {
             //    continue;
 
             for (const Lit_t &lit: prg->rules[idx].body) {
-
-
                 ValueRep headattval = prg->rules[idx].head.valid;
                 if (lit.attid == attid && (!is_impossible || (is_impossible && lit.valid == val))) {
-                    if (I.guarantees(lit)) {
+                    if (I.guarantees(lit) && !I.guaranteedBefore(lit,attid,val,is_impossible)) {
                         ++regRuleBodyTrueLitCounter[idx];
                         if (regRuleBodyTrueLitCounter[idx] == prg->rules[idx].body.size()) {
                             if (I.getVal(headatt) == UNASSIGNED && !prg->isRandomAtt[headatt]) {
@@ -112,13 +110,15 @@ namespace GroundPlog {
                             regRuleBodyFalsifiedTrail.push_back(idx);
                             regRuleBodyFalsified[idx] = true;
 
-                            if (!prg->isRandomAtt[headatt]) {
-                                pvCounter[{headatt, headattval}]--;
-                                if (pvCounter[{headatt, headattval}] == 0) {
-                                    if (!!I.is_impossible_val(attid, headattval)) {
-                                        smthassigned = true;
-                                        I.make_impossible(headatt, headattval);
-                                        propagateAssignment(headatt, headattval, true);
+                            if (!prg->isRandomAtt[headatt] ) {
+                                if(I.getVal(headatt)==UNASSIGNED) {
+                                    pvCounter[{headatt, headattval}]--;
+                                    if (pvCounter[{headatt, headattval}] == 0) {
+                                        if (!I.is_impossible_val(attid, headattval)) {
+                                            smthassigned = true;
+                                            I.make_impossible(headatt, headattval);
+                                            propagateAssignment(headatt, headattval, true);
+                                        }
                                     }
                                 }
                             } else {
@@ -308,10 +308,7 @@ namespace GroundPlog {
 
 
         }
-
-
         return something_assigned;
-
     }
 
 
@@ -424,7 +421,7 @@ namespace GroundPlog {
             for (const Lit_t &lit: prg->randomrules[idx].body) {
                 ATTID headatt = prg->randomrules[idx].head.first;
                 if (lit.attid == attid && !is_impossible || (is_impossible && lit.valid == val)) {
-                    if (I.guarantees(lit)) {
+                    if (I.guarantees(lit) && !I.guaranteedBefore(lit,attid,val,is_impossible)) {
                         ++randomRuleBodyTrueLitCounter[idx]; // counter increased!
                         if (randomRuleBodyTrueLitCounter[idx] == prg->randomrules[idx].body.size() && undecidedDynRangeAttFor[idx]==0) {
                             --UNDECIDEDRULECOUNTER[headatt];
@@ -452,7 +449,7 @@ namespace GroundPlog {
             for (const Lit_t &lit: prg->pratoms[idx].body) {
                 ATTID headatt = prg->pratoms[idx].head.attid;
                 if (lit.attid == attid && !is_impossible || (is_impossible && lit.valid == val)) {
-                    if (I.guarantees(lit)) {
+                    if (I.guarantees(lit) && !I.guaranteedBefore(lit, attid, val, is_impossible)) {
                         ++prAtBodyTrueLitCounter[idx]; // counter increased!
                         if (prAtBodyTrueLitCounter[idx] == prg->pratoms[idx].body.size()) {
                             --UNDECIDEDRULECOUNTER[headatt];
@@ -498,7 +495,7 @@ namespace GroundPlog {
             for (unsigned idx : prg->regularRuleBodies[attid]) {
                 for (const Lit_t &lit: prg->rules[idx].body) {
                     ATTID headatt = prg->rules[idx].head.attid;
-                    if (I.guarantees(lit) && lit.attid == attid ) {
+                    if (lit.attid == attid && I.guarantees(lit)  &&(!I.guaranteesByNegativeAssignments(lit))) {
                         --regRuleBodyTrueLitCounter[idx];
                         if (regRuleBodyTrueLitCounter[idx] == prg->rules[idx].body.size() - 1 &&
                             prg->isRandomAtt[headatt]) {
@@ -514,7 +511,7 @@ namespace GroundPlog {
             for(unsigned idx:prg->randomRuleBodies[attid]) {
                 for (const Lit_t &lit: prg->randomrules[idx].body) {
                     ATTID headatt = prg->randomrules[idx].head.first;
-                    if (I.guarantees(lit) && lit.attid == attid ) {
+                    if ( lit.attid == attid  && I.guarantees(lit) && !I.guaranteesByNegativeAssignments(lit)) {
                         --randomRuleBodyTrueLitCounter[idx];
                         if (randomRuleBodyTrueLitCounter[idx] == prg->randomrules[idx].body.size() - 1 &&
                             undecidedDynRangeAttFor[idx]==0) {
@@ -529,7 +526,7 @@ namespace GroundPlog {
             for(unsigned idx:prg->prAtBodies[attid]) {
                 for (const Lit_t &lit: prg->pratoms[idx].body) {
                     ATTID headatt = prg->pratoms[idx].head.attid;
-                    if (I.guarantees(lit) && lit.attid == attid ) {
+                    if (lit.attid == attid  && I.guarantees(lit) && !I.guaranteesByNegativeAssignments(lit)) {
                         --prAtBodyTrueLitCounter[idx];
                         if (prAtBodyTrueLitCounter[idx] == prg->pratoms[idx].body.size() - 1) {
                             if (I.getVal(headatt) == UNASSIGNED) {

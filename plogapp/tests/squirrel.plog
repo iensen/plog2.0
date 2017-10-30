@@ -46,7 +46,7 @@ look(18)=p1.
 look(19)=p1.
 look(20)=p1.
 obs(found(1), false).
-obs(found(5), false).
+%obs(found(5), false).
 
 ?found(15). 
 

@@ -43,6 +43,11 @@ namespace GroundPlog {
 
         bool guarantees(const Lit_t &lit) const;
 
+
+        bool guaranteesByNegativeAssignments(const Lit_t &lit);
+        bool guaranteesByPositiveAssignments(const Lit_t &lit);
+        bool guaranteedBefore(const Lit_t &lit, ATTID attid, ValueRep val, bool is_impossible);
+
         bool falsifies(const Lit_t &lit) const;
 
         bool decides(const Lit_t &lit) const;

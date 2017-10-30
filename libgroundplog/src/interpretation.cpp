@@ -51,6 +51,29 @@ namespace GroundPlog {
             return getVal(lit.attid) == UNDEFINED || getVal(lit.attid) == lit.valid;
     }
 
+    bool Interpretation::guaranteesByNegativeAssignments(const Lit_t &lit) {
+        return lit.defaultNeg && !lit.classicNeg && is_impossible_val(lit.attid, lit.valid);
+    }
+
+    bool Interpretation::guaranteedBefore(const Lit_t &lit, ATTID attid, ValueRep val, bool is_impossible) {
+        return is_impossible && guaranteesByPositiveAssignments(lit) ||
+               !is_impossible && guaranteesByNegativeAssignments(lit);
+    }
+
+
+    bool Interpretation::guaranteesByPositiveAssignments(const Lit_t &lit) {
+        if (!lit.classicNeg && !lit.defaultNeg)
+            return getVal(lit.attid) == lit.valid;
+        if (lit.classicNeg && !lit.defaultNeg)
+            return getVal(lit.attid) != UNASSIGNED && getVal(lit.attid) != lit.valid && getVal(lit.attid) != UNDEFINED;
+        if (lit.defaultNeg && !lit.classicNeg)
+            return getVal(lit.attid) != UNASSIGNED && getVal(lit.attid) != lit.valid;
+        if (lit.classicNeg && lit.defaultNeg)
+            return getVal(lit.attid) == UNDEFINED || getVal(lit.attid) == lit.valid;
+    }
+
+
+
     bool Interpretation::guarantees(const std::vector<Lit_t> &body) const {
         for (const Lit_t &lit: body)
             if (!guarantees(lit))

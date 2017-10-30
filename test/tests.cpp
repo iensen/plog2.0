@@ -153,9 +153,9 @@ TEST(NEWVERSION_NASA, _fgl4) {
     ASSERT_NEAR(run_plog("../../plog/plogapp/tests/nasa/F.plog"), 0.905719, 1e-5);
 }
 
-TEST(NEWVERSION_NASA, _fgl4rdn) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/nasa/F2.plog"), 0.905719, 1e-5);
-}
+//TEST(NEWVERSION_NASA, _fgl4rdn) {
+//    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/nasa/F2.plog"), 0.905719, 1e-5);
+//}
 
 
 
@@ -417,16 +417,19 @@ TEST(NEWVERSION_SQ, _1) {
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    ::testing::GTEST_FLAG(filter) = "*_SQ*";
-
+    //::testing::GTEST_FLAG(filter) = "NEWVERSION_SQ*";
+    //::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS._20x5*";
     //::testing::GTEST_FLAG(filter) = "OLDVERSION_SQ*";
     //  ::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS._20x5*";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._5x4x36*";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._l4";
-   // ::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._fgl4";
+    //::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._fgl4";
     // ::testing::GTEST_FLAG(filter) = "OLDVERSION_NAIVE_POKER._*";
-     //::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._5x6";
-   // ::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._fgl4rdn";
+    // ::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._5x3";
+    //::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._fgl4rdn";
+    //::testing::GTEST_FLAG(filter) = "NEWVERSION.*";
+    //::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._*";
+    ::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS._*";
 
     return RUN_ALL_TESTS();
 }
