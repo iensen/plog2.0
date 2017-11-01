@@ -1,0 +1,22 @@
+sorts
+
+#boolean = {true, false}.
+
+attributes
+
+c1: #boolean.
+c2: #boolean.
+s: #boolean.
+
+
+statements
+
+s :- c1.
+s :- c2.
+
+c1 = false :- not c1.
+c2 = false :- not c1.
+s = false :- not s.
+
+% the probability should be 0, there is no reason to believe the symptom
+?s.

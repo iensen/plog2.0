@@ -428,8 +428,8 @@ int main(int argc, char **argv) {
     // ::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._5x3";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._fgl4rdn";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION.*";
-    //::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._*";
-    ::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS._*";
+    ::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._*";
+    //::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS._*";
 
     return RUN_ALL_TESTS();
 }

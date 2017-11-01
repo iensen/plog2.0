@@ -183,8 +183,6 @@ LitUid NonGroundProgramBuilder::lit(Location const &loc, Symbol id, TermUid tid)
 
 LitUid NonGroundProgramBuilder::lit(Location const &loc, String att_name, String range_name) {
     TermUid lt  = term(DefaultLocation(),String("random"),termvec(att_name,range_name));
-    std::cout << "LOL"<<range_name << std::endl;
-
     return lits_.insert(make_locatable<Plog::Literal>(loc, Relation::EQ, terms_.erase(lt),terms_.erase(boolterm(true))));
 
 }
@@ -248,11 +246,3 @@ void NonGroundProgramBuilder::query(const Location &loc, LitUid query) {
 
 }
 
-
-
-
-
-//void NonGroundProgramBuilder::block(Location const &loc, String name, IdVecUid args) {
-    //prg_.begin(loc, name, idvecs_.erase(args));
-    // let's leave this empty for now and see what happens
-//}

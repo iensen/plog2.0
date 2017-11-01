@@ -35,6 +35,9 @@ namespace  Plog {
         String attrName = getAttrName();
         if (attrName == "")
             return true;
+        if(attrName == "obs" || attrName == "do") { // allow do and obs in bodies
+            return false;
+        }
         for (const UAttDecl &decl: attdecls) {
             if (decl->attname == attrName) {
                 return false;

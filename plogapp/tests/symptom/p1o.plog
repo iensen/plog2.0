@@ -1,0 +1,24 @@
+sorts
+
+#boolean = {true, false}.
+
+attributes
+
+c1: #boolean.
+c2: #boolean.
+s: #boolean.
+
+
+statements
+
+s :- c1.
+s :- c2.
+
+c1 = false :- not c1.
+c2 = false :- not c1.
+s = false :- not s.
+
+obs(s, true, true).
+
+
+?s.

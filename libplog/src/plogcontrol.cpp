@@ -132,7 +132,7 @@ Gringo::SolveResult PlogControl::solve() {
 
     auto res = groundplog_->solve(&clingoControl);
     if(!res.is_dco) {
-        fprintf(stderr, "ERROR: the program is not strongly causally ordered\n");
+        fprintf(stderr, "ERROR: the program is not dynamically causally ordered\n");
     } else {
         printf("answer: %f\n", res.prob);
     }
@@ -161,11 +161,11 @@ void PlogControl::ground() {
     pb = new PlogGroundProgramBuilder(*out_);
     clingoControl.register_observer(*pb);
     clingoControl.ground({{"base", {}}});
-    // solve (this is needed to make sure that the rules are passed from gringo to clasp:
 
+    // solve (this is needed to make sure that the rules are passed from gringo to clasp:
     Clingo::SolveIteratively solveit = clingoControl.solve_iteratively();
     solveit.next();
-    //std::cout << "MODEL: " << solveit.next() << std::endl;
+    // we actually don't need the model, just close it
     solveit.close();
 }
 

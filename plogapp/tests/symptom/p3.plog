@@ -1,0 +1,32 @@
+sorts
+
+#boolean = {true, false}.
+
+attributes
+
+c1: #boolean.
+c2: #boolean.
+s: #boolean.
+p:#boolean -> #boolean.
+
+
+statements
+
+s :- c1.
+s :- c2.
+
+c1 = false :- not obs(s, true, true).
+c2 = false :- not obs(s, true, true).
+s = false :- not s = true.
+
+
+
+random(c1) :- obs(s, true, true).
+random(c2) :- obs(s, true, true).
+pr(c1) = 5/100.
+pr(c2) = 1/100.
+obs(s, true, true).
+
+
+%?c2.
+?c1.

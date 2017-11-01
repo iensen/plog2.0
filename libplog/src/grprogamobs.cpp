@@ -190,6 +190,8 @@ void PlogGroundProgramBuilder::addRegularRuleToBackend(PlogGroundProgramBuilder:
     }
 }
 
+
+
 void PlogGroundProgramBuilder::addQueryToBackend(Clingo::Symbol &qsymb) {
     auto *h = qsymb.arguments().begin();
     Atom_t attr = getGroundPlogAtom(*h);
@@ -274,6 +276,7 @@ std::vector<Lit_t> PlogGroundProgramBuilder::getGroundPlogBody(const std::vector
     for(literal_t lit:gbody) {
         int32_t  litpos = abs(lit);
         Clingo::Symbol hsymbol = symbols[litpos];
+        //std::cout << "AAA"<< hsymbol.to_string();
         Atom_t atom = getGroundPlogAtom(hsymbol);
         body.emplace_back(Lit_t{atom.attid, atom.valid, lit < 0, hsymbol.is_negative()});
     }
@@ -284,6 +287,9 @@ void PlogGroundProgramBuilder::addSortAtomToBackend(PlogGroundProgramBuilder::GR
     throw "not implemented yet";
 }
 
+
+// takes symbol whose string representation is of the form obs(a(t), val, рааtrue/false)
+// and adds it to the backend (out)
 void PlogGroundProgramBuilder::addObservationToBackend(const Clingo::Symbol &symbol) {
     Clingo::Symbol attsymb = symbol.arguments()[0];
     Clingo::Symbol valsymb = symbol.arguments()[1];
@@ -341,16 +347,18 @@ void PlogGroundProgramBuilder::registerAtomInBackend(unsigned int &atom_id) {
 }
 
 
-
+// return true iff the rule is a random selection rule
 bool PlogGroundProgramBuilder::GRule::isRandom() {
-    // to check if a rule is random we need to check that it's head is of the form random(...
+    //std::cout <<"AAA: "<< getHeadAttrName()<< std::endl;
     return getHeadAttrName()=="random";
 }
 
+// return true iff the rule is a pr-atom
 bool PlogGroundProgramBuilder::GRule::isPrAtom() {
     return getHeadAttrName()=="__pr";
 }
 
+// return true if the rule is regular (not a pr-atom, not a random selection)
 bool PlogGroundProgramBuilder::GRule::isRegular() {
     //  the rule is regular if it is not random and
     // the last atom in the body of the form ext(id,...) where id a number
@@ -361,7 +369,6 @@ bool PlogGroundProgramBuilder::GRule::isRegular() {
 
 
     // the loop is needed because gringo may reorder the atoms in the rule's body!
-
     Clingo::literal_t lit = body[body.size()-1];
     if ((abs(lit)) >= symbols->size() || symbols->at(abs(lit)) == Clingo::Symbol()) {
             return false;
@@ -420,8 +427,10 @@ bool PlogGroundProgramBuilder::GRule::isAtomExternal() {
     return getExternalSymbolType(s) == ExternalSymbolType :: Atom;
 }
 
+
+// move all external atoms to the end of rule's body
 void PlogGroundProgramBuilder::GRule::normalize() {
-     assert(symbols!= nullptr);
+    assert(symbols!= nullptr);
     for(int i=0;i<body.size();i++) {
         Clingo::literal_t lit = body[i];
         if ((abs(lit)) >= symbols->size() || symbols->at(abs(lit)) == Clingo::Symbol()) {
