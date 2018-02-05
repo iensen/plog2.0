@@ -1,0 +1,47 @@
+sorts
+
+#node = {1,2,3,4,5}.
+#value = {1,2,3,4,5,6}.
+#boolean = {true, false}.
+
+attributes
+
+arc: #node, #node -> #boolean.
+value_of : #node -> #value.
+possible_value_1:#value -> #boolean.
+possible_value_2:#value -> #boolean.
+possible_value_3:#value -> #boolean.
+possible_value_4:#value -> #boolean.
+possible_value_5:#value -> #boolean.
+leaf: #node -> #boolean.
+statements
+
+arc(4,5).
+arc(3,5).
+arc(2,4).
+arc(1,4).
+
+leaf(X) = false :- arc(Y,X).
+leaf(X) = true :- not leaf(X) = false.
+random(value_of(N)) :- leaf(N).
+
+
+% non-unary predicates are not supported yet in the
+% random selection rules, so we ground it manually
+%random(value_of(N):{X:possible_value(X,N)}) :- -leaf(N).
+%possible_value(X,N) :- arc(N1,N), value_of(N1) = X.
+
+possible_value_1(X) :- arc(N1,1), value_of(N1) = X.
+possible_value_2(X) :- arc(N1,2), value_of(N1) = X.
+possible_value_3(X) :- arc(N1,3), value_of(N1) = X.
+possible_value_4(X) :- arc(N1,4), value_of(N1) = X.
+possible_value_5(X) :- arc(N1,5), value_of(N1) = X.
+
+random(value_of(1), possible_value_1) :- leaf(1) = false.
+random(value_of(2), possible_value_2) :- leaf(2) = false.
+random(value_of(3), possible_value_3) :- leaf(3) = false.
+random(value_of(4), possible_value_4) :- leaf(4) = false.
+random(value_of(5), possible_value_5) :- leaf(5) = false.
+
+
+?value_of(5) = 3.

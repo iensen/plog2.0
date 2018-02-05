@@ -7,69 +7,69 @@
 
 
 TEST(NEWVERSION, 0) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/p1.plog"), 0.30, 1e-8);
+    ASSERT_NEAR(run_plog("plogapp/tests/p1.plog"), 0.30, 1e-8);
 }
 
 TEST(NEWVERSION, 1) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/triv0.plog"), 1.0, 1e-8);
+    ASSERT_NEAR(run_plog("plogapp/tests/triv0.plog"), 1.0, 1e-8);
 }
 
 TEST(NEWVERSION, 2) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/triv1.plog"), 0.0, 1e-8);
+    ASSERT_NEAR(run_plog("plogapp/tests/triv1.plog"), 0.0, 1e-8);
 }
 
 TEST(NEWVERSION, 3) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/rels0.plog"), 1.0, 1e-8);
+    ASSERT_NEAR(run_plog("plogapp/tests/rels0.plog"), 1.0, 1e-8);
 }
 
 
 TEST(NEWVERSION, 4) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/rels.plog"), 0.5, 1e-8);
+    ASSERT_NEAR(run_plog("plogapp/tests/rels.plog"), 0.5, 1e-8);
 }
 
 TEST(NEWVERSION, 5) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/rshort.plog"), 1.0/3.0, 1e-5);
+    ASSERT_NEAR(run_plog("plogapp/tests/rshort.plog"), 1.0/3.0, 1e-5);
 }
 
 TEST(NEWVERSION, 6) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/obs1.plog"), 1.0 , 1e-5);
+    ASSERT_NEAR(run_plog("plogapp/tests/obs1.plog"), 1.0 , 1e-5);
 }
 
 
 TEST(NEWVERSION, 7) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/obs2.plog"), 0.0, 1e-5);
+    ASSERT_NEAR(run_plog("plogapp/tests/obs2.plog"), 0.0, 1e-5);
 }
 
 
 TEST(NEWVERSION, 8) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/paper/dice1.plog"), 0.25, 1e-5);
+    ASSERT_NEAR(run_plog("plogapp/tests/paper/dice1.plog"), 0.25, 1e-5);
 }
 
 TEST(NEWVERSION, 9) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/paper/dice2.plog"), 0.15, 1e-5);
+    ASSERT_NEAR(run_plog("plogapp/tests/paper/dice2.plog"), 0.15, 1e-5);
 }
 
 TEST(NEWVERSION, 10) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/paper/dice3.plog"), 1.0/6.0, 1e-5);
+    ASSERT_NEAR(run_plog("plogapp/tests/paper/dice3.plog"), 1.0/6.0, 1e-5);
 }
 
 
 TEST(NEWVERSION, 11) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/paper/monty1.plog"), 0.33333, 1e-5);
+    ASSERT_NEAR(run_plog("plogapp/tests/paper/monty1.plog"), 0.33333, 1e-5);
 }
 
 
 TEST(NEWVERSION, 12) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/paper/monty2.plog"), 0.0, 1e-5);
+    ASSERT_NEAR(run_plog("plogapp/tests/paper/monty2.plog"), 0.0, 1e-5);
 }
 
 TEST(NEWVERSION, 13) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/paper/monty3.plog"), 0.66666, 1e-5);
+    ASSERT_NEAR(run_plog("plogapp/tests/paper/monty3.plog"), 0.66666, 1e-5);
 }
 
 
 TEST(NEWVERSION, 14) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/rsort.plog"), 0.111111, 1e-5);
+    ASSERT_NEAR(run_plog("plogapp/tests/rsort.plog"), 0.111111, 1e-5);
 }
 
 
@@ -370,29 +370,29 @@ TEST(OLDVERSION_DCO_BLOCKS, _20x5) {
 
 
 TEST(NEWVERSION_POKER, _5x3) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Poker/poker_5_3.txt"), 0.545455, 1e-5);
+    ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Poker/poker_5_3.txt"), 0.545455, 1e-5);
 }
 
 
 TEST(NEWVERSION_POKER, _5x4) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Poker/poker_5_4.txt"), 0.417582, 1e-5);
+    ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Poker/poker_5_4.txt"), 0.417582, 1e-5);
 }
 
 TEST(NEWVERSION_POKER, _5x5) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Poker/poker_5_5.txt"), 0.399897, 1e-5);
+    ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Poker/poker_5_5.txt"), 0.399897, 1e-5);
 }
 
 TEST(NEWVERSION_POKER, _5x6) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Poker/poker_5_6.txt"), 0.547344, 1e-5);
+    ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Poker/poker_5_6.txt"), 0.547344, 1e-5);
 }
 
 TEST(NEWVERSION_POKER, _5x4x36) {
-    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/weijuns_testsuite/Poker/poker_5_4_36.txt"), 0.372804, 1e-5);
+    ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Poker/poker_5_4_36.txt"), 0.372804, 1e-5);
 }
 
 
 TEST(OLDVERSION_NAIVE_SQ, _1) {
-    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/Squirrel/pr.plog",OldPlogMode::NAIVE),0.152380, 1e-4);
+    ASSERT_NEAR(run_old_plog("../oldplog/Examples/Squirrel/pr.plog",OldPlogMode::NAIVE),0.152380, 1e-4);
 }
 
 
@@ -416,19 +416,21 @@ TEST(NEWVERSION_SQ, _1) {
 
 
 int main(int argc, char **argv) {
+    //int PATH_MAX = 100500;
+
     ::testing::InitGoogleTest(&argc, argv);
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_SQ*";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS._20x5*";
     //::testing::GTEST_FLAG(filter) = "OLDVERSION_SQ*";
     //  ::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS._20x5*";
-    //::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._5x4x36*";
+    ::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._5x4x36*";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._l4";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._fgl4";
     // ::testing::GTEST_FLAG(filter) = "OLDVERSION_NAIVE_POKER._*";
     // ::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._5x3";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._fgl4rdn";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION.*";
-    ::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._*";
+    //::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._*";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS._*";
 
     return RUN_ALL_TESTS();

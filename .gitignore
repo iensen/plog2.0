@@ -3,3 +3,11 @@
 cmake-build-debug/
 cmake-build-release/
 plogapp/.DS_Store
+CMakeFiles
+CMakeCache.txt
+plog1
+plog.cbp
+Makefile
+cmake_install.cmake
+
+

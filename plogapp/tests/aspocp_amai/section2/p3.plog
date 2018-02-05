@@ -1,0 +1,19 @@
+sorts
+#s = {1,2,3}.
+#boolean = {true, false}.
+
+attributes
+a : #s.
+b : #boolean.
+
+statements
+
+random(a).
+random(b).
+pr(a=1) = 1/2.
+
+%?a=1.
+%?a=2.
+%?a = 3.
+%?b = true.
+?b = false.

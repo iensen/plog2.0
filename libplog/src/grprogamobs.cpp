@@ -110,6 +110,8 @@ PlogGroundProgramBuilder::PlogGroundProgramBuilder(GroundPlogBackend &out):out(o
 
 void PlogGroundProgramBuilder::end_step() {
 
+
+
     if(!rulesPassedToBackend) {
 
 
@@ -133,6 +135,7 @@ void PlogGroundProgramBuilder::end_step() {
             std::cout << c.first << " " << c.second << std::endl;
         }
         */
+
 
 
 
@@ -301,9 +304,12 @@ void PlogGroundProgramBuilder::addObservationToBackend(const Clingo::Symbol &sym
 }
 
 void PlogGroundProgramBuilder::addActionToBackend(const Clingo::Symbol &symbol) {
-    Atom_t at = getGroundPlogAtom(symbol);
-    out.action(at.attid, at.valid);
 
+    Clingo::Symbol attsymb = symbol.arguments()[0];
+    Clingo::Symbol valsymb = symbol.arguments()[1];
+    unsigned attid = insert(attsymb.to_string(), attids);
+    unsigned valid = insert(valsymb.to_string(), atids);
+    out.action(attid, valid);
 }
 
 void PlogGroundProgramBuilder::addAttributeMapToBackend() {

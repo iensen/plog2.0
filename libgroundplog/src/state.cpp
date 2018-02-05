@@ -382,18 +382,18 @@ namespace GroundPlog {
     void GroundPlog::State::initUndecidedRuleCounter() {
         UNDECIDEDRULECOUNTER.assign(prg->att_count, 0);
         for (const RandomRule &r : prg->randomrules) {
-            if (r.body.size() > 0 ||r.head.second!=UNASSIGNED)
+            if (!r.body.empty() ||r.head.second!=UNASSIGNED)
                 ++UNDECIDEDRULECOUNTER[r.head.first];
         }
 
         for (const RegularRule &r:prg->rules) {
-            if (r.body.size() > 0) {
+            if (!r.body.empty()) {
                 ++UNDECIDEDRULECOUNTER[r.head.attid];
             }
         }
 
         for (const PrAtom &p :prg->pratoms) {
-            if (p.body.size() > 0)
+            if (!p.body.empty())
                 ++UNDECIDEDRULECOUNTER[p.head.attid];
         }
     }
@@ -612,7 +612,8 @@ namespace GroundPlog {
         while(prAtBodyFalsifiedTrail.size()>prAtBodyFalsifiedTrailLevel.back()) {
             unsigned ridx = prAtBodyFalsifiedTrail.back();
             prAtBodyFalsified[ridx] = false;
-            ++UNDECIDEDRULECOUNTER[ridx];
+            unsigned headatt = prg->pratoms[ridx].head.attid;
+            ++UNDECIDEDRULECOUNTER[headatt];
             prAtBodyFalsifiedTrail.pop_back();
         }
         prAtBodyFalsifiedTrailLevel.pop_back();
@@ -622,7 +623,8 @@ namespace GroundPlog {
          while(randomRuleBodyFalsifiedTrail.size()>randomRuleBodyFalsifiedTrailLevel.back()) {
              unsigned ridx = randomRuleBodyFalsifiedTrail.back();
              randomRuleBodyFalsified[ridx] = false;
-             ++UNDECIDEDRULECOUNTER[ridx];
+             unsigned headatt = prg->randomrules[ridx].head.first;
+             ++UNDECIDEDRULECOUNTER[headatt];
              randomRuleBodyFalsifiedTrail.pop_back();
          }
         randomRuleBodyFalsifiedTrailLevel.pop_back();
@@ -637,7 +639,7 @@ namespace GroundPlog {
             if(!prg->isRandomAtt[headatt]) {
                 pvCounter[{headatt, valid}]++;
             } else {
-                ++UNDECIDEDRULECOUNTER[ridx];
+                ++UNDECIDEDRULECOUNTER[headatt];
             }
             regRuleBodyFalsifiedTrail.pop_back();
         }

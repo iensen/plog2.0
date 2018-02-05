@@ -1,0 +1,24 @@
+sorts
+
+#boolean = {true, false}.
+#outcome = {1,2,3,4,5,6}.
+#step = {1,2,3,4,5}.
+
+attributes
+
+throw : #step -> #outcome.
+made_5th_throw: #boolean.
+
+
+statements
+% the outcome of the die at step 1 is random
+
+random(throw(1)).
+random(throw(5)) :- throw(1) = 1.
+
+%random(throw(T)) :- throw(T2) != 1, T = T2+1.
+%made_5th_throw :- throw(5) = X.
+
+%?made_5th_throw.
+
+?throw(5) = 1.

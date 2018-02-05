@@ -1,0 +1,15 @@
+
+sorts
+#boolean = {true, false}.
+#attribute_term ={f}.
+#agent = {a}.
+
+attributes
+alarm: #boolean.
+authorized: #agent, #attribute_term -> #boolean.
+
+statements
+
+%alarm :- do(f, Y), done_by(A,f,Y) not authorized(A, f).
+
+?alarm = true.

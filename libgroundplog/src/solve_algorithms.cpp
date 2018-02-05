@@ -126,7 +126,7 @@ void GroundPlog::ExactDCOSolve::extend(GroundPlog::State &S, Clingo::Control *cC
 
 
     if(S.LastLevelUndecidedCount()>0){
-        std::cout << "AAAA" << std::endl;
+        std::cout << "Warning: Clingo Called!" << std::endl;
         std::unordered_set<unsigned> P_I = P(S);
         Clingo_Result m = call_clingo(cControl, P_I);
         if (!m.unique_model)
@@ -187,22 +187,26 @@ GroundPlog::ExactDCOSolve::call_clingo(Clingo::Control *clingoCtrl, std::unorder
     for(auto it = ats.begin(); it!=ats.end();it++) {
         if(activeRules.find(abs(it->literal()))!=activeRules.end()) {
             assignedSymbols.push_back(it->symbol());
+            //std:: cout << it->symbol().to_string();
             clingoCtrl->assign_external(it->symbol(), Clingo::TruthValue::True);
         }
+
     }
 
 
     // find the first model:
     Clingo::SolveIteratively solveit = clingoCtrl->solve_iteratively();
     Clingo::Model m1 = solveit.next();
+
     ClingoModelRep mr = modelToASPIfs(m1, clingoCtrl);
     Clingo::Model m2 = solveit.next();
+    //std::cout << "MODEL3: " << m1 << std::endl;
+
     solveit.close();
     // assign the externals back to FREE:
     for(const Clingo::Symbol &s: assignedSymbols) {
         clingoCtrl->assign_external(s, Clingo::TruthValue::False);
     }
-    // std::cout << "MODEL3: " << m1 << std::endl;
 
 
     if(!m1 || m2) { // we don't have exactly one model!

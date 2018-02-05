@@ -1,0 +1,27 @@
+sorts
+
+#boolean = {true, false}.
+
+attributes
+
+c1: #boolean.
+c2: #boolean.
+s: #boolean.
+
+
+statements
+
+s :- c1.
+s :- c2.
+
+c1 = false :- not obs(s, true, true).
+c2 = false :- not obs(s, true, true).
+s = false :- not s.
+
+%uncomment this and get inconsistent program:
+obs(s, true, true).
+
+% the probability should be 0, there is no reason to believe the symptom
+?s.
+%?c1.
+%?c2.

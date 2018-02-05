@@ -1,0 +1,16 @@
+sorts
+#boolean = {true, false}.
+
+attributes
+a: #boolean.
+
+
+statements
+
+obs(a, true, true).
+random(a).
+
+%a = false.
+
+?a. % the probability is undefined if the program consists of observation only , so nan is shown
+

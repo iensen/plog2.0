@@ -1,0 +1,90 @@
+sorts
+
+#boolean = {true, false}.
+#person={mary, todd, john}.
+#gene ={g_a,g_b,g_o}.
+#genotype = {g(g_a, g_b), g(g_a, g_o), g(g_b,g_o),
+             g(g_a, g_a), g(g_b, g_b), g(g_o,g_o)}.
+#bloodtype={b_a,b_b,b_o,b_ab}.
+#generation = {1,2}.
+
+attributes
+
+genotype_of: #person -> #genotype.
+bloodtype_of: #person -> #bloodtype.
+mother_of: #person -> #person.
+father_of: #person -> #person.
+generation_of: #person -> #generation.
+possible_combination: #genotype, #genotype, #genotype -> #boolean.
+belongs_to: #gene, #genotype -> #boolean.
+
+possible_genotype_mary: #genotype -> #boolean.
+possible_genotype_todd: #genotype -> #boolean.
+possible_genotype_john: #genotype -> #boolean.
+
+statements
+
+generation_of(john) = 2.
+generation_of(mary) = 1.
+generation_of(todd) = 1.
+
+mother_of(john)=mary.
+father_of(john)=todd.
+
+bloodtype_of(X)=b_a :- genotype_of(X) = g(g_a,Y), Y!=g_b.
+bloodtype_of(X)=b_b :- genotype_of(X) = g(g_b,Y), Y!=g_a.
+bloodtype_of(X)=b_ab :- genotype_of(X) = g(g_a,g_b).
+bloodtype_of(X)=b_o :- genotype_of(X) = g(g_o,g_o).
+
+random(genotype_of(X)):- generation_of(X) = 1.
+
+
+pr(genotype_of(X) = g(g_a,g_o)|generation_of(X) = 1) = 24/100. 
+pr(genotype_of(X) = g(g_b,g_o)|generation_of(X) = 1) = 24/100. 
+pr(genotype_of(X) = g(g_a,g_b)|generation_of(X) = 1) = 18/100. 
+pr(genotype_of(X) = g(g_a,g_a)|generation_of(X) = 1) = 9/100. 
+pr(genotype_of(X) = g(g_b,g_b)|generation_of(X) = 1) = 9/100.
+pr(genotype_of(X) = g(g_o,g_o)|generation_of(X) = 1) = 16/100.
+
+
+possible_genotype_mary(G) :-father_of(mary)=F,
+                          mother_of(mary)=M,
+                          genotype_of(F) = U,
+                          genotype_of(M) = V,
+                          possible_combination(G,U,V).
+
+possible_genotype_todd(G) :-father_of(todd)=F,
+                          mother_of(todd)=M,
+                          genotype_of(F) = U,
+                          genotype_of(M) = V,
+                          possible_combination(G,U,V).
+
+
+possible_genotype_john(G) :-father_of(john)=F,
+                          mother_of(john)=M,
+                          genotype_of(F) = U,
+                          genotype_of(M) = V,
+                          possible_combination(G,U,V).
+ 
+
+random(genotype_of(mary), possible_genotype_mary) :-
+                                           generation_of(mary) = 2.
+
+
+random(genotype_of(john), possible_genotype_john) :-
+                                           generation_of(john) = 2.
+
+
+random(genotype_of(todd), possible_genotype_todd) :- generation_of(todd) = 2.
+
+belongs_to(G,g(G,X)).
+belongs_to(G,g(X,G)).
+
+possible_combination(g(G1,G2),U,V) :- belongs_to(G1,U), belongs_to(G2,V).
+possible_combination(g(G1,G2),U,V) :- belongs_to(G2,U), belongs_to(G1,V).
+
+%?possible_genotype_john(g(g_a,g_a)) = true.
+%?belongs_to(g_b, g(g_a,g_b)) = true.
+%?possible_combination(g(g_a,g_b),g(g_a,g_o),g(g_b,g_o)) = true.
+%?generation_of(john) =2.
+?genotype_of(john) = g(g_a,g_b).

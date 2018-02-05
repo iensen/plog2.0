@@ -296,7 +296,7 @@ namespace GroundPlog {
 
                     if (r.head.second == UNASSIGNED || all_decided && at_least_one_guaranteed) {
                         if (foundRuleType != RuleType::None)
-                            return false;
+                            return nullptr;
                         foundRuleType = RuleType::Random;
                         rr = &r;
                     }
@@ -309,7 +309,7 @@ namespace GroundPlog {
             RegularRule &r = rules[i];
             if (I.guarantees(r.body)) {
                 if (foundRuleType != RuleType::None)
-                    return false;
+                    return nullptr;
                 foundRuleType = RuleType::Regular;
                 rg = &r;
             }
@@ -335,7 +335,7 @@ namespace GroundPlog {
         } else {// it's active
             std::unordered_set<ValueRep> result;
             Rule *rr = findUniqueActiveRuleFor(attid, interpretation);
-            if (RandomRule *r = dynamic_cast<RandomRule *>(rr)) {
+            if (auto r = dynamic_cast<RandomRule *>(rr)) {
                 unsigned int range_sort_id = a_ranges[atfromatt[r->head.first]];
                 for (ValueRep  y=0;y<sort_elems[range_sort_id].size();y++) {
                     if (r->head.second != UNASSIGNED) {
@@ -350,7 +350,7 @@ namespace GroundPlog {
                 }
             }
 
-            if (RegularRule *r = dynamic_cast<RegularRule *>(rr)) {
+            if (auto *r = dynamic_cast<RegularRule *>(rr)) {
                 result.insert(r->head.valid);
             }
             return result;

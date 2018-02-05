@@ -1,0 +1,20 @@
+sorts
+#boolean = {true, false}.
+
+attributes
+a: #boolean.
+b: #boolean.
+c: #boolean.
+d: #boolean.
+f: #boolean.
+
+statements
+
+f.
+random(a) :- not b, f.
+pr(a) = 3/10.
+c :- a.
+d :- a = false.
+
+%?c.
+?d.

@@ -1,0 +1,15 @@
+sorts
+#boolean = {true, false}.
+#attribute_terms = {f}.
+
+attributes
+f : #boolean.
+directly_observable: #attribute_terms -> #boolean.
+
+
+statements
+f = Y :- directly_observable(f), obs(f,Y, true).
+directly_observable(f).
+obs(f,true,true).
+
+?f = true.
