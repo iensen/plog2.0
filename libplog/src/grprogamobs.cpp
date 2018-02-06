@@ -294,9 +294,12 @@ void PlogGroundProgramBuilder::addSortAtomToBackend(PlogGroundProgramBuilder::GR
 // takes symbol whose string representation is of the form obs(a(t), val, рааtrue/false)
 // and adds it to the backend (out)
 void PlogGroundProgramBuilder::addObservationToBackend(const Clingo::Symbol &symbol) {
-    Clingo::Symbol attsymb = symbol.arguments()[0];
-    Clingo::Symbol valsymb = symbol.arguments()[1];
-    Clingo::Symbol truthval = symbol.arguments()[2];
+    int att_idx = 0;
+    if(symbol.arguments().size() == 5) // we have obs(a,f,y, t/f)
+        ++ att_idx;
+    Clingo::Symbol attsymb = symbol.arguments()[att_idx];
+    Clingo::Symbol valsymb = symbol.arguments()[att_idx + 1];
+    Clingo::Symbol truthval = symbol.arguments()[att_idx + 2];
     unsigned attid = insert(attsymb.to_string(), attids);
     unsigned valid = insert(valsymb.to_string(), atids);
     out.observation(attid, valid, truthval.to_string()=="true");
@@ -305,8 +308,11 @@ void PlogGroundProgramBuilder::addObservationToBackend(const Clingo::Symbol &sym
 
 void PlogGroundProgramBuilder::addActionToBackend(const Clingo::Symbol &symbol) {
 
-    Clingo::Symbol attsymb = symbol.arguments()[0];
-    Clingo::Symbol valsymb = symbol.arguments()[1];
+    int att_idx = 0;
+    if (symbol.arguments().size() == 4)// we have do(a,f,y)
+        ++att_idx;
+    Clingo::Symbol attsymb = symbol.arguments()[att_idx];
+    Clingo::Symbol valsymb = symbol.arguments()[att_idx + 1];
     unsigned attid = insert(attsymb.to_string(), attids);
     unsigned valid = insert(valsymb.to_string(), atids);
     out.action(attid, valid);

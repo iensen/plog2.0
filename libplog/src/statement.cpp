@@ -239,6 +239,7 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
 }
 
 // do not pass e-literal here!
+// !! THIS NEEDS A REVISION
 std::vector<Clingo::AST::BodyLiteral> Statement::getSortAtoms(const Plog::ULit & lit, const USortDefVec &sortDefVec,const UAttDeclVec & attdecls) {
     // add assert that it is not an e-literal
     std::vector<Clingo::AST::BodyLiteral> result;
@@ -250,11 +251,47 @@ std::vector<Clingo::AST::BodyLiteral> Statement::getSortAtoms(const Plog::ULit &
     FunctionTerm * fterm = dynamic_cast<FunctionTerm*>(lit->lt.get());
     bool isRandom = attrName == "random";
 
+    // TODO: Create doTerm, obsTerm, etc with corresponding methods.
     if(attrName == "random" || attrName == "pr" || attrName == "obs" || attrName == "do") {
-        // take the term from the first argument!
+
+        int att_idx = 0;
+        bool with_agent = false;
+        if(attrName == "obs" && fterm->args.size() == 5
+                || attrName == "do" && fterm->args.size()==4) {
+            ++att_idx;
+            with_agent = true;
+        }
+
+        if(!isRandom) {
+            if(with_agent) {
+                const UTerm & agent = fterm->args[0];
+                std::vector<Clingo::AST::Term> args2;
+                args2.push_back(termToClingoTerm(agent));
+                Clingo::AST::BodyLiteral bodylit = make_body_lit("_agent", args2);
+                result.push_back(bodylit);
+
+            }
+            const UTerm & attribute_term = fterm->args[att_idx];
+            const UTerm & value = fterm->args[att_idx + 1];
+            std::vector<Clingo::AST::Term> args2;
+            args2.push_back(termToClingoTerm(value));
+            String attrName3="";
+            if(dynamic_cast<FunctionTerm*>(attribute_term.get())) {
+                attrName3 = dynamic_cast<FunctionTerm *>(attribute_term.get())->name;
+            } else{
+                attrName3 = dynamic_cast<ValTerm *>(attribute_term.get())->value.name();
+            }
+            std::vector<String> argSorts2 = findArgSorts(attrName3, attdecls);
+            String sortName = argSorts2[argSorts2.size() - 1];
+            Clingo::AST::BodyLiteral bodylit = make_body_lit(concat('_', sortName), args2);
+            result.push_back(bodylit);
+        }
         fterm = dynamic_cast<FunctionTerm*>(fterm->args[0].get());
         if(fterm)
-           attrName = fterm->name;
+            attrName = fterm->name;
+
+        // take the term from the first argument!
+
     }
     std::vector<String> argSorts = findArgSorts(attrName, attdecls);
 
@@ -263,8 +300,8 @@ std::vector<Clingo::AST::BodyLiteral> Statement::getSortAtoms(const Plog::ULit &
         for(int i=0; i< argSorts.size()-1;i++) {
             // for now assume attribute declaration may only contain sort names.
             String sortName = argSorts[i];
-            std::vector<Clingo::AST::Term> args;
             std::unique_ptr<Term> ut(targs[i]->clone());
+            std::vector<Clingo::AST::Term> args;
             args.push_back(termToClingoTerm(ut));
             Clingo::AST::BodyLiteral bodylit = make_body_lit(concat('_',sortName),args);
             result.push_back(bodylit);

@@ -68,7 +68,7 @@ namespace Plog {
             //       if (stm->getType() == StatementType::QUERY || stm->getType() == StatementType::PR_ATOM)
             auto rules = stm->toGringoAST(attdecls_, sortdefs_);
             for (const auto &rule: rules) {
-                //std::cout << rule << std::endl;
+               // std::cout << rule << std::endl;
                 b.add(rule);
             }
         }

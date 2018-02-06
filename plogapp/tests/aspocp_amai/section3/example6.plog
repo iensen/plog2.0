@@ -16,10 +16,11 @@ statements
 
 % the do with three arguments is not implemented yet, 
 % so we use an auxiliary predicate done_by instead
-alarm :- do(f, Y), done_by(A,f,Y), not authorized(A, f).
+alarm :- do(A, f, true), not authorized(A,f).
 
 random(f).
-do(f,true).
-done_by(a,f,true).
+do(a, f,true).
+
+
 
 ?alarm = true.
