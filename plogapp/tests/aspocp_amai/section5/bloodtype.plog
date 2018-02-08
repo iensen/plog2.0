@@ -47,6 +47,7 @@ pr(genotype_of(X) = g(g_b,g_b)|generation_of(X) = 1) = 9/100.
 pr(genotype_of(X) = g(g_o,g_o)|generation_of(X) = 1) = 16/100.
 
 
+
 possible_genotype_mary(G) :-father_of(mary)=F,
                           mother_of(mary)=M,
                           genotype_of(F) = U,
@@ -66,6 +67,11 @@ possible_genotype_john(G) :-father_of(john)=F,
                           genotype_of(M) = V,
                           possible_combination(G,U,V).
  
+
+% here we cannot use a rule
+% random(genotype_of(P): {X:possible_genotype(P,X)}) :-
+%                                           generation_of(P) = 2.
+% because non-unary dynamic range predicate in random rules is not supported
 
 random(genotype_of(mary), possible_genotype_mary) :-
                                            generation_of(mary) = 2.
