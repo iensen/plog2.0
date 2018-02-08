@@ -1,0 +1,25 @@
+sorts
+#boolean = {true, false}.
+
+attributes
+a:#boolean.
+b:#boolean.
+h:#boolean.
+x:#boolean.
+y:#boolean.
+p: #boolean -> #boolean.
+f: #boolean -> #boolean.
+statements
+h.
+p(true).
+p(false).
+random(x,p).
+random(y,p) :- x.
+a:- not b, x.
+b:- not a, x.
+a :- not h, y.
+f:- not f,a,y.
+f:- not f,a,y = false.
+
+% the program does not produce correct answer, since it is not a dco.
+?a = true
