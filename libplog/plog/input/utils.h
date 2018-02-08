@@ -12,6 +12,7 @@
 #include "types.h"
 #include<plog/input/attributedeclaration.h>
 
+
 using Gringo::UTermVec ;
 using Gringo::UTerm;
 using Gringo::String;

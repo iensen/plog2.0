@@ -346,11 +346,24 @@ Clingo::AST::BodyLiteral Statement::gringobodyexlit(Plog::ULit &lit, const UAttD
     if (!elit->isRelational(attdecls)) {
         std::pair<Gringo::UTerm, bool> termb = term(elit->lit); //3
         Clingo::AST::Term f_t = termToClingoTerm(termb.first);
+        Clingo::AST::Sign sign = Clingo::AST::Sign::None;
         if (!termb.second) {
-            throw "not implemented yet";
-            // negate f_t
+           // std::stringstream ss;
+            //ss <<"-";
+            //termb.first->print(ss);
+            //std::cout << ss.str()<< std::endl;
+            //auto funct = dynamic_cast<Gringo::FunctionTerm*>(termb.first.get());
+
+            //if(!funct) {
+                throw "not implemented yet";
+            //}
+           // Symbol cf = Clingo::Function{funct->name,funct->args};
+
+            //)f_t = {defaultLoc, sym};
         }
         Clingo::AST::Literal alit{defaultLoc, Clingo::AST::Sign::None, f_t};
+
+        //elit->neg = ;
         return Clingo::AST::BodyLiteral{defaultLoc, elit->neg ? Clingo::AST::Sign::Negation : Clingo::AST::Sign::None,
                                         alit};
     } else {

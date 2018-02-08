@@ -9,6 +9,34 @@ using Gringo::VarTerm;
 using Gringo::ValTerm;
 using Gringo::UTermVec;
 using Gringo::Term;
+using Gringo::BinOpTerm;
+using Gringo::BinOp ;
+
+
+static Clingo::AST::BinaryOperator gringoToClingoBinOp(Gringo::BinOp op) {
+        switch(op) {
+            case Gringo::BinOp::ADD: return Clingo::AST::BinaryOperator::Plus;
+            default:throw "not implemented";
+
+              }
+}
+
+Clingo::AST::Term negate(const UTerm &term) {
+    // if it is a function term:
+    FunctionTerm * fterm = dynamic_cast<FunctionTerm*>(term.get());
+
+    if (fterm) {
+        String name = fterm->name;
+        UTermVec fargs = clone(fterm->args);
+        std::vector<Clingo::AST::Term> args;
+        for(const UTerm &t: fargs) {
+            args.push_back(termToClingoTerm(t));
+        }
+        auto f_ = Clingo::AST::Function{name.c_str(), args};
+        return {defaultLoc,f_};
+    }
+
+}
 
 Clingo::AST::Term termToClingoTerm(const UTerm & term) {
 
@@ -55,7 +83,15 @@ Clingo::AST::Term termToClingoTerm(const UTerm & term) {
         return {defaultLoc,sym};
     }
 
-    // bin op and un op terms go here
+
+    BinOpTerm * bterm = dynamic_cast<BinOpTerm*>(term.get());
+    if(bterm) {
+        UTerm leftc(bterm->left->clone());
+        UTerm rightc(bterm->right->clone());
+        return {defaultLoc, Clingo::AST::BinaryOperation{gringoToClingoBinOp(bterm->op),termToClingoTerm(leftc),termToClingoTerm(rightc)}};
+    }
+
+    //unary ops go here
 
     throw std::logic_error("cannot convert a term");
 }
