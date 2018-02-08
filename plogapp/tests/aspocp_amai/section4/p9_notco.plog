@@ -21,6 +21,6 @@ e :- a.
 e :- not e.
 
 
-% the program produces an error, but not a readable one.
+% the program produces an error, since it is not a dco, but not a readable one.
 %?c.
 ?d.
