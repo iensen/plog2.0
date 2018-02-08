@@ -14,6 +14,8 @@ statements
 % the outcome of the die at step 1 is random
 
 random(throw(1)).
+% the classical negation is not supported yet, throw(T2)<>1 is replaced
+% with throw(T2) =X, X<>1
 random(throw(T)) :- throw(T2) =X, X<>1,T = T2 + 1.
 made_5th_throw :- throw(5) = X.
 ?made_5th_throw.
