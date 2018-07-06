@@ -1,0 +1,37 @@
+sorts
+#guards = {a,b}.
+#boolean = {true, false}.
+
+attributes
+
+order: #boolean.
+dead: #boolean.
+pull: #guards -> #boolean.
+shoot: #guards -> #boolean.
+somebody_shoots: #boolean.
+
+statements
+
+random(order).
+random(pull(a)).
+shoot(G) :- order, 
+            not shoot(G) = false.
+shoot(G) :- pull(G), not shoot(G) = false.
+
+somebody_shoots :- shoot(a).
+somebody_shoots :- shoot(b).
+
+random(dead) :- somebody_shoots.
+pr(dead | shoot(a), shoot(b) = false) = 3/10.
+pr(dead | shoot(b), shoot(a) = false) = 3/10.
+pr(dead | shoot(b), shoot(b)) = 4/10.
+
+shoot(G) = false :- order = false, pull(G) = false.
+dead = false :- shoot(a) = false, shoot(b) = false.
+pull(b) = false.
+
+%shoot(b) = false.
+? dead.
+
+
+
