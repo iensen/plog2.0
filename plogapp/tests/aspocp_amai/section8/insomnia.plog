@@ -1,0 +1,24 @@
+sorts
+
+#activity = {work, sleep}.
+#boolean = {true, false}.
+
+
+attributes
+
+insomnia: #boolean.
+possible: #activity -> #boolean.
+act: #activity.
+
+statements
+
+random(insomnia).
+random(act, possible).
+possible(X) :- not possible(X) = false.
+possible(sleep) = false :- insomnia.
+pr(insomnia) = 3/10.
+pr(act = sleep | insomnia = false) = 7/10. %fixed gamma
+
+%?act = sleep.
+?act = work.
+
