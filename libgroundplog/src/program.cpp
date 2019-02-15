@@ -77,6 +77,10 @@ namespace GroundPlog {
         return isRandomAtt[aid];
     }
 
+    bool Program::isIntervened(ATTID aid) {
+        return isIntervenedAtt[aid];
+    }
+
     std::unordered_set<ATTID> Program::getRandomAttributeTerms() {
         std::unordered_set<ATTID> result;
         for (RandomRule r: randomrules) {
@@ -170,7 +174,9 @@ namespace GroundPlog {
                 continue;
             if (I.getVal(at) == UNDEFINED)
                 continue;
-
+            if(isIntervened(at)) {
+                continue;
+            }
 
             Rule *r = findUniqueActiveRuleFor(at, I);
 
@@ -377,6 +383,7 @@ namespace GroundPlog {
 
         build_att_occur_map();
         fill_is_random_map();
+        fill_is_intervened_map();
         build_random_rule_ranges_map();
 
     }
@@ -485,6 +492,14 @@ namespace GroundPlog {
         isRandomAtt.assign(att_count, false);
         for (const RandomRule &r :randomrules) {
             isRandomAtt[r.head.first] = true;
+        }
+    }
+
+
+    void Program::fill_is_intervened_map() {
+        isIntervenedAtt.assign(att_count, false);
+        for (const Action &a : actions) {
+            isIntervenedAtt[a.attid] = true;
         }
     }
 

@@ -138,6 +138,8 @@ namespace GroundPlog {
         // checking properties of a progeam:
         bool isRandom(ATTID attid);
 
+        bool isIntervened(ATTID attid);
+
         size_t getAttValuesCount(unsigned int attid);
         //std::unordered_set<ValueRep> getAttValues(unsigned int attid);
 
@@ -159,6 +161,7 @@ namespace GroundPlog {
         std::vector<std::unordered_set<ATTID>> randomRulesRangeAtts;
 
         std::vector<char> isRandomAtt;
+        std::vector<char> isIntervenedAtt;
 
         void addAtomExternal(unsigned int att_id, unsigned int val_id, unsigned int ex_atom_id);
 
@@ -210,6 +213,8 @@ namespace GroundPlog {
         ValueRep getRewrittenValue(ATTID attid, ValueRep oldval);
 
         void sort_regular_rules();
+
+        void fill_is_intervened_map();
     };
 }
 #endif //PLOG_PROGRAM_H
