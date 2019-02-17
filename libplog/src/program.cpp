@@ -30,11 +30,11 @@ namespace Plog {
     }
 
     void Program::rewrite(Defines &defs, Logger &log) {
-        printf("REWRITING IS NOT IMPLEMENTED YET\n");
+        //printf("REWRITING IS NOT IMPLEMENTED YET\n");
     }
 
     void Program::check(Logger &log) {
-        printf("CHECKING IS NOT IMPLEMENTED YET\n");
+        //printf("CHECKING IS NOT IMPLEMENTED YET\n");
     }
 
     void Program::print(std::ostream &out) const {

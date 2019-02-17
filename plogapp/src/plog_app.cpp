@@ -127,6 +127,7 @@ void PlogApp::validateOptions(const ProgramOptions::OptionContext &root, const P
 }
 
 void PlogApp::run(GroundPlog::GroundPlogFacade &groundPlog) {
+    printVersion();
     try {
         using namespace std::placeholders;
         if (mode_ != mode_ground_plog) {
@@ -154,7 +155,7 @@ void PlogApp::printHelp(const ProgramOptions::OptionContext &root) {
 }
 
 void PlogApp::printVersion() {
-    throw "not implemented yet";
+    std::cout << getName()<< " " << getVersion() << std::endl;
 }
 
 void PlogApp::onEvent(const GroundPlog::Event &ev) {

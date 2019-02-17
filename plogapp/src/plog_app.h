@@ -30,8 +30,8 @@ class PlogApp : public GroundPlog::Cli::GroundPlogAppBase {
     using BaseType    = GroundPlog::Cli::GroundPlogAppBase;
 public:
     PlogApp();
-    const char* getName()    const override { return "plog"; }
-    const char* getVersion() const override { return "2.0"; }
+    const char* getName()    const override { return "Plog"; }
+    const char* getVersion() const override { return "2.1"; }
     const char* getUsage()   const override { return "[options] [files]"; }
 
     void shutdown() override;
