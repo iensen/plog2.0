@@ -9,5 +9,10 @@ plog1
 plog.cbp
 Makefile
 cmake_install.cmake
+ex
+plog1
+tests
+clingo1
+wplog
 
 
