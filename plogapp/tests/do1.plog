@@ -1,0 +1,36 @@
+sorts
+
+  #boolean = {true,false}.
+
+attributes
+
+  smoking : #boolean.
+
+  tar : #boolean.
+
+  cancer : #boolean.
+
+  statements
+
+  
+
+  random(smoking).
+
+  random(tar).
+
+  random(cancer).
+
+
+  pr(tar|smoking=true) = 8/10.
+
+  pr(tar|smoking=false) = 1/10.
+
+  pr(cancer|tar=true) = 1/100.
+
+  pr(cancer|tar=false) = 1/500.
+
+  pr(smoking) = 3/10.
+
+  do(cancer,true).
+
+?smoking = true.
