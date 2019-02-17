@@ -5,7 +5,6 @@
 #ifndef PLOG_TERMZ_H
 #define PLOG_TERMZ_H
 
-#include <bits/unique_ptr.h>
 #include <gringo/term.hh>
 #include<gringo/symbol.hh>
 #include<gringo/locatable.hh>

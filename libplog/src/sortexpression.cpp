@@ -41,7 +41,7 @@ std::vector<Clingo::AST::Term> Concatenation::generate( const USortDefVec &sortD
 }
 
 std::string Concatenation::toString() const {
-    return std::__cxx11::string();
+    return std::string();
 }
 
 
@@ -50,7 +50,7 @@ std::vector<Clingo::AST::Term> BinOpSortExpr::generate( const USortDefVec &sortD
 }
 
 std::string BinOpSortExpr::toString() const{
-    return std::__cxx11::string();
+    return std::string();
 }
 
 
