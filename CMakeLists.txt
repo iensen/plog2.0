@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.3)
 project(plog)
 #project(clingo)
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 
 file(GLOB_RECURSE PLOG_SOURCES
@@ -71,12 +71,12 @@ TARGET_LINK_LIBRARIES(clingo1  python2.7 tbb pthread dl)
 add_executable(plog1  ${PLOG_SOURCES} ${CLINGO_SOURCES} ${PLOG_MAIN_FILE})
 TARGET_LINK_LIBRARIES(plog1  python2.7 tbb pthread dl)
 
-add_executable(ex ${EXAMPLE_MAIN_FILE} ${CLINGO_SOURCES})
-TARGET_LINK_LIBRARIES(ex  python2.7 tbb pthread dl)
+#add_executable(ex ${EXAMPLE_MAIN_FILE} ${CLINGO_SOURCES})
+#TARGET_LINK_LIBRARIES(ex  python2.7 tbb pthread dl)
 
-add_executable(tests   ${OLD_PLOG_SOURCES} ${TEST_SOURCES} ${PLOG_SOURCES} ${CLINGO_SOURCES}   test/utils.h)
-TARGET_LINK_LIBRARIES(tests  python2.7 tbb dl gtest pthread )
+#add_executable(tests   ${OLD_PLOG_SOURCES} ${TEST_SOURCES} ${PLOG_SOURCES} ${CLINGO_SOURCES}   test/utils.h)
+#TARGET_LINK_LIBRARIES(tests  python2.7 tbb dl gtest pthread )
 
-add_executable(wplog ${OLD_PLOG_SOURCES} ${OLDPLOG_MAIN_FILE})
+#add_executable(wplog ${OLD_PLOG_SOURCES} ${OLDPLOG_MAIN_FILE})
 
 
