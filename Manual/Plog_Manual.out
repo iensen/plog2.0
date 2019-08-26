@@ -1,0 +1,22 @@
+\BOOKMARK [1][-]{section.1}{System installation}{}% 1
+\BOOKMARK [1][-]{section.2}{System usage}{}% 2
+\BOOKMARK [1][-]{section.3}{Command Line Options}{}% 3
+\BOOKMARK [1][-]{section.4}{Syntax Description}{}% 4
+\BOOKMARK [2][-]{subsection.4.1}{Sort definitions}{section.4}% 5
+\BOOKMARK [2][-]{subsection.4.2}{Attribute Declarations}{section.4}% 6
+\BOOKMARK [2][-]{subsection.4.3}{Program Rules}{section.4}% 7
+\BOOKMARK [2][-]{subsection.4.4}{Display \(New!\)}{section.4}% 8
+\BOOKMARK [1][-]{section.5}{Answer Sets}{}% 9
+\BOOKMARK [1][-]{section.6}{Typechecking}{}% 10
+\BOOKMARK [2][-]{subsection.6.1}{Type errors}{section.6}% 11
+\BOOKMARK [3][-]{subsubsection.6.1.1}{Sort definition errors}{subsection.6.1}% 12
+\BOOKMARK [3][-]{subsubsection.6.1.2}{Predicate declarations errors}{subsection.6.1}% 13
+\BOOKMARK [3][-]{subsubsection.6.1.3}{Program rules errors}{subsection.6.1}% 14
+\BOOKMARK [2][-]{subsection.6.2}{Type warnings}{section.6}% 15
+\BOOKMARK [3][-]{subsubsection.6.2.1}{ASP based warning checking}{subsection.6.2}% 16
+\BOOKMARK [3][-]{subsubsection.6.2.2}{Constraint solver based warning checking}{subsection.6.2}% 17
+\BOOKMARK [1][-]{section.7}{SPARC and ASPIDE}{}% 18
+\BOOKMARK [2][-]{subsection.7.1}{Installation}{section.7}% 19
+\BOOKMARK [2][-]{subsection.7.2}{Creating Projects and Adding SPARC source files}{section.7}% 20
+\BOOKMARK [2][-]{subsection.7.3}{Executing queries and computing Answer sets}{section.7}% 21
+\BOOKMARK [2][-]{subsection.7.4}{Warnings Checking}{section.7}% 22

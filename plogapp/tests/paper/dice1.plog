@@ -22,4 +22,4 @@ random(roll(D)).
 
 pr(roll(D)=6|owns(D,mike))=1/4.
 
-? roll(d1)=6.
+? roll(d1)=1.
