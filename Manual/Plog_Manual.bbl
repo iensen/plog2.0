@@ -6,4 +6,16 @@ Evgenii Balai, Michael Gelfond, and Yuanlin Zhang.
 \newblock In {\em Logic Programming and Nonmonotonic Reasoning}, pages
   135--147. Springer, 2013.
 
+\bibitem{Balai2019}
+Evgenii Balai, Michael Gelfond, and Yuanlin Zhang.
+\newblock P-log: refinement and a new coherency condition.
+\newblock {\em Annals of Mathematics and Artificial Intelligence},
+  86(1):149--192, Jul 2019.
+
+\bibitem{gelfond2014knowledge}
+Michael Gelfond and Yulia Kahl.
+\newblock {\em Knowledge representation, reasoning, and the design of
+  intelligent agents: The answer-set programming approach}.
+\newblock Cambridge University Press, 2014.
+
 \end{thebibliography}
