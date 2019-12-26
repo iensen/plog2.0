@@ -147,7 +147,7 @@ int str_to_int(std::string str) {
 // if it is of the form a, return a
 Gringo::String getAttrName(const UTerm &term) {
     String termName = "";
-    FunctionTerm * faterm = (FunctionTerm*) term.get();
+    FunctionTerm * faterm = dynamic_cast<FunctionTerm*>(term.get());
 
     if(faterm   && faterm->args.size()>0) {
         termName = faterm->name;
