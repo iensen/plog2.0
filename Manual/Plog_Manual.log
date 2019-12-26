@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.22)  27 AUG 2019 00:28
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.10.22)  25 DEC 2019 19:04
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -464,67 +464,41 @@ Package pdftex.def Info: plog_output.png  used on input line 147.
 (pdftex.def)             Requested size: 414.83827pt x 222.77304pt.
  [3 <./plog_output.png>]
 LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <14.4> not available
-(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 172.
-
-Overfull \hbox (17.74411pt too wide) in paragraph at lines 218--220
-\OT1/ppl/m/n/12 where $\OML/cmm/m/it/12 number[]$ \OT1/ppl/m/n/12 and $\OML/cmm
-/m/it/12 number[]$ \OT1/ppl/m/n/12 are non-negative num-bers such that $\OML/cm
-m/m/it/12 number[] \OMS/cmsy/m/n/12 ^^T \OML/cmm/m/it/12 number[]$\OT1/ppl/m/n/
-12 .
- []
-
-[4] [5]
-Overfull \hbox (13.9184pt too wide) in paragraph at lines 285--286
-[]\OT1/ppl/m/n/12 if $\OMS/cmsy/m/n/12 C$ \OT1/ppl/m/n/12 is a con-di-tion on $
-\OML/cmm/m/it/12 var[]; :::; var[]$\OT1/ppl/m/n/12 , then $\OML/cmm/m/it/12 not
-\OT1/cmr/m/n/12 (\OMS/cmsy/m/n/12 C\OT1/cmr/m/n/12 )$ \OT1/ppl/m/n/12 is also a
- con-di-tion on $\OML/cmm/m/it/12 var[]; :::; var[]$\OT1/ppl/m/n/12 . 
- []
-
-[6]
-Overfull \hbox (4.09825pt too wide) in paragraph at lines 336--337
-[]\OT1/ppl/m/n/12 it does not con-tain sort ex-pres-sions of the form (4), de-n
-ot-ing sets of records 
- []
-
-LaTeX Font Info:    Font shape `OMS/ppl/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 343.
-[7] [8] [9] [10] (./Plog_Manual.bbl [11])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 553.
- [12]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 553.
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 168.
+ [4] [5] [6] [7] (./Plog_Manual.bbl)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 379.
+ [8]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 379.
  (./Plog_Manual.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 553.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 553.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 379.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 379.
 Package rerunfilecheck Info: File `Plog_Manual.out' has not changed.
 (rerunfilecheck)             Checksum: 93D5692A04B0F423B70C698E7EF61307;1047.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 553.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 379.
  ) 
 Here is how much of TeX's memory you used:
- 8214 strings out of 492982
- 114957 string characters out of 6134895
- 206609 words of memory out of 5000000
- 11608 multiletter control sequences out of 15000+600000
+ 8199 strings out of 492982
+ 114817 string characters out of 6134895
+ 204608 words of memory out of 5000000
+ 11605 multiletter control sequences out of 15000+600000
  24080 words of font info for 73 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 28i,8n,35p,419b,539s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 28i,8n,35p,417b,539s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
-ublic/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
-/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8
-.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><
-/usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/te
-xlive/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb></usr/share/texlive/texmf-
-dist/fonts/type1/urw/palatino/uplr8a.pfb></usr/share/texlive/texmf-dist/fonts/t
-ype1/urw/palatino/uplri8a.pfb>
-Output written on Plog_Manual.pdf (12 pages, 217457 bytes).
+/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/urw/palatino/uplr8a.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/urw/palatino/uplri8a.pfb>
+Output written on Plog_Manual.pdf (8 pages, 188956 bytes).
 PDF statistics:
- 263 PDF objects out of 1000 (max. 8388607)
- 231 compressed objects within 3 object streams
- 60 named destinations out of 1000 (max. 500000)
+ 227 PDF objects out of 1000 (max. 8388607)
+ 201 compressed objects within 3 object streams
+ 48 named destinations out of 1000 (max. 500000)
  134 words of extra memory for PDF output out of 10000 (max. 10000000)
 
