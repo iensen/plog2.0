@@ -48,6 +48,7 @@ double parse_old_plog_output(std::string out) {
 
 double parse_new_plog_output(std::string out) {
     int index = 0;
+    while(out[index]!='a') ++ index;
     while(!isdigit(out[index])) ++ index;
     return stringtoDouble(out.substr(index));
 }

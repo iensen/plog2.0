@@ -42,7 +42,7 @@ TEST(NEWVERSION, 7) {
 
 
 TEST(NEWVERSION, 8) {
-    ASSERT_NEAR(run_plog("plogapp/tests/paper/dice1.plog"), 0.25, 1e-5);
+    ASSERT_NEAR(run_plog("plogapp/tests/paper/dice1.plog"), 0.15, 1e-5);
 }
 
 TEST(NEWVERSION, 9) {
