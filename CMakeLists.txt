@@ -1,6 +1,11 @@
+# Run cmake DBUILD_TESTS=1 . to build tests.
+# Run cmake . to build the actual P-log executable.
+# If you need to switch between the two modes, make sure to 
+# remove CmakeCache.txt file between runs.
+
 cmake_minimum_required(VERSION 3.3)
 project(plog)
-#project(clingo)
+#project(tests)
 #set(CMAKE_BUILD_TYPE Release)
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3")
 set(CMAKE_BUILD_TYPE Debug)
@@ -70,14 +75,20 @@ add_definitions(-DWITH_PYTHON)
 #add_executable(clingo1 ${CLINGO_MAIN_FILE} ${CLINGO_SOURCES})
 #TARGET_LINK_LIBRARIES(clingo1  python2.7 tbb pthread dl)
 
+if(BUILD_TESTS)
+add_executable(tests   ${OLD_PLOG_SOURCES} ${TEST_SOURCES} ${PLOG_SOURCES} ${CLINGO_SOURCES}   test/utils.h)
+TARGET_LINK_LIBRARIES(tests  python2.7 tbb dl gtest pthread )
+else()
 add_executable(plog2  ${PLOG_SOURCES} ${CLINGO_SOURCES} ${PLOG_MAIN_FILE})
 TARGET_LINK_LIBRARIES(plog2  python2.7 tbb pthread dl)
+endif(BUILD_TESTS)
+
+
 
 #add_executable(ex ${EXAMPLE_MAIN_FILE} ${CLINGO_SOURCES})
 #TARGET_LINK_LIBRARIES(ex  python2.7 tbb pthread dl)
 
-#add_executable(tests   ${OLD_PLOG_SOURCES} ${TEST_SOURCES} ${PLOG_SOURCES} ${CLINGO_SOURCES}   test/utils.h)
-#TARGET_LINK_LIBRARIES(tests  python2.7 tbb dl gtest pthread )
+
 
 #add_executable(wplog ${OLD_PLOG_SOURCES} ${OLDPLOG_MAIN_FILE})
 
