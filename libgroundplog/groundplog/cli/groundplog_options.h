@@ -27,7 +27,7 @@
 #include <groundplog/groundplog_facade.h>
 #include <string>
 #include <iosfwd>
-namespace ProgramOptions {
+namespace Potassco::ProgramOptions {
 class OptionContext;
 class OptionGroup;
 class ParsedOptions;
@@ -86,8 +86,8 @@ enum ConfigKey {
 class GroundPlogCliConfig: public GroundPlogConfig{
 public:
 
-    typedef ProgramOptions::ParsedOptions ParsedOpts;
-    typedef ProgramOptions::OptionGroup   Options;
+    typedef Potassco::ProgramOptions::ParsedOptions ParsedOpts;
+    typedef Potassco::ProgramOptions::OptionGroup   Options;
     typedef SingleOwnerPtr<Options>       OptionsPtr;
 	uint32             numSolver()const {return 0;};
     bool validate();
@@ -101,8 +101,8 @@ public:
 	 * Once options are added, root can be used with an option source (e.g. the command-line)
 	 * to populate this object.
 	 */
-	void addOptions(ProgramOptions::OptionContext& root);
-	bool finalize(const ProgramOptions::ParsedOptions& parsed, bool applyDefaults);
+	void addOptions(Potassco::ProgramOptions::OptionContext& root);
+	bool finalize(const Potassco::ProgramOptions::ParsedOptions& parsed, bool applyDefaults);
     bool finalizeAppConfig(UserConfig* active, const ParsedOpts& exclude, bool defs);
     bool setAppDefaults(UserConfig* active, const ParsedOpts& exclude);
     bool             isGenerator() const { return (cliMode & mode_tester) == 0; }

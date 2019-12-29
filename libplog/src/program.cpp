@@ -60,7 +60,6 @@ namespace Plog {
 
     void Program::loadToControl(Clingo::Control &ctl) {
         auto b = ctl.builder();
-        b.begin();
         Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
         b.add({loc, Clingo::AST::Program{"base", {}}});
         // add program rules:
@@ -87,7 +86,7 @@ namespace Plog {
         }
 
         //add axioms:
-        b.end();
+
     }
 
 }

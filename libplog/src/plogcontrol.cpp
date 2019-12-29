@@ -6,12 +6,12 @@
 
 class GroundPlogBackend;
 
-bool PlogControl::hasSubKey(unsigned key, char const *name, unsigned* subKey) {
+bool PlogControl::hasSubKey(unsigned key, char const *name) const {
     //*subKey = groundPlogConfig_.getKey(key, name);
     //return *subKey != Clasp::Cli::ClaspCliConfig::KEY_INVALID;
     throw "not implemented yet";
 }
-unsigned PlogControl::getSubKey(unsigned key, char const *name) {
+unsigned PlogControl::getSubKey(unsigned key, char const *name) const{
     //unsigned ret = groundPlogConfig_.getKey(key, name);
     //if (ret == Clasp::Cli::ClaspCliConfig::KEY_INVALID) {
     //    throw std::runtime_error("invalid key");
@@ -19,7 +19,7 @@ unsigned PlogControl::getSubKey(unsigned key, char const *name) {
     //return ret;
     throw "not implemented yet";
 }
-unsigned PlogControl::getArrKey(unsigned key, unsigned idx) {
+unsigned PlogControl::getArrKey(unsigned key, unsigned idx) const{
     //unsigned ret = groundPlogConfig_.getArrKey(key, idx);
     //if (ret == Clasp::Cli::ClaspCliConfig::KEY_INVALID) {
     //    throw std::runtime_error("invalid key");
@@ -41,7 +41,7 @@ const char* PlogControl::getSubKeyName(unsigned key, unsigned idx) const {
   //  return ret;
     throw "not implemented yet";
 }
-bool PlogControl::getKeyValue(unsigned key, std::string &value) {
+bool PlogControl::getKeyValue(unsigned key, std::string &value) const{
    // int ret = groundPlogConfig_.getValue(key, value);
    // if (ret < -1) {
    //     throw std::runtime_error("could not get option value");
@@ -57,7 +57,7 @@ void PlogControl::setKeyValue(unsigned key, const char *val) {
     throw "not implemented yet";
 
 }
-unsigned PlogControl::getRootKey() {
+unsigned PlogControl::getRootKey() const{
     //return Clasp::Cli::ClaspCliConfig::KEY_ROOT;
     throw "not implemented yet";
 
@@ -67,7 +67,7 @@ bool PlogControl::external(Gringo::SymbolicAtomIter it) const {
     throw "not implemented yet";
 }
 
-void PlogControl::parse(const PlogControl::StringSeq &files, const PlogOptions &opts) {
+void PlogControl::parse(const PlogControl::StringVec &files, const PlogOptions &opts) {
     using namespace Gringo;
     // make empty theory data
     std::unique_ptr<Potassco::TheoryData> data = gringo_make_unique<Potassco::TheoryData>();
@@ -94,16 +94,18 @@ void PlogControl::main() {
     solve();
 
 }
-
+const unsigned messageLimit = 20;
 PlogControl::PlogControl(GroundPlog::GroundPlogFacade *groundplog,
-                         GroundPlog::Cli::GroundPlogCliConfig &groundplogConfig, PlogControl::PostGroundFunc pgf,
-                         PlogControl::PreSolveFunc psf,Gringo::Logger::Printer printer):
+                         GroundPlog::Cli::GroundPlogCliConfig &groundplogConfig,
+                         PlogControl::PostGroundFunc pgf,
+                         PlogControl::PreSolveFunc psf,
+                         Gringo::Logger::Printer printer):
  groundplog_(groundplog)
 , groundPlogConfig_(groundplogConfig)
 , pgf_(pgf)
 , psf_(psf)
-        ,logger_(printer),
- clingoControl{{"0"}, [](Clingo::WarningCode, char const *message) {}, 20}
+,logger_(printer),
+ clingoControl{{"0"}, [](Clingo::WarningCode, char const *message) {}, messageLimit}
 {
 
 }
@@ -142,7 +144,7 @@ void PlogControl::load(std::string const &filename) {
     throw "not implemented yet";
 }
 
-void PlogControl::add(std::string const &name, Gringo::FWStringVec const &params, std::string const &part) {
+void PlogControl::add(std::string const &name,  Gringo::StringVec const &, std::string const &part) {
     throw "not implemented yet";
 }
 
@@ -163,10 +165,10 @@ void PlogControl::ground() {
     clingoControl.ground({{"base", {}}});
 
     // solve (this is needed to make sure that the rules are passed from gringo to clasp:
-    Clingo::SolveIteratively solveit = clingoControl.solve_iteratively();
-    solveit.next();
+    clingoControl.solve();
+    //solveit.next();
     // we actually don't need the model, just close it
-    solveit.close();
+    //solveit.close();
 }
 
 Gringo::SymbolicAtoms &PlogControl::getDomain() {
@@ -174,10 +176,6 @@ Gringo::SymbolicAtoms &PlogControl::getDomain() {
 }
 
 bool PlogControl::valid(Gringo::SymbolicAtomIter it) const {
-    throw "not implemented yet";
-}
-
-Gringo::SymbolicAtomIter PlogControl::next(Gringo::SymbolicAtomIter it) {
     throw "not implemented yet";
 }
 
@@ -241,5 +239,9 @@ PlogControl::~PlogControl() {
 }
 
 bool PlogControl::fact(Gringo::SymbolicAtomIter it) const {
+    throw "not implemented yet";
+}
+
+Gringo::SymbolicAtomIter PlogControl::next(Gringo::SymbolicAtomIter it) const {
     throw "not implemented yet";
 }

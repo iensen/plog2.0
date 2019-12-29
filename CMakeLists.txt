@@ -6,10 +6,10 @@
 cmake_minimum_required(VERSION 3.3)
 project(plog)
 #project(tests)
-#set(CMAKE_BUILD_TYPE Release)
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3")
-set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3")
+#set(CMAKE_BUILD_TYPE Debug)
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 
 file(GLOB_RECURSE PLOG_SOURCES
@@ -34,8 +34,9 @@ file(GLOB_RECURSE CLINGO_SOURCES
         clingo/liblp/src/*.cpp
         clingo/libclingo/src/*.cc
         clingo/libgringo/src/*.cc
-        clingo/libclasp/src/*.cpp
-        clingo/libprogram_opts/src/*.cpp
+        clingo/clasp/src/*.cpp
+        clingo/clasp/app/clasp_app.cpp
+        clingo/clasp/libpotassco/src/*.cpp
         clingo/libreify/src/*.cc
         clingo/libclasp/src/*.cpp
         clingo/app/clingo/src/*.cpp
@@ -48,7 +49,9 @@ file(GLOB_RECURSE TEST_SOURCES
         )
 
 
-include_directories(clingo/libclasp)
+include_directories(clingo/clasp)
+include_directories(clingo/clasp/app)
+include_directories(clingo/clasp/libpotassco)
 include_directories(clingo/liblp)
 include_directories(clingo/libclingo)
 include_directories(clingo/libgringo)
@@ -74,7 +77,7 @@ add_definitions(-DWITH_PYTHON)
 
 #add_executable(clingo1 ${CLINGO_MAIN_FILE} ${CLINGO_SOURCES})
 #TARGET_LINK_LIBRARIES(clingo1  python2.7 tbb pthread dl)
-
+#set(BUILD_TESTS 1)
 if(BUILD_TESTS)
 add_executable(tests   ${OLD_PLOG_SOURCES} ${TEST_SOURCES} ${PLOG_SOURCES} ${CLINGO_SOURCES}   test/utils.h)
 TARGET_LINK_LIBRARIES(tests  python2.7 tbb dl gtest pthread )

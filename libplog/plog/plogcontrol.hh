@@ -3,15 +3,15 @@
 #include <plog/programbuilder.h>
 #include <gringo/input/nongroundparser.hh>
 #include <gringo/input/groundtermparser.hh>
-#include <gringo/control.hh>
+#include <clingo/control.hh>
 #include <clingo.hh>
 #include <gringo/logger.hh>
-#include <gringo/scripts.hh>
+#include <clingo/scripts.hh>
 #include <groundplog/program.h>
 #include <groundplog/groundplog_facade.h>
 #include <groundplog/cli/groundplog_options.h>
-#include <program_opts/application.h>
-#include <program_opts/string_convert.h>
+#include <potassco/application.h>
+#include <potassco/string_convert.h>
 #include <mutex>
 #include<plog/plog.h>
 #include <plog/input/program.h>
@@ -38,7 +38,7 @@ struct plog_control {
     virtual void ground() = 0;
     virtual Gringo::SolveResult solve() = 0;
     virtual void interrupt() = 0;
-    virtual void add(std::string const &name, Gringo::FWStringVec const &params, std::string const &part) = 0;
+    virtual void add(std::string const &name,  Gringo::StringVec const &, std::string const &part) = 0;
     virtual void load(std::string const &filename) = 0;
     virtual Gringo::Symbol getConst(std::string const &name) = 0;
     virtual Potassco::Atom_t addProgramAtom() = 0;
@@ -52,7 +52,7 @@ struct plog_control {
 
 struct PlogOptions {
     using Foobar = std::vector<Gringo::Sig>;
-    ProgramOptions::StringSeq     defines;
+    std::vector<std::string>      defines;
     Gringo::Output::OutputOptions outputOptions;
     Gringo::Output::OutputFormat  outputFormat          = Gringo::Output::OutputFormat::INTERMEDIATE;
     bool                          verbose               = false;
@@ -76,7 +76,6 @@ class PlogControl : public plog_control, private Gringo::ConfigProxy, private Gr
 public:
     using StringVec        = std::vector<std::string>;
     using ExternalVec      = std::vector<std::pair<Gringo::Symbol, Potassco::Value_t>>;
-    using StringSeq        = ProgramOptions::StringSeq;
     using PostGroundFunc   = std::function<bool (GroundPlog::Program &)>;
     using PreSolveFunc     = std::function<bool (GroundPlog::GroundPlogFacade &)>;
     enum class ConfigUpdate { KEEP, REPLACE };
@@ -85,7 +84,7 @@ public:
                 GroundPlog::Cli::GroundPlogCliConfig &groundplogConfig, PostGroundFunc pgf, PreSolveFunc psf,Gringo::Logger::Printer printer);
     ~PlogControl() noexcept override;
     void parse();
-    void parse(const StringSeq& files, const PlogOptions& opts);
+    void parse(const StringVec&  files, const PlogOptions& opts);
     void main();
     void onFinish(GroundPlog::GroundPlogFacade::Result ret);
     bool update();
@@ -97,20 +96,21 @@ public:
 
     // {{{2 ConfigProxy interface
 
-    bool hasSubKey(unsigned key, char const *name, unsigned* subKey = nullptr) override;
-    unsigned getSubKey(unsigned key, char const *name) override;
-    unsigned getArrKey(unsigned key, unsigned idx) override;
+    bool hasSubKey(unsigned key, char const *name) const override;
+    unsigned getSubKey(unsigned key, char const *name) const override;
+    unsigned getArrKey(unsigned key, unsigned idx) const override;
     void getKeyInfo(unsigned key, int* nSubkeys = 0, int* arrLen = 0, const char** help = 0, int* nValues = 0) const override;
     const char* getSubKeyName(unsigned key, unsigned idx) const override;
-    bool getKeyValue(unsigned key, std::string &value) override;
+    bool getKeyValue(unsigned key, std::string &value) const override;
     void setKeyValue(unsigned key, const char *val) override;
-    unsigned getRootKey() override;
+    unsigned getRootKey() const override;
 
     // {{{2 SymbolicAtoms interface
 
     Gringo::SymbolicAtomIter begin(Gringo::Sig sig) const override;
     Gringo::SymbolicAtomIter begin() const override;
     Gringo::SymbolicAtomIter end() const override;
+    Gringo::SymbolicAtomIter next(Gringo::SymbolicAtomIter it) const override;
     bool eq(Gringo::SymbolicAtomIter it, Gringo::SymbolicAtomIter jt) const override;
     Gringo::SymbolicAtomIter lookup(Gringo::Symbol atom) const override;
     size_t length() const override;
@@ -118,7 +118,6 @@ public:
     Gringo::Symbol atom(Gringo::SymbolicAtomIter it) const override;
     Potassco::Lit_t literal(Gringo::SymbolicAtomIter it) const override;
     bool fact(Gringo::SymbolicAtomIter it) const override;
-    Gringo::SymbolicAtomIter next(Gringo::SymbolicAtomIter it) override;
     bool valid(Gringo::SymbolicAtomIter it) const override;
     bool external(Gringo::SymbolicAtomIter it) const override;
 
@@ -126,7 +125,7 @@ public:
 
     Gringo::SymbolicAtoms &getDomain() override;
     void ground();
-    void add(std::string const &name, Gringo::FWStringVec const &params, std::string const &part) override;
+    void add(std::string const &name,  Gringo::StringVec const &params, std::string const &part) override;
     void load(std::string const &filename) override;
     Gringo::SolveResult solve() override;
     std::string str();

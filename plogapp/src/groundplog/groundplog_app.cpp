@@ -4,6 +4,7 @@
 #include "groundplog_app.h"
 #include <iostream>
 #include <fstream>
+#include <signal.h>
 
 namespace GroundPlog {
     namespace Cli {
@@ -12,7 +13,7 @@ namespace GroundPlog {
 
         GroundPlogAppBase::~GroundPlogAppBase() {}
 
-        void GroundPlogAppBase::storeCommandArgs(const ProgramOptions::ParsedValues &values) {
+        void GroundPlogAppBase::storeCommandArgs(const Potassco::ProgramOptions::ParsedValues &values) {
             /* for whatever reason, we don't need the values */
         }
 
@@ -39,7 +40,7 @@ namespace GroundPlog {
 
         }
 
-        void GroundPlogAppBase::initOptions(ProgramOptions::OptionContext &root) {
+        void GroundPlogAppBase::initOptions(Potassco::ProgramOptions::OptionContext &root) {
 
             groundPlogConfig_.addOptions(root);
             groundPlogAppOpts_.initOptions(root);
@@ -47,19 +48,17 @@ namespace GroundPlog {
 
         }
 
-        void GroundPlogAppBase::validateOptions(const ProgramOptions::OptionContext &root,
-                                                const ProgramOptions::ParsedOptions &parsed,
-                                                const ProgramOptions::ParsedValues &values) {
-            using ProgramOptions::Error;
+        void GroundPlogAppBase::validateOptions(const Potassco::ProgramOptions::OptionContext &root,
+                                                const Potassco::ProgramOptions::ParsedOptions &parsed,
+                                                const Potassco::ProgramOptions::ParsedValues &values) {
+            using Potassco::ProgramOptions::Error;
             if (!groundPlogAppOpts_.validateOptions(parsed) || !groundPlogConfig_.finalize(parsed, true)) {
                 throw Error("command-line error!");
             }
             GroundPlogAppOptions& app = groundPlogAppOpts_;
             for (std::size_t i = 1; i < app.input.size(); ++i) {
-                if (!isStdIn(app.input[i]) && !std::ifstream(app.input[i].c_str()).is_open()) {
-                    throw Error(ClaspStringBuffer().appendFormat("'%s': could not open input file!", app.input[i].c_str()).c_str());
-
-                }
+                POTASSCO_EXPECT(isStdIn(app.input[i]) || std::ifstream(app.input[i].c_str()).is_open(),
+                                "'%s': could not open input file!", app.input[i].c_str());
             }
             setExitCode(0);
             storeCommandArgs(values);
@@ -89,7 +88,7 @@ namespace GroundPlog {
             throw "not implemented yet";
         }
 
-        void GroundPlogAppBase::printHelp(const ProgramOptions::OptionContext &root) {
+        void GroundPlogAppBase::printHelp(const Potassco::ProgramOptions::OptionContext &root) {
             throw "not implemented yet";
         }
 
@@ -99,7 +98,7 @@ namespace GroundPlog {
 
         bool GroundPlogAppBase::parsePositional(const std::string &s, std::string &out) {
             int num;
-            if   (bk_lib::string_cast(s, num)) { out = "number"; }
+            if   (Potassco::string_cast(s, num)) { out = "number"; }
             else                               { out = "file";   }
             return true;
         }
@@ -138,12 +137,12 @@ namespace GroundPlog {
 
 
 
-        bool GroundPlogAppOptions::validateOptions(const ProgramOptions::ParsedOptions &parsed) {
+        bool GroundPlogAppOptions::validateOptions(const Potassco::ProgramOptions::ParsedOptions &parsed) {
             return true; // no options yet
         }
 
-        void GroundPlogAppOptions::initOptions(ProgramOptions::OptionContext &root) {
-            using namespace ProgramOptions;
+        void GroundPlogAppOptions::initOptions(Potassco::ProgramOptions::OptionContext &root) {
+            using namespace Potassco::ProgramOptions;
             OptionGroup basic("Basic Options");
             // add other options
             basic.addOptions()

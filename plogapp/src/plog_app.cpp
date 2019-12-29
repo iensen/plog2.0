@@ -44,8 +44,8 @@ void PlogApp::shutdown() {
     GroundPlog::Cli::GroundPlogAppBase::shutdown();
 }
 
-void PlogApp::initOptions(ProgramOptions::OptionContext &root) {
-    using namespace ProgramOptions;
+void PlogApp::initOptions(Potassco::ProgramOptions::OptionContext &root) {
+    using namespace Potassco::ProgramOptions;
     BaseType::initOptions(root);
     grOpts_.defines.clear();
     grOpts_.verbose = false;
@@ -85,7 +85,7 @@ void PlogApp::initOptions(ProgramOptions::OptionContext &root) {
             ("keep-facts"               , flag(grOpts_.keepFacts = false), "Do not remove facts from normal rules")
             ("reify-sccs"               , flag(grOpts_.outputOptions.reifySCCs = false), "Calculate SCCs for reified output")
             ("reify-steps"              , flag(grOpts_.outputOptions.reifySteps = false), "Add step numbers to reified output")
-            ("foobar,@4"                , storeTo(grOpts_.foobar, parseFoobar) , "Foobar")
+            ("foobar,@4"                , storeTo(grOpts_.foobar, Gringo::parseFoobar) , "Foobar")
             ;
     root.add(gringo);
 
@@ -102,8 +102,8 @@ void PlogApp::initOptions(ProgramOptions::OptionContext &root) {
 
 }
 
-void PlogApp::validateOptions(const ProgramOptions::OptionContext &root, const ProgramOptions::ParsedOptions &parsed,
-                              const ProgramOptions::ParsedValues &vals) {
+void PlogApp::validateOptions(const Potassco::ProgramOptions::OptionContext &root, const Potassco::ProgramOptions::ParsedOptions &parsed,
+                              const Potassco::ProgramOptions::ParsedValues &vals) {
 	 BaseType::validateOptions(root, parsed, vals);
 	    if (parsed.count("text") > 0) {
 	        if (parsed.count("output") > 0) {
@@ -149,7 +149,7 @@ void PlogApp::run(GroundPlog::GroundPlogFacade &groundPlog) {
 
 
 
-void PlogApp::printHelp(const ProgramOptions::OptionContext &root) {
+void PlogApp::printHelp(const Potassco::ProgramOptions::OptionContext &root) {
     throw "not implemented yet";
 }
 

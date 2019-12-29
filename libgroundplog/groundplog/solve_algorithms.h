@@ -52,7 +52,8 @@ namespace GroundPlog {
 
         static std::tuple<bool, double, double> GetCompletionProbA(State &S,Clingo::Control *cControl,
                                                                    const AttributeSelectionHeuristic &heu,
-                                                                   const ValueSelectionHeuristic &heuv, ATTID selectedATT);
+                                                                   const ValueSelectionHeuristic &heuv,
+                                                                   ATTID selectedATT);
     };
 }
 

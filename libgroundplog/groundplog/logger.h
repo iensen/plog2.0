@@ -48,7 +48,8 @@ using Errors = plog_error;
 namespace Plog {
 class Logger {
 public:
-    using Printer = std::function<void (plog_warning_t, char const *)>;
+    // todo: replace with custom printer
+    using Printer = Gringo::Logger::Printer;
     Logger(Printer p = nullptr, unsigned limit = 20)
     : p_(p)
     , limit_(limit) { }
@@ -90,11 +91,9 @@ inline void Logger::enable(Warnings id, bool enabled) {
 }
 
 inline void Logger::print(plog_warning_t code, char const *msg) {
-    if (p_) { p_(code, msg); }
-    else {
+    // todo: use custom printer if necessary
         fprintf(stderr, "%s\n", msg);
         fflush(stderr);
-    }
 }
 
 inline Logger::~Logger() { }

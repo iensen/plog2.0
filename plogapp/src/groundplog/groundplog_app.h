@@ -4,8 +4,8 @@
 
 #ifndef PLOG_GRNDPLOG_APP_H
 #define PLOG_GRNDPLOG_APP_H
-#include <program_opts/typed_value.h>
-#include <program_opts/application.h>
+#include <potassco/program_opts/typed_value.h>
+#include <potassco/application.h>
 #include <clasp/util/timer.h>
 #include <groundplog/cli/groundplog_options.h>
 #include <groundplog/cli/groundplog_output.h>
@@ -42,9 +42,9 @@ namespace GroundPlog {
 /////////////////////////////////////////////////////////////////////////////////////////
         struct GroundPlogAppOptions {
             GroundPlogAppOptions();
-            void initOptions(ProgramOptions::OptionContext& root);
+            void initOptions(Potassco::ProgramOptions::OptionContext& root);
 
-            bool validateOptions(const ProgramOptions::ParsedOptions& parsed);
+            bool validateOptions(const Potassco::ProgramOptions::ParsedOptions& parsed);
             typedef std::vector<std::string>  StringSeq;
             StringSeq   input;     // list of input files - only first used!
         };
@@ -52,18 +52,18 @@ namespace GroundPlog {
 // ground P-log application base
 /////////////////////////////////////////////////////////////////////////////////////////
 // Base class for applications using the clasp library.
-        class GroundPlogAppBase : public ProgramOptions::Application {
+    class GroundPlogAppBase : public Potassco::Application {
         public:
 
-            typedef ProgramOptions::PosOption PosOption;
+            typedef  Potassco::ProgramOptions::PosOption PosOption;
         protected:
-            using ProgramOptions::Application::run;
+            using  Potassco::Application::run;
             GroundPlogAppBase();
             ~GroundPlogAppBase();
             // -------------------------------------------------------------------------------------------
             // Functions to be implemented by subclasses
             virtual void          run(GroundPlogFacade& groundPlog)      = 0;
-            virtual void          storeCommandArgs(const ProgramOptions::ParsedValues& values);
+            virtual void          storeCommandArgs(const Potassco::ProgramOptions::ParsedValues& values);
             // -------------------------------------------------------------------------------------------
             // Helper functions that subclasses might call during run
             bool handlePostGroundOptions(Program &prg);
@@ -74,13 +74,15 @@ namespace GroundPlog {
             virtual const int*  getSignals()    const;
             virtual HelpOpt     getHelpOption() const { return HelpOpt("Print {1=basic|2=more|3=full} help and exit", 3); }
             virtual PosOption   getPositional() const { return parsePositional; }
-            virtual void        initOptions(ProgramOptions::OptionContext& root);
-            virtual void        validateOptions(const ProgramOptions::OptionContext& root, const ProgramOptions::ParsedOptions& parsed, const ProgramOptions::ParsedValues& values);
+            virtual void        initOptions(Potassco::ProgramOptions::OptionContext& root);
+            virtual void        validateOptions(const Potassco::ProgramOptions::OptionContext& root,
+                                const Potassco::ProgramOptions::ParsedOptions& parsed,
+                                const Potassco::ProgramOptions::ParsedValues& values);
             virtual void        setup();
             virtual void        run();
             virtual void        shutdown();
             virtual bool        onSignal(int);
-            virtual void        printHelp(const ProgramOptions::OptionContext& root);
+            virtual void        printHelp(const Potassco::ProgramOptions::OptionContext& root);
             virtual void        printVersion();
             static  bool        parsePositional(const std::string& s, std::string& out);
             // -------------------------------------------------------------------------------------------
@@ -117,7 +119,7 @@ namespace GroundPlog {
             }
         protected:
             virtual void        run(GroundPlogFacade& clasp);
-            virtual void        printHelp(const ProgramOptions::OptionContext& root);
+            virtual void        printHelp(const Potassco::ProgramOptions::OptionContext& root);
         private:
             GroundPlogApp(const GroundPlogApp&);
             GroundPlogApp& operator=(const GroundPlogApp&);

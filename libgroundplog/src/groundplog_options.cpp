@@ -1,7 +1,7 @@
 
 #include <groundplog/cli/groundplog_options.h>
-#include <program_opts/program_options.h>
-#include <program_opts/errors.h>
+#include <potassco/program_opts/program_options.h>
+#include <potassco/program_opts/errors.h>
 
 namespace GroundPlog {
     namespace Cli {
@@ -30,9 +30,9 @@ namespace GroundPlog {
             return true;
         }
 
-        bool GroundPlog::Cli::GroundPlogCliConfig::finalize(const ProgramOptions::ParsedOptions &parsed,
+        bool GroundPlog::Cli::GroundPlogCliConfig::finalize(const Potassco::ProgramOptions::ParsedOptions &parsed,
                                                             bool applyDefaults) {
-            ParsedOpts temp;
+            Potassco::ProgramOptions::ParsedOptions temp;
             return finalizeAppConfig(this, parsed, applyDefaults);
 
         }
@@ -49,14 +49,14 @@ namespace GroundPlog {
         static inline bool isOption(int k) { return k >= option_category_nodes_end && k < detail__num_options; }
 
 // Type for storing one command-line option.
-        class GroundPlogCliConfig::ProgOption : public ProgramOptions::Value {
+        class GroundPlogCliConfig::ProgOption : public  Potassco::ProgramOptions::Value {
         public:
-            ProgOption(GroundPlogCliConfig &c, int o) : ProgramOptions::Value(0), config_(&c), option_(o) {}
+            ProgOption(GroundPlogCliConfig &c, int o) :  Potassco::ProgramOptions::Value(0), config_(&c), option_(o) {}
 
             bool doParse(const std::string &opt, const std::string &value) {
                 int ret = isOption(option_) ? config_->setActive(option_, value.c_str()) : throw "not implemented";
                 if (ret == -1) {
-                    throw ProgramOptions::UnknownOption(config_->isGenerator() ? "<plog>" : throw "not implemented", opt);
+                    throw  Potassco::ProgramOptions::UnknownOption(config_->isGenerator() ? "<plog>" : throw "not implemented", opt);
                 }
                 return ret > 0;
             }
@@ -76,13 +76,13 @@ namespace GroundPlog {
             return true;
         }
 
-        void GroundPlog::Cli::GroundPlogCliConfig::addOptions(ProgramOptions::OptionContext &root) {
+        void GroundPlog::Cli::GroundPlogCliConfig::addOptions(Potassco::ProgramOptions::OptionContext &root) {
             createOptions();
-            using namespace ProgramOptions;
+            using namespace  Potassco::ProgramOptions;
             OptionGroup configOpts("Clasp.Config Options");
             OptionGroup solving("Clasp.Solving Options");
             OptionGroup asp("Clasp.ASP Options");
-            OptionGroup search("Clasp.Search Options", ProgramOptions::desc_level_e1);
+            OptionGroup search("Clasp.Search Options", Potassco::ProgramOptions::desc_level_e1);
            configOpts.addOption(*opts_->begin());
             configOpts.addOption(*(opts_->end() - 1));
             for (Options::option_iterator it = opts_->begin() + 1, end = opts_->end() - 1; it != end; ++it) {
@@ -101,7 +101,7 @@ namespace GroundPlog {
         void GroundPlog::Cli::GroundPlogCliConfig::createOptions() {
             if (opts_.get()) { return; }
             opts_ = new Options();
-            using namespace ProgramOptions;
+            using namespace Potassco::ProgramOptions;
 
             opts_->addOptions()("configuration",
                                 createOption(meta_config)->defaultsTo("auto")->state(Value::value_defaulted),

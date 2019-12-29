@@ -193,16 +193,13 @@ GroundPlog::ExactDCOSolve::call_clingo(Clingo::Control *clingoCtrl, std::unorder
 
     }
 
-
+    auto modelIterator = clingoCtrl->solve();
     // find the first model:
-    Clingo::SolveIteratively solveit = clingoCtrl->solve_iteratively();
-    Clingo::Model m1 = solveit.next();
+    auto const &  m1 = modelIterator.next();
 
     ClingoModelRep mr = modelToASPIfs(m1, clingoCtrl);
-    Clingo::Model m2 = solveit.next();
+    auto const & m2 = modelIterator.next();
     //std::cout << "MODEL3: " << m1 << std::endl;
-
-    solveit.close();
     // assign the externals back to FREE:
     for(const Clingo::Symbol &s: assignedSymbols) {
         clingoCtrl->assign_external(s, Clingo::TruthValue::False);
