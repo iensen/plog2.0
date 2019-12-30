@@ -1,6 +1,4 @@
 // {{{ GPL License
-
-// This file is part of gringo - a grounder for logic programs.
 // Copyright (C) 2016  Evgenii Balai
 
 // This program is free software: you can redistribute it and/or modify
