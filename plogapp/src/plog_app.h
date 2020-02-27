@@ -36,7 +36,7 @@ public:
 
     void shutdown() override;
 protected:
-    enum Mode { mode_plog = 0, mode_ground_plog = 1, mode_gringo = 2 };
+    enum Mode { mode_query = 0, mode_possible_worlds = 1 };
     void        initOptions(Potassco::ProgramOptions::OptionContext& root) override;
     void        validateOptions(const Potassco::ProgramOptions::OptionContext& root, const Potassco::ProgramOptions::ParsedOptions& parsed, const Potassco::ProgramOptions::ParsedValues& vals) override;
     void        run(GroundPlog::GroundPlogFacade& clasp) override;

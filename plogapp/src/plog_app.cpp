@@ -92,12 +92,10 @@ void PlogApp::initOptions(Potassco::ProgramOptions::OptionContext &root) {
     OptionGroup basic("Basic Options");
     // add basic options
     basic.addOptions()
-            ("mode", storeTo(mode_ = mode_plog, values<Mode>()
-                     ("clingo", mode_plog)
-                     ("clasp", mode_ground_plog)
-    ("gringo", mode_gringo)),
-             "Run in {clingo|clasp|gringo} mode\n")
-            ;
+            ("mode", storeTo(mode_ = mode_query, values<Mode>()
+                     ("query", mode_query)
+                     ("pw", mode_possible_worlds)),
+             "Run in {query|compute possible wolrds} mode\n");
     root.add(basic);
 
 }
@@ -105,37 +103,19 @@ void PlogApp::initOptions(Potassco::ProgramOptions::OptionContext &root) {
 void PlogApp::validateOptions(const Potassco::ProgramOptions::OptionContext &root, const Potassco::ProgramOptions::ParsedOptions &parsed,
                               const Potassco::ProgramOptions::ParsedValues &vals) {
 	 BaseType::validateOptions(root, parsed, vals);
-	    if (parsed.count("text") > 0) {
-	        if (parsed.count("output") > 0) {
-	            error("'--text' and '--output' are mutually exclusive!");
-	            exit(E_NO_RUN);
-	        }
-	        if (parsed.count("mode") > 0 && mode_ != mode_gringo) {
-	            error("'--text' can only be used with '--mode=gringo'!");
-	            exit(E_NO_RUN);
-	        }
-	        mode_ = mode_gringo;
-	    }
-	    if (parsed.count("output") > 0) {
-	        if (parsed.count("mode") > 0 && mode_ != mode_gringo) {
-	            error("'--output' can only be used with '--mode=gringo'!");
-	            exit(E_NO_RUN);
-	        }
-	        mode_ = mode_gringo;
-	    }
 }
 
 void PlogApp::run(GroundPlog::GroundPlogFacade &groundPlog) {
     printVersion();
     try {
         using namespace std::placeholders;
-        if (mode_ != mode_ground_plog) {
+        if (mode_ == mode_query) {
             groundPlog.start(groundPlogConfig_);
             grd = Gringo::gringo_make_unique<PlogControl>(groundPlog_.get(), groundPlogConfig_, std::bind(&PlogApp::handlePostGroundOptions, this, _1), std::bind(&PlogApp::handlePreSolveOptions, this, _1),nullptr);
             grd->parse(groundPlogAppOpts_.input, grOpts_);
             grd->main();
         }
-        else {
+        else if(mode_ == mode_possible_worlds){
             //GroundPlogAppBase::run(groundPlog);
             throw "not implemented!";
         }
