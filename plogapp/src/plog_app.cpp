@@ -109,15 +109,14 @@ void PlogApp::run(GroundPlog::GroundPlogFacade &groundPlog) {
     printVersion();
     try {
         using namespace std::placeholders;
+        groundPlog.start(groundPlogConfig_);
+        grd = Gringo::gringo_make_unique<PlogControl>(groundPlog_.get(), groundPlogConfig_, std::bind(&PlogApp::handlePostGroundOptions, this, _1), std::bind(&PlogApp::handlePreSolveOptions, this, _1),nullptr);
+        grd->parse(groundPlogAppOpts_.input, grOpts_);
         if (mode_ == mode_query) {
-            groundPlog.start(groundPlogConfig_);
-            grd = Gringo::gringo_make_unique<PlogControl>(groundPlog_.get(), groundPlogConfig_, std::bind(&PlogApp::handlePostGroundOptions, this, _1), std::bind(&PlogApp::handlePreSolveOptions, this, _1),nullptr);
-            grd->parse(groundPlogAppOpts_.input, grOpts_);
-            grd->main();
+              grd->computeQuery();
         }
         else if(mode_ == mode_possible_worlds){
-            //GroundPlogAppBase::run(groundPlog);
-            throw "not implemented!";
+            grd->computePossibleWorlds();
         }
     }
     catch (Gringo::GringoError const &e) {

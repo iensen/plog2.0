@@ -88,12 +88,22 @@ void PlogControl::parse(const PlogControl::StringVec &files, const PlogOptions &
 
 }
 
-void PlogControl::main() {
+void PlogControl::computeQuery(){
     groundPlogConfig_.releaseOptions();
     ground();
-    solve();
 
+    // solve (this is needed to make sure that the rules are passed from gringo to clasp:
+    clingoControl.solve();
+    solve();
 }
+
+void PlogControl::computePossibleWorlds(){
+    groundPlogConfig_.releaseOptions();
+    ground();
+    //groundplog_->call_clingo()
+}
+
+
 const unsigned messageLimit = 20;
 PlogControl::PlogControl(GroundPlog::GroundPlogFacade *groundplog,
                          GroundPlog::Cli::GroundPlogCliConfig &groundplogConfig,
@@ -164,8 +174,7 @@ void PlogControl::ground() {
     clingoControl.register_observer(*pb);
     clingoControl.ground({{"base", {}}});
 
-    // solve (this is needed to make sure that the rules are passed from gringo to clasp:
-    clingoControl.solve();
+
     //solveit.next();
     // we actually don't need the model, just close it
     //solveit.close();

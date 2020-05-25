@@ -64,7 +64,7 @@ Statement::~Statement() {
 // for a term of the form term rel term, where term is not con
 // structed from an attribute term, return {term rel term, true}
 // to do: get rid of this and construct clingo terms directly
-std::pair<Gringo::UTerm,bool>  Statement::term(Plog::ULit & lit) {
+std::pair<Gringo::UTerm, bool>  Statement::term(Plog::ULit & lit) {
         if (FunctionTerm *fterm = dynamic_cast<FunctionTerm *>(lit->lt.get())) {
             String name = fterm->name;
             UTermVec &args = fterm->args;

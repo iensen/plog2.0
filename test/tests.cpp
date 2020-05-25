@@ -76,6 +76,10 @@ TEST(NEWVERSION, 15) {
     ASSERT_NEAR(run_plog("plogapp/tests/do1.plog"), 0.3, 1e-5);
 }
 
+TEST(NEWVERSION, CLINGO_CONSEQUENCES) {
+    ASSERT_NEAR(run_plog("plogapp/tests/clingocons.plog"), 0.5, 1e-5);
+}
+
 TEST(OLDVERSION_NAIVE_BLOCKS, _5x1) {
     ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap5_1.plg",OldPlogMode::NAIVE), 0.4, 1e-5);
 }

@@ -5,8 +5,7 @@
 
 #include <groundplog/solve_algorithms.h>
 #include<queue>
-
-
+#include <groundplog/clingo_control.h>
 
 
 GroundPlog::SolveResult GroundPlog::ExactDCOSolve::run(GroundPlog::Program *prg, Clingo::Control *cControl) {
@@ -179,34 +178,23 @@ std::unordered_set<unsigned int> GroundPlog::ExactDCOSolve::P(const State &S) {
 
 GroundPlog::Clingo_Result
 GroundPlog::ExactDCOSolve::call_clingo(Clingo::Control *clingoCtrl, std::unordered_set<unsigned> activeRules) {
-    //std::cout <<"CLINGO CALLED" << std::endl;
-    // assign externals:
-    Clingo::SymbolicAtoms ats = clingoCtrl->symbolic_atoms();
+    std::function<bool(unsigned int)> isRuleActive = [&activeRules](unsigned int externAtomId) {
+        return activeRules.find(externAtomId) != activeRules.end();
+    };
+    auto control = PlogClingoControl(clingoCtrl, isRuleActive);
 
-    std::vector<Clingo::Symbol> assignedSymbols;
-    for(auto it = ats.begin(); it!=ats.end();it++) {
-        if(activeRules.find(abs(it->literal()))!=activeRules.end()) {
-            assignedSymbols.push_back(it->symbol());
-            //std:: cout << it->symbol().to_string();
-            clingoCtrl->assign_external(it->symbol(), Clingo::TruthValue::True);
-        }
-
-    }
-
-    auto modelIterator = clingoCtrl->solve();
+    auto modelIterator = control.getModels();
     // find the first model:
     auto const &  m1 = modelIterator.next();
+    bool hadFirstModel = bool(m1);
 
+    // this ClingoModelRep construction has to
+    // occur here because right after we call .next()
+    // m1 will be destroyed!
     ClingoModelRep mr = modelToASPIfs(m1, clingoCtrl);
     auto const & m2 = modelIterator.next();
-    //std::cout << "MODEL3: " << m1 << std::endl;
-    // assign the externals back to FREE:
-    for(const Clingo::Symbol &s: assignedSymbols) {
-        clingoCtrl->assign_external(s, Clingo::TruthValue::False);
-    }
 
-
-    if(!m1 || m2) { // we don't have exactly one model!
+    if(!hadFirstModel || m2) { // we don't have exactly one model!
         return Clingo_Result{false, mr};
     } else {
         // here we have exactly one model m1

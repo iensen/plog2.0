@@ -85,7 +85,9 @@ public:
     ~PlogControl() noexcept override;
     void parse();
     void parse(const StringVec&  files, const PlogOptions& opts);
-    void main();
+    void computeQuery();
+    void computePossibleWorlds();
+
     void onFinish(GroundPlog::GroundPlogFacade::Result ret);
     bool update();
 

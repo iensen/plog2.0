@@ -28,9 +28,7 @@ GroundPlog::Program &GroundPlog::GroundPlogFacade::start(GroundPlog::GroundPlogC
 
 GroundPlog::GroundPlogFacade::Result
 GroundPlog::GroundPlogFacade::solve(Clingo::Control *clctl) {
-
-    // this is apparently memory leak!
-    SolveAlgorithm*  algo = config_->solve.createSolveObject();
+    std::unique_ptr<SolveAlgorithm>  algo(config_->solve.createSolveObject());
     return algo->run(static_cast<GroundPlog::Program *>(this->program()), clctl);
 }
 
