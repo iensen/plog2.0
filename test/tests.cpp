@@ -413,15 +413,6 @@ TEST(NEWVERSION_SQ, _1) {
     ASSERT_NEAR(run_plog("plogapp/tests/squirrel.plog"), 0.152380, 1e-4);
 }
 
-
-
-
-
-
-
-
-
-
 int main(int argc, char **argv) {
     //int PATH_MAX = 100500;
 
