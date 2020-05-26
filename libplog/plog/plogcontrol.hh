@@ -10,6 +10,7 @@
 #include <groundplog/program.h>
 #include <groundplog/groundplog_facade.h>
 #include <groundplog/cli/groundplog_options.h>
+#include <groundplog/solve_algorithms.h>
 #include <potassco/application.h>
 #include <potassco/string_convert.h>
 #include <mutex>
@@ -36,7 +37,7 @@ struct plog_control {
     using FreeControlFunc = void (*)(Gringo::Control *);
     virtual Gringo::SymbolicAtoms &getDomain() = 0;
     virtual void ground() = 0;
-    virtual Gringo::SolveResult solve() = 0;
+    virtual Gringo::SolveResult solve(GroundPlog::AlgorithmKind) = 0;
     virtual void interrupt() = 0;
     virtual void add(std::string const &name,  Gringo::StringVec const &, std::string const &part) = 0;
     virtual void load(std::string const &filename) = 0;
@@ -85,7 +86,7 @@ public:
     ~PlogControl() noexcept override;
     void parse();
     void parse(const StringVec&  files, const PlogOptions& opts);
-    void computeQuery();
+    void computeQuery(GroundPlog::AlgorithmKind algo);
     void computePossibleWorlds();
 
     void onFinish(GroundPlog::GroundPlogFacade::Result ret);
@@ -129,7 +130,7 @@ public:
     void ground();
     void add(std::string const &name,  Gringo::StringVec const &params, std::string const &part) override;
     void load(std::string const &filename) override;
-    Gringo::SolveResult solve() override;
+    Gringo::SolveResult solve(GroundPlog::AlgorithmKind) override;
     std::string str();
     Gringo::Symbol getConst(std::string const &name) override;
     void interrupt() override;

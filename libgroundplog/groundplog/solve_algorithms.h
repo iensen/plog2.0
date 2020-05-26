@@ -16,10 +16,14 @@
 #include <unordered_set>
 #include "state.h"
 
-
 using ClingoModelRep= std::vector<clingo_literal_t>;
 
 namespace GroundPlog {
+
+    enum class AlgorithmKind {
+        for_dco,
+        naive
+    };
 
     struct Clingo_Result {
         bool unique_model;
@@ -54,6 +58,14 @@ namespace GroundPlog {
                                                                    const AttributeSelectionHeuristic &heu,
                                                                    const ValueSelectionHeuristic &heuv,
                                                                    ATTID selectedATT);
+    };
+
+    class NaiveSolve : public SolveAlgorithm {
+    private:
+
+    public:
+        NaiveSolve(){};
+        virtual SolveResult run(Program *pr, Clingo::Control *pControl) override;
     };
 }
 

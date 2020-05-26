@@ -413,6 +413,12 @@ TEST(NEWVERSION_SQ, _1) {
     ASSERT_NEAR(run_plog("plogapp/tests/squirrel.plog"), 0.152380, 1e-4);
 }
 
+TEST(NEWVERSION_NAIVE, _5x3) {
+    // TODO: the correct answer is not 0.0, just locking down that the code reaches the correct place.
+    ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Poker/poker_5_3.txt", NewPlogMode::QUERY_NAIVE), 0.0, 1e-5);
+}
+
+
 int main(int argc, char **argv) {
     //int PATH_MAX = 100500;
 
@@ -427,7 +433,7 @@ int main(int argc, char **argv) {
     // ::testing::GTEST_FLAG(filter) = "OLDVERSION_NAIVE_POKER._*";
     // ::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._5x3";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._fgl4rdn";
-    ::testing::GTEST_FLAG(filter) = "NEWVERSION*";
+    ::testing::GTEST_FLAG(filter) = "NEWVERSION_NAIVE*";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._*";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS._*";
 

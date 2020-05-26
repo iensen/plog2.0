@@ -193,13 +193,7 @@ GroundPlog::ExactDCOSolve::call_clingo(Clingo::Control *clingoCtrl, std::unorder
     // m1 will be destroyed!
     ClingoModelRep mr = modelToASPIfs(m1, clingoCtrl);
     auto const & m2 = modelIterator.next();
-
-    if(!hadFirstModel || m2) { // we don't have exactly one model!
-        return Clingo_Result{false, mr};
-    } else {
-        // here we have exactly one model m1
-        return Clingo_Result{true, mr};
-    }
+    return Clingo_Result{hadFirstModel &&  !m2, mr};
 }
 
 
@@ -227,3 +221,8 @@ GroundPlog::ExactDCOSolve::GetCompletionProbA( State &S,Clingo::Control *cContro
     return std::tuple<bool, double, double>{true, satsum, totalsum};
 }
 
+
+
+GroundPlog::SolveResult GroundPlog::NaiveSolve::run(GroundPlog::Program *prg, Clingo::Control *cControl) {
+    return {true, 0.0};
+}

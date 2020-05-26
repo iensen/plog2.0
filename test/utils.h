@@ -24,6 +24,11 @@ enum class OldPlogMode {
     NAIVE, DCOOPTIMIZED
 };
 
+enum class NewPlogMode {
+    QUERY_DCO, QUERY_NAIVE,POSSIBLE_WORLDS,CAUSES
+};
+
+
 double stringtoDouble(const std::string &s) {
     std::stringstream ss;
     ss << s;
@@ -53,20 +58,32 @@ double parse_new_plog_output(std::string out) {
     return stringtoDouble(out.substr(index));
 }
 
-double run_plog(std::string file) {
+double run_plog(const std::string& file, NewPlogMode mode = NewPlogMode::QUERY_DCO) {
     PlogApp app;
-    char ** f = new char*[3];
-    f[1] = new char[file.length()+1];
-    f[0] = new char[5];
-    f[2] = nullptr;
-    strcpy(f[0],"plog");
-    strcpy(f[1],file.c_str());
+    char ** argv = new char*[4];
+    argv[1] = new char[file.length() + 1];
+    argv[0] = new char[5];
+    argv[2] = nullptr;
+    // our parser requires that argv[end] is nullptr
+    argv[3] = nullptr;
+    strcpy(argv[0], "plog");
+    strcpy(argv[1], file.c_str());
     testing::internal::CaptureStdout();
-    app.main(2, f);
+    switch(mode) {
+        case NewPlogMode::QUERY_DCO: {
+            app.main(2, argv);
+            break;
+        }
+        default:
+            assert(mode == NewPlogMode::QUERY_NAIVE);
+            const std::string naiveAlgoOption = "--algo=naive";
+            argv[2] = const_cast<char*>(naiveAlgoOption.c_str());
+            app.main(3, argv);
+    }
     std::string output = testing::internal::GetCapturedStdout();
-    delete[] f[0];
-    delete[] f[1];
-    delete[] f;
+    delete[] argv[0];
+    delete[] argv[1];
+    delete[] argv;
     return parse_new_plog_output(output);
 }
 

@@ -27,8 +27,8 @@ GroundPlog::Program &GroundPlog::GroundPlogFacade::start(GroundPlog::GroundPlogC
 
 
 GroundPlog::GroundPlogFacade::Result
-GroundPlog::GroundPlogFacade::solve(Clingo::Control *clctl) {
-    std::unique_ptr<SolveAlgorithm>  algo(config_->solve.createSolveObject());
+GroundPlog::GroundPlogFacade::solve(Clingo::Control *clctl, AlgorithmKind algoKind) {
+    std::unique_ptr<SolveAlgorithm>  algo(config_->solve.createSolveObject(algoKind));
     return algo->run(static_cast<GroundPlog::Program *>(this->program()), clctl);
 }
 

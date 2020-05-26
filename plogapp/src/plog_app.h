@@ -1,7 +1,6 @@
 // {{{ GPL License
 
-// This file is part of gringo - a grounder for logic programs.
-// Copyright (C) 2016  Evgenii Balai
+// Copyright (C) 2020  Evgenii Balai
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -53,6 +52,8 @@ protected:
 private:
     PlogOptions grOpts_;
     Mode mode_;
+    // algorithm used to answer queries
+    GroundPlog::AlgorithmKind algo_;
     std::unique_ptr<PlogControl> grd;
 };
 

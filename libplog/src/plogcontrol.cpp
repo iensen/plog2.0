@@ -88,13 +88,13 @@ void PlogControl::parse(const PlogControl::StringVec &files, const PlogOptions &
 
 }
 
-void PlogControl::computeQuery(){
+void PlogControl::computeQuery(GroundPlog::AlgorithmKind algo){
     groundPlogConfig_.releaseOptions();
     ground();
 
     // solve (this is needed to make sure that the rules are passed from gringo to clasp:
     clingoControl.solve();
-    solve();
+    solve(algo);
 }
 
 void PlogControl::computePossibleWorlds(){
@@ -140,10 +140,9 @@ std::string PlogControl::str() {
     throw "not implemented yet";
 }
 
-Gringo::SolveResult PlogControl::solve() {
-
-    auto res = groundplog_->solve(&clingoControl);
-    if(!res.is_dco) {
+Gringo::SolveResult PlogControl::solve(GroundPlog::AlgorithmKind algo) {
+    auto res = groundplog_->solve(&clingoControl, algo);
+    if(algo == GroundPlog::AlgorithmKind::for_dco && !res.success) {
         fprintf(stderr, "ERROR: the program is not dynamically causally ordered\n");
     } else {
         printf("answer: %f\n", res.prob);

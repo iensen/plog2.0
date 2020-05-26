@@ -12,9 +12,9 @@
 namespace GroundPlog {
 
 struct SolveResult {
-    bool is_dco;
+    bool success;
     double prob;
-    SolveResult(bool is_dco, double prob):is_dco(is_dco), prob(prob){}
+    SolveResult(bool success, double prob):success(success), prob(prob){}
 };
 }
 #endif //PLOG_SOLVINGRES_H

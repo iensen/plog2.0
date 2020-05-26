@@ -17,7 +17,14 @@ namespace GroundPlog {
 
 
     struct SolveOptions {
-            SolveAlgorithm* createSolveObject() const { return new ExactDCOSolve(); }
+            SolveAlgorithm* createSolveObject(AlgorithmKind algoKind) const {
+                if (algoKind == AlgorithmKind::for_dco) {
+                    return new ExactDCOSolve();
+                } else {
+                    assert(algoKind == AlgorithmKind::naive);
+                    return new NaiveSolve();
+                }
+            }
     };
 
     struct ParserOptions{};
@@ -81,7 +88,7 @@ namespace GroundPlog {
         //! Starts definition of a P-log problem
         Program& start(GroundPlogConfig & config);
 
-        Result solve(Clingo::Control *ctl);
+        Result solve(Clingo::Control *ctl, AlgorithmKind algo);
 
 
     private:
