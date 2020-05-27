@@ -32,7 +32,7 @@ namespace Plog {
 
         Gringo::Input::Program toGringo();
 
-        void loadToControl(Clingo::Control &ctl);
+        void loadToControl(Clingo::Control &ctl, AlgorithmKind algo);
 
         ~Program();
 

@@ -17,6 +17,8 @@
 #include<gringo/input/aggregates.hh>
 #include<clingo.hh>
 #include <plog/plogparser.h>
+#include <plog/plog.h>
+
 
 enum class StatementType { RULE, PR_ATOM, QUERY};
 using Gringo::Input::ToGroundArg;
@@ -37,7 +39,7 @@ struct Statement : Gringo::Printable, Gringo::Locatable {
     // this should ground the statement and store the result in stms (collection of gringo statements!)
     virtual void toGround(ToGroundArg &x, UStmVec &stms) const;
     virtual ~Statement();
-    std::vector<Clingo::AST::Statement> toGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec);
+    std::vector<Clingo::AST::Statement> toGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec, AlgorithmKind algo);
     StatementType  getType();
 
 private:
@@ -52,7 +54,7 @@ private:
 
     std::vector<Clingo::AST::Statement> prAtomToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec);
     std::vector<Clingo::AST::Statement>queryToGringoAST();
-    std::vector<Clingo::AST::Statement> ruleToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec);
+    std::vector<Clingo::AST::Statement> ruleToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec, AlgorithmKind algo);
 
     static int rule_id;
     Plog::ULit     head_;

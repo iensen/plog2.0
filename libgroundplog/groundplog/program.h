@@ -133,7 +133,7 @@ namespace GroundPlog {
 
         void fill_vall_candidates();
 
-        void finalize();
+        void finalize(bool solvingForDCO);
 
         // checking properties of a progeam:
         bool isRandom(ATTID attid);

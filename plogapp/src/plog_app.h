@@ -53,7 +53,7 @@ private:
     PlogOptions grOpts_;
     Mode mode_;
     // algorithm used to answer queries
-    GroundPlog::AlgorithmKind algo_;
+    AlgorithmKind algo_;
     std::unique_ptr<PlogControl> grd;
 };
 

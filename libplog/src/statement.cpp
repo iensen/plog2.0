@@ -93,11 +93,12 @@ StatementType Statement::getType() {
 
 
 
-std::vector<Clingo::AST::Statement> Statement::toGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec) {
+std::vector<Clingo::AST::Statement> Statement::toGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec,
+        AlgorithmKind algo) {
     switch(type_) {
         case StatementType::PR_ATOM: return prAtomToGringoAST(attdecls, sortDefVec);
         case StatementType::QUERY:   return queryToGringoAST();
-        default: return ruleToGringoAST(attdecls, sortDefVec);
+        default: return ruleToGringoAST(attdecls, sortDefVec, algo);
     }
 }
 
@@ -137,7 +138,7 @@ std::vector<Clingo::AST::Statement> Statement::queryToGringoAST() {
     return {{loc, f_r}};
 }
 
-std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec) {
+std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec, AlgorithmKind algo) {
     std::vector<Clingo::AST::Statement> result;
     // generate a rule of the form head :- body, sort_atoms, ex_atom
     auto    fterm = term(head_);
@@ -170,11 +171,11 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
         result.emplace_back(Clingo::AST::Statement{defaultLoc, ext}); //2
     }
 
-    // if the rule is of the form random(a(t),p) :- B,
+    // if the rule is of the form random(a(t),p) :- B, and the algo is for_dco
     // 1. add rules a(t,y):- __ext(a(t,y)) for every y from the range of a(t)
     // 2. add rules #external __ext(a(t,y)):sorts for the head to the program
     // f_str stores random(a(t),p)
-    if(f_str.find("random(") == 0 ) {// if the head is a random atom
+    if(algo == AlgorithmKind::for_dco && f_str.find("random(") == 0 ) {// if the head is a random atom
         // fgterm stores random(
         FunctionTerm* fgterm = (FunctionTerm*) (fterm.first.get()); //
 
@@ -219,7 +220,7 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
             Clingo::AST::External ext = Clingo::AST::External{ext_term,bodylits,make_term("false")};
             result.emplace_back(Clingo::AST::Statement{defaultLoc, ext}); //2
         }
-        // add the atom of the form __range(a,s), where a is the atom name and s is the sort
+        // add the atom of the form __range(a,s), where a is the term name and s is the sort
         std::vector<Clingo::AST::Term> rargs;
         rargs.push_back(make_term(termName));
         rargs.push_back(make_term(resSort->toString().c_str()));

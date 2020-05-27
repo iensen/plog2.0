@@ -224,5 +224,13 @@ GroundPlog::ExactDCOSolve::GetCompletionProbA( State &S,Clingo::Control *cContro
 
 
 GroundPlog::SolveResult GroundPlog::NaiveSolve::run(GroundPlog::Program *prg, Clingo::Control *cControl) {
+    std::function<bool(unsigned int)> isRuleActive = [](unsigned int) {
+        return true;
+    };
+    auto control = PlogClingoControl(cControl, isRuleActive);
+    for(auto const & model : control.getModels()) {
+        //std::cout << model;
+    }
+
     return {true, 0.0};
 }

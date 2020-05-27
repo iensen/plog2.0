@@ -58,15 +58,15 @@ namespace Plog {
     }
 
 
-    void Program::loadToControl(Clingo::Control &ctl) {
+    void Program::loadToControl(Clingo::Control &ctl, AlgorithmKind algo) {
         auto b = ctl.builder();
         Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
         b.add({loc, Clingo::AST::Program{"base", {}}});
         // add program rules:
         for (const UStm &stm: stms_) {
-            auto rules = stm->toGringoAST(attdecls_, sortdefs_);
+            auto rules = stm->toGringoAST(attdecls_, sortdefs_, algo);
             for (const auto &rule: rules) {
-                //std::cout << rule << std::endl;
+                // std::cout << rule << std::endl;
                 b.add(rule);
             }
         }

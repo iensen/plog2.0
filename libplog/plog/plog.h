@@ -32,4 +32,8 @@ enum plog_error {
 //! Corresponding type to ::plog_error.
 typedef int plog_error_t;
 
+enum class AlgorithmKind {
+    for_dco,
+    naive
+};
 #endif //PLOG_PLOG_H

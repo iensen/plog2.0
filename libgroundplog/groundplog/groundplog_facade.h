@@ -10,6 +10,7 @@
 #include<groundplog/program.h>
 #include<vector>
 #include <clingo.hh>
+#include "plog/plog.h"
 
 //! Provides a simplified interface to the services of the Ground Plog library.
 namespace GroundPlog {

@@ -70,6 +70,7 @@ bool PlogControl::external(Gringo::SymbolicAtomIter it) const {
 void PlogControl::parse(const PlogControl::StringVec &files, const PlogOptions &opts) {
     using namespace Gringo;
     // make empty theory data
+
     std::unique_ptr<Potassco::TheoryData> data = gringo_make_unique<Potassco::TheoryData>();
     Output::OutputPredicates outPreds;
     for (auto &x : opts.foobar) {
@@ -88,13 +89,13 @@ void PlogControl::parse(const PlogControl::StringVec &files, const PlogOptions &
 
 }
 
-void PlogControl::computeQuery(GroundPlog::AlgorithmKind algo){
+void PlogControl::computeQuery(){
     groundPlogConfig_.releaseOptions();
     ground();
 
     // solve (this is needed to make sure that the rules are passed from gringo to clasp:
     clingoControl.solve();
-    solve(algo);
+    solve();
 }
 
 void PlogControl::computePossibleWorlds(){
@@ -109,13 +110,15 @@ PlogControl::PlogControl(GroundPlog::GroundPlogFacade *groundplog,
                          GroundPlog::Cli::GroundPlogCliConfig &groundplogConfig,
                          PlogControl::PostGroundFunc pgf,
                          PlogControl::PreSolveFunc psf,
-                         Gringo::Logger::Printer printer):
+                         Gringo::Logger::Printer printer,
+                         bool solvingDCO):
  groundplog_(groundplog)
 , groundPlogConfig_(groundplogConfig)
 , pgf_(pgf)
 , psf_(psf)
 ,logger_(printer),
- clingoControl{{"0"}, [](Clingo::WarningCode, char const *message) {}, messageLimit}
+ clingoControl{{"0"}, [](Clingo::WarningCode, char const *message) {}, messageLimit},
+ solvingDCO(solvingDCO)
 {
 
 }
@@ -140,9 +143,9 @@ std::string PlogControl::str() {
     throw "not implemented yet";
 }
 
-Gringo::SolveResult PlogControl::solve(GroundPlog::AlgorithmKind algo) {
-    auto res = groundplog_->solve(&clingoControl, algo);
-    if(algo == GroundPlog::AlgorithmKind::for_dco && !res.success) {
+Gringo::SolveResult PlogControl::solve() {
+    auto res = groundplog_->solve(&clingoControl, solvingDCO? AlgorithmKind::for_dco:AlgorithmKind::naive);
+    if(solvingDCO && !res.success) {
         fprintf(stderr, "ERROR: the program is not dynamically causally ordered\n");
     } else {
         printf("answer: %f\n", res.prob);
@@ -168,7 +171,7 @@ void PlogControl::ground() {
         }
         parsed = false;
     }
-    prg_.loadToControl(clingoControl);
+    prg_.loadToControl(clingoControl, solvingDCO?AlgorithmKind::for_dco:AlgorithmKind::naive);
     pb = new PlogGroundProgramBuilder(*out_);
     clingoControl.register_observer(*pb);
     clingoControl.ground({{"base", {}}});

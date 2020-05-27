@@ -20,11 +20,6 @@ using ClingoModelRep= std::vector<clingo_literal_t>;
 
 namespace GroundPlog {
 
-    enum class AlgorithmKind {
-        for_dco,
-        naive
-    };
-
     struct Clingo_Result {
         bool unique_model;
         ClingoModelRep m;

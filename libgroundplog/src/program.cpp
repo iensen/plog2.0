@@ -373,18 +373,17 @@ namespace GroundPlog {
     }
 
 
-    void Program::finalize() {
+    void Program::finalize(bool solvingForDCO) {
+        if(solvingForDCO) {
+            fill_vall_candidates();
+            fill_val_candidates_vects();
+            rewrite_att_vals();
 
-        //sort_regular_rules();
-
-        fill_vall_candidates();
-        fill_val_candidates_vects();
-        rewrite_att_vals();
-
-        build_att_occur_map();
-        fill_is_random_map();
-        fill_is_intervened_map();
-        build_random_rule_ranges_map();
+            build_att_occur_map();
+            fill_is_random_map();
+            fill_is_intervened_map();
+            build_random_rule_ranges_map();
+        }
 
     }
 

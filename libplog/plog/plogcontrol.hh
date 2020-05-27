@@ -37,7 +37,7 @@ struct plog_control {
     using FreeControlFunc = void (*)(Gringo::Control *);
     virtual Gringo::SymbolicAtoms &getDomain() = 0;
     virtual void ground() = 0;
-    virtual Gringo::SolveResult solve(GroundPlog::AlgorithmKind) = 0;
+    virtual Gringo::SolveResult solve() = 0;
     virtual void interrupt() = 0;
     virtual void add(std::string const &name,  Gringo::StringVec const &, std::string const &part) = 0;
     virtual void load(std::string const &filename) = 0;
@@ -82,11 +82,12 @@ public:
     enum class ConfigUpdate { KEEP, REPLACE };
 
     PlogControl(GroundPlog::GroundPlogFacade *groundplog,
-                GroundPlog::Cli::GroundPlogCliConfig &groundplogConfig, PostGroundFunc pgf, PreSolveFunc psf,Gringo::Logger::Printer printer);
+                GroundPlog::Cli::GroundPlogCliConfig &groundplogConfig, PostGroundFunc pgf, PreSolveFunc psf,Gringo::Logger::Printer printer,
+                bool solvingDCO);
     ~PlogControl() noexcept override;
     void parse();
     void parse(const StringVec&  files, const PlogOptions& opts);
-    void computeQuery(GroundPlog::AlgorithmKind algo);
+    void computeQuery();
     void computePossibleWorlds();
 
     void onFinish(GroundPlog::GroundPlogFacade::Result ret);
@@ -127,10 +128,10 @@ public:
     // {{{2 Control interface
 
     Gringo::SymbolicAtoms &getDomain() override;
-    void ground();
+    void ground() override ;
     void add(std::string const &name,  Gringo::StringVec const &params, std::string const &part) override;
     void load(std::string const &filename) override;
-    Gringo::SolveResult solve(GroundPlog::AlgorithmKind) override;
+    Gringo::SolveResult solve() override;
     std::string str();
     Gringo::Symbol getConst(std::string const &name) override;
     void interrupt() override;
@@ -157,6 +158,8 @@ public:
     bool parsed                 = false;
     bool grounded               = false;
     bool configUpdate_          = false;
+    // the flag is true if the mode is query mode, and the algorithm is for dco programs
+    bool solvingDCO = false;
 private:
     PlogGroundProgramBuilder *pb;
 };

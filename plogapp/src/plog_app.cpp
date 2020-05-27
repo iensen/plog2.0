@@ -96,7 +96,7 @@ void PlogApp::initOptions(Potassco::ProgramOptions::OptionContext &root) {
                      ("query", mode_query)
                      ("pw", mode_possible_worlds)),
              "Run in {query|compute possible wolrds} mode\n")
-            ("algo", storeTo(algo_ = AlgorithmKind::for_dco, values<GroundPlog::AlgorithmKind>()
+            ("algo", storeTo(algo_ = AlgorithmKind::for_dco, values<AlgorithmKind>()
                      ("for_dco", AlgorithmKind::for_dco)
                      ("naive", AlgorithmKind::naive)),
              "Use {algorithm for dco programs|naive algorithm that computes all possible worlds}\n");
@@ -115,10 +115,11 @@ void PlogApp::run(GroundPlog::GroundPlogFacade &groundPlog) {
     try {
         using namespace std::placeholders;
         groundPlog.start(groundPlogConfig_);
-        grd = Gringo::gringo_make_unique<PlogControl>(groundPlog_.get(), groundPlogConfig_, std::bind(&PlogApp::handlePostGroundOptions, this, _1), std::bind(&PlogApp::handlePreSolveOptions, this, _1),nullptr);
+        grd = Gringo::gringo_make_unique<PlogControl>(groundPlog_.get(), groundPlogConfig_, std::bind(&PlogApp::handlePostGroundOptions, this, _1), std::bind(&PlogApp::handlePreSolveOptions, this, _1),nullptr,
+                algo_== AlgorithmKind::for_dco);
         grd->parse(groundPlogAppOpts_.input, grOpts_);
         if (mode_ == mode_query) {
-              grd->computeQuery(algo_);
+              grd->computeQuery();
         }
         else if(mode_ == mode_possible_worlds){
             grd->computePossibleWorlds();
