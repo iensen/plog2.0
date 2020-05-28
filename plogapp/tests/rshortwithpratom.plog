@@ -1,0 +1,11 @@
+sorts
+#s = {a,b,c}.
+attributes
+p:#s.
+
+statements
+
+random(p).
+pr(p = b) = 1/2.
+
+?p=a.
