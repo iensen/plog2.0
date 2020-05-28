@@ -52,7 +52,7 @@ class PlogGroundProgramBuilder:public GroundProgramObserver {
         // move the externals in the body to the end
       };
 public:
-    PlogGroundProgramBuilder(GroundPlogBackend &out);
+    PlogGroundProgramBuilder(GroundPlogBackend &out, bool isSolvingForDCO);
 private:
     virtual void output_atom(Clingo::Symbol symbol, atom_t atom) override;
     virtual void rule(bool, AtomSpan, LiteralSpan) override;
@@ -96,6 +96,7 @@ private:
 
     void registerAtomInBackend(unsigned int &atom_id);
     bool rulesPassedToBackend = false;
+    bool isSolvingForDCO;
 
 
 };

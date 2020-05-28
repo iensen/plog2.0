@@ -31,7 +31,6 @@ void PlogGroundProgramBuilder::rule(bool choice, AtomSpan headats, LiteralSpan b
 
 }
 
-// question: why is it i need to include the namespace here? Is it C++ bug?
 void PlogGroundProgramBuilder::output_atom(Clingo::Symbol symbol, Clingo::atom_t atom) {
 
     //std::cout << "ATOM ID: " << atom << " SYMBOL: " << symbol.to_string() << std::endl;
@@ -58,7 +57,11 @@ void PlogGroundProgramBuilder::output_atom(Clingo::Symbol symbol, Clingo::atom_t
     }
 
     if(sname.length()>=3 && sname[0]=='_' && sname[1]=='_' && sname[2]=='q') {// query atom ,
-           addQueryToBackend(symbol);
+           // we don't care about query if we use clingo to compute probabilities
+           if(isSolvingForDCO) {
+               addQueryToBackend(symbol);
+           }
+           return;
     }
 
     if(sname == "obs") {
@@ -103,8 +106,8 @@ void PlogGroundProgramBuilder::output_atom(Clingo::Symbol symbol, Clingo::atom_t
      }
 
 }
-
-PlogGroundProgramBuilder::PlogGroundProgramBuilder(GroundPlogBackend &out):out(out) {
+// todo: introduce a proper class hierarchy for this, instead of passing a flag
+PlogGroundProgramBuilder::PlogGroundProgramBuilder(GroundPlogBackend &out, bool forDCOSolving):out(out), isSolvingForDCO(forDCOSolving) {
 
 }
 

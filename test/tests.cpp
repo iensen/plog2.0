@@ -151,12 +151,12 @@ TEST(OLDVERSION_NAIVE_NASA, _fgl4rdn) {
 
 
 
-TEST(NEWVERSION_NASA, _l4) {
+TEST(PERF_NEWVERSION_NASA, _l4) {
     ASSERT_NEAR(run_plog("plogapp/tests/nasa/A4n.plog"), 0.059235, 1e-5);
 }
 
 
-TEST(NEWVERSION_NASA, _fgl4) {
+TEST(PERF_NEWVERSION_NASA, _fgl4) {
     ASSERT_NEAR(run_plog("plogapp/tests/nasa/F.plog"), 0.905719, 1e-5);
 }
 
@@ -349,17 +349,17 @@ TEST(NEWVERSION_BLOCKS, _20x2) {
     ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Blocks/blockmap20_2.plg"), 0.621053, 1e-5);
 }
 
-TEST(NEWVERSION_BLOCKS, _20x3) {
+TEST(PERF_NEWVERSION_BLOCKS, _20x3) {
     ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Blocks/blockmap20_3.plg"), 0.454386, 1e-5);
 }
 
 
-TEST(NEWVERSION_BLOCKS, _20x4) {
+TEST(PERF_NEWVERSION_BLOCKS, _20x4) {
     ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Blocks/blockmap20_4.plg"), 0.308153, 1e-5);
 }
 
 
-TEST(NEWVERSION_BLOCKS, _20x5) {
+TEST(PERF_NEWVERSION_BLOCKS, _20x5) {
     ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Blocks/blockmap20_5.plg"), 0.191692, 1e-5);
 }
 
@@ -381,19 +381,19 @@ TEST(NEWVERSION_POKER, _5x3) {
 }
 
 
-TEST(NEWVERSION_POKER, _5x4) {
+TEST(PERF_NEWVERSION_POKER, _5x4) {
     ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Poker/poker_5_4.txt"), 0.417582, 1e-5);
 }
 
-TEST(NEWVERSION_POKER, _5x5) {
+TEST(PERF_NEWVERSION_POKER, _5x5) {
     ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Poker/poker_5_5.txt"), 0.399897, 1e-5);
 }
 
-TEST(NEWVERSION_POKER, _5x6) {
+TEST(PERF_NEWVERSION_POKER, _5x6) {
     ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Poker/poker_5_6.txt"), 0.547344, 1e-5);
 }
 
-TEST(NEWVERSION_POKER, _5x4x36) {
+TEST(PERF_NEWVERSION_POKER, _5x4x36) {
     ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Poker/poker_5_4_36.txt"), 0.372804, 1e-5);
 }
 
@@ -409,7 +409,7 @@ TEST(OLDVERSION_DCO_SQ, _1) {
 }
 
 
-TEST(NEWVERSION_SQ, _1) {
+TEST(PERF_NEWVERSION_SQ, _1) {
     ASSERT_NEAR(run_plog("plogapp/tests/squirrel.plog"), 0.152380, 1e-4);
 }
 
@@ -433,9 +433,10 @@ int main(int argc, char **argv) {
     // ::testing::GTEST_FLAG(filter) = "OLDVERSION_NAIVE_POKER._*";
     // ::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._5x3";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._fgl4rdn";
-    ::testing::GTEST_FLAG(filter) = "NEWVERSION_NAIVE*";
+    //::testing::GTEST_FLAG(filter) = "NEWVERSION_NAIVE*";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._*";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS._*";
+    ::testing::GTEST_FLAG(filter) = "NEWVERSION*";
 
     return RUN_ALL_TESTS();
 }

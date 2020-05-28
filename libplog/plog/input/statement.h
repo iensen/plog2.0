@@ -53,7 +53,7 @@ private:
     std::unordered_set<std::string> getVariables(const UTerm &term);
 
     std::vector<Clingo::AST::Statement> prAtomToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec);
-    std::vector<Clingo::AST::Statement>queryToGringoAST();
+    std::vector<Clingo::AST::Statement>queryToGringoAST(const UAttDeclVec & attdecls,  AlgorithmKind algo);
     std::vector<Clingo::AST::Statement> ruleToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec, AlgorithmKind algo);
 
     static int rule_id;

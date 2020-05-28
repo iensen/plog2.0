@@ -97,7 +97,7 @@ std::vector<Clingo::AST::Statement> Statement::toGringoAST(const UAttDeclVec & a
         AlgorithmKind algo) {
     switch(type_) {
         case StatementType::PR_ATOM: return prAtomToGringoAST(attdecls, sortDefVec);
-        case StatementType::QUERY:   return queryToGringoAST();
+        case StatementType::QUERY:   return queryToGringoAST(attdecls, algo);
         default: return ruleToGringoAST(attdecls, sortDefVec, algo);
     }
 }
@@ -123,19 +123,36 @@ std::vector<Clingo::AST::Statement> Statement::prAtomToGringoAST(const UAttDeclV
     Clingo::AST::Rule f_r{{loc, f_l}, gringobody(attdecls, sortDefVec)};
     return {{loc, f_r},make_external_atom_rule(attdecls, sortDefVec)};
 }
-
-std::vector<Clingo::AST::Statement> Statement::queryToGringoAST() {
+// for dco algo, and query ?p(a) we construct __query(p(a), true) -- full representation of the query
+// for naive algo, we construct __query :- p(a), since we just need to know whether or not the query was true
+std::vector<Clingo::AST::Statement> Statement::queryToGringoAST(const UAttDeclVec & attdecls, AlgorithmKind algo) {
     Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
-    std::vector<Clingo::AST::Term> args;
-    auto   queryargs = term(head_);
-
-    args.push_back(termToClingoTerm(queryargs.first));
-    args.push_back(queryargs.second?Clingo::AST::Term{loc,Clingo::Id("true")}:Clingo::AST::Term{loc,Clingo::Id("false")});
-    Clingo::AST::Function f_ = {"__query", args};
-    Clingo::AST::Term f_t{loc, f_};
-    Clingo::AST::Literal f_l{loc, Clingo::AST::Sign::None, f_t};
-    Clingo::AST::Rule f_r{{loc, f_l}, std::vector<Clingo::AST::BodyLiteral>()};
-    return {{loc, f_r}};
+    if(algo == AlgorithmKind::for_dco) {
+        std::vector<Clingo::AST::Term> args;
+        auto queryargs = term(head_);
+        args.push_back(termToClingoTerm(queryargs.first));
+        args.push_back(queryargs.second ? Clingo::AST::Term{loc, Clingo::Id("true")} : Clingo::AST::Term{loc,
+                                                                                                         Clingo::Id(
+                                                                                                                 "false")});
+        Clingo::AST::Function f_ = {"__query", args};
+        Clingo::AST::Term f_t{loc, f_};
+        Clingo::AST::Literal f_l{loc, Clingo::AST::Sign::None, f_t};
+        Clingo::AST::Rule f_r{{loc, f_l}, std::vector<Clingo::AST::BodyLiteral>()};
+        return {{loc, f_r}};
+    } else {
+        Clingo::AST::Function f_ = {"__query", {}};
+        Clingo::AST::Term f_t{loc, f_};
+        Clingo::AST::Literal f_l{loc, Clingo::AST::Sign::None, f_t};
+        std::pair<Gringo::UTerm, bool> termb = term(head_); //3
+        if(!termb.second) {
+            throw "not implemented";
+        }
+        Clingo::AST::Term f_bt = termToClingoTerm(termb.first);
+        Clingo::AST::Literal alit{defaultLoc, Clingo::AST::Sign::None, f_bt};
+        auto bodyLit =  Clingo::AST::BodyLiteral{defaultLoc, Clingo::AST::Sign::None, alit};
+        Clingo::AST::Rule f_r{{loc, f_l}, std::vector<Clingo::AST::BodyLiteral>{bodyLit}};
+        return {{loc, f_r}};
+    }
 }
 
 std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec, AlgorithmKind algo) {

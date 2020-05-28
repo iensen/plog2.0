@@ -172,7 +172,7 @@ void PlogControl::ground() {
         parsed = false;
     }
     prg_.loadToControl(clingoControl, solvingDCO?AlgorithmKind::for_dco:AlgorithmKind::naive);
-    pb = new PlogGroundProgramBuilder(*out_);
+    pb = new PlogGroundProgramBuilder(*out_, solvingDCO);
     clingoControl.register_observer(*pb);
     clingoControl.ground({{"base", {}}});
 
