@@ -175,7 +175,7 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
     // 1. add rules a(t,y):- __ext(a(t,y)) for every y from the range of a(t)
     // 2. add rules #external __ext(a(t,y)):sorts for the head to the program
     // f_str stores random(a(t),p)
-    if(algo == AlgorithmKind::for_dco && f_str.find("random(") == 0 ) {// if the head is a random atom
+    if(f_str.find("random(") == 0 ) {// if the head is a random atom
         // fgterm stores random(
         FunctionTerm* fgterm = (FunctionTerm*) (fterm.first.get()); //
 
@@ -194,40 +194,56 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
             throw std::logic_error("random attribute term not found");
         }
 
-
-
         const UTerm & aterm = fgterm->args[0];
         String termName = getAttrName(aterm);
         // find the list of possible values
         const USortExpr  & resSort = getResultSort(termName,attdecls);
         std::vector<Clingo::AST::Term> instances = resSort->generate(sortDefVec);
-        // add the rule add a(t,instance) :- ext(a(t,instance)) for every instance in intances
-        for(const Clingo::AST::Term &y: instances) {
-            std::vector<Clingo::AST::Term> argsc = getAttrArgs(aterm);
-            argsc.push_back(y);
-            Clingo::AST::Literal lit = make_lit(termName.c_str(),argsc);
-            std::vector<Clingo::AST::Term> exargs;
-            exargs.push_back(make_term(termName.c_str(),argsc));
-            Clingo::AST::BodyLiteral bodyLit = make_body_lit("__ext", exargs);
+        if(algo == AlgorithmKind::for_dco) {
+            // add the rule add a(t,instance) :- ext(a(t,instance)) for every instance in intances
+            for (const Clingo::AST::Term &y: instances) {
+                std::vector<Clingo::AST::Term> argsc = getAttrArgs(aterm);
+                argsc.push_back(y);
+                Clingo::AST::Literal lit = make_lit(termName.c_str(), argsc);
+                std::vector<Clingo::AST::Term> exargs;
+                exargs.push_back(make_term(termName.c_str(), argsc));
+                Clingo::AST::BodyLiteral bodyLit = make_body_lit("__ext", exargs);
+                std::vector<Clingo::AST::BodyLiteral> body;
+                body.push_back(bodyLit);
+                Clingo::AST::Rule f_r{{defaultLoc, lit}, body};
+                // add a(t,y) :- ext(a(t,y))
+                result.emplace_back(Clingo::AST::Statement{defaultLoc, f_r}); //1
+                Clingo::AST::Term ext_term = make_term("__ext", exargs);
+                std::vector<Clingo::AST::BodyLiteral> bodylits = getSortAtoms(head_, sortDefVec, attdecls);
+                //add ext(a(y,y)):sorts
+                Clingo::AST::External ext = Clingo::AST::External{ext_term, bodylits, make_term("false")};
+                result.emplace_back(Clingo::AST::Statement{defaultLoc, ext}); //2
+            }
+            // add the atom of the form __range(a,s), where a is the term name and s is the sort
+            std::vector<Clingo::AST::Term> rargs;
+            rargs.push_back(make_term(termName));
+            rargs.push_back(make_term(resSort->toString().c_str()));
+            Clingo::AST::Literal lit = make_lit("__range", rargs);
+            Clingo::AST::Rule f_r{{defaultLoc, lit},
+                                  {}};
+            result.push_back(Clingo::AST::Statement{defaultLoc, f_r});
+        } else {
+            assert(algo == AlgorithmKind::naive);
+            // add P-log general axioms.
+            // a(t,y1) | ... | a(t,yn) :- random(a,p)
+            Clingo::AST::Disjunction d;
+            for (const Clingo::AST::Term &y: instances) {
+                std::vector<Clingo::AST::Term> argsc = getAttrArgs(aterm);
+                argsc.push_back(y);
+                auto lit = make_lit(termName.c_str(), argsc);
+                auto conditionalLit = Clingo::AST::ConditionalLiteral{lit,{}};
+                d.elements.push_back(conditionalLit);
+            }
             std::vector<Clingo::AST::BodyLiteral> body;
-            body.push_back(bodyLit);
-            Clingo::AST::Rule f_r{{defaultLoc, lit}, body};
-            // add a(t,y) :- ext(a(t,y))
-            result.emplace_back(Clingo::AST::Statement{defaultLoc, f_r}); //1
-            Clingo::AST::Term ext_term = make_term("__ext", exargs);
-            std::vector<Clingo::AST::BodyLiteral> bodylits = getSortAtoms(head_,sortDefVec, attdecls);
-            //add ext(a(y,y)):sorts
-            Clingo::AST::External ext = Clingo::AST::External{ext_term,bodylits,make_term("false")};
-            result.emplace_back(Clingo::AST::Statement{defaultLoc, ext}); //2
+            body.push_back(Clingo::AST::BodyLiteral{defaultLoc,Clingo::AST::Sign::None, f_l});
+            Clingo::AST::Rule f_r{{defaultLoc, d}, body};
+            result.push_back(Clingo::AST::Statement{defaultLoc, f_r});
         }
-        // add the atom of the form __range(a,s), where a is the term name and s is the sort
-        std::vector<Clingo::AST::Term> rargs;
-        rargs.push_back(make_term(termName));
-        rargs.push_back(make_term(resSort->toString().c_str()));
-        Clingo::AST::Literal lit = make_lit("__range",rargs);
-        Clingo::AST::Rule f_r{{defaultLoc, lit}, {}};
-        result.push_back(Clingo::AST::Statement{defaultLoc, f_r});
-
     }
 
     //std::cout << "result for the rule" << std::endl;
