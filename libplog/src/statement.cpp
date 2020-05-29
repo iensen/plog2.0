@@ -260,6 +260,20 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
             body.push_back(Clingo::AST::BodyLiteral{defaultLoc,Clingo::AST::Sign::None, f_l});
             Clingo::AST::Rule f_r{{defaultLoc, d}, body};
             result.push_back(Clingo::AST::Statement{defaultLoc, f_r});
+            // __interveted(a(t)) :- do(a(t),_)
+            auto a_t = termToClingoTerm(aterm);
+            Clingo::AST::BodyLiteral bodyLit = make_body_lit("do", {a_t,Clingo::AST::Term{defaultLoc,Clingo::AST::Variable{"_"}}});
+            Clingo::AST::Literal lit = make_lit("__intervene",{a_t});
+            Clingo::AST::Rule interveneDef{{defaultLoc, lit}, {bodyLit}};
+            result.push_back(Clingo::AST::Statement{defaultLoc, interveneDef});
+            // __truly_random(a(t)) :- random(a(t), true), not __intervene(a(t))
+            Clingo::AST::Literal truly_random_lit = make_lit("__truly_random",{a_t});
+            auto intervene_lit = make_body_lit("__intervene",{a_t},Clingo::AST::Sign::Negation);
+            auto random_lit = Clingo::AST::BodyLiteral{defaultLoc,Clingo::AST::Sign::None, f_l};
+            Clingo::AST::Rule trulyrandomDef{{defaultLoc, truly_random_lit}, {random_lit, intervene_lit}};
+            result.push_back(Clingo::AST::Statement{defaultLoc, trulyrandomDef});
+
+
         }
     }
 
@@ -439,8 +453,8 @@ std::unordered_set<std::string> Statement::getVariables(const UTerm &term) {
 
 
 // todo use references if possible:
-Clingo::AST::BodyLiteral Statement::make_body_lit(String name, std::vector<Clingo::AST::Term> args) {
-    return {defaultLoc,Clingo::AST::Sign::None, make_lit(name,args)};
+Clingo::AST::BodyLiteral Statement::make_body_lit(String name, std::vector<Clingo::AST::Term> args, Clingo::AST::Sign sign) {
+    return {defaultLoc,sign, make_lit(name,args)};
 }
 
 std::vector<String> Statement::findArgSorts(String attrName,const UAttDeclVec & attdecls) {

@@ -69,7 +69,7 @@ private:
 
 
 public:
-    static Clingo::AST::BodyLiteral make_body_lit(String name, std::vector<Clingo::AST::Term> args);
+    static Clingo::AST::BodyLiteral make_body_lit(String name, std::vector<Clingo::AST::Term> args, Clingo::AST::Sign sign = Clingo::AST::Sign::None);
     static Clingo::AST::Literal make_lit(String name, std::vector<Clingo::AST::Term> args);
     static Clingo::AST::Term make_term(String name, std::vector<Clingo::AST::Term> args);
     static Clingo::AST::Term make_term(String name);
