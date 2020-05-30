@@ -14,6 +14,7 @@
 #include "attribute_selection_heuristic.h"
 #include "value_selection_heuristic.h"
 #include <unordered_set>
+#include <plog/input/program.h>
 #include "state.h"
 
 using ClingoModelRep= std::vector<clingo_literal_t>;
@@ -27,7 +28,7 @@ namespace GroundPlog {
 
     class SolveAlgorithm {
     public:
-       virtual SolveResult run(Program *ctl, Clingo::Control *pControl) = 0;
+       virtual SolveResult run(GroundPlog::Program *groundProgram, Plog::Program* inputProgram, Clingo::Control *cControl) = 0;
     };
 
 
@@ -39,7 +40,7 @@ namespace GroundPlog {
 
     public:
         ExactDCOSolve(){};
-        virtual SolveResult run(Program *pr, Clingo::Control *pControl) override;
+        virtual SolveResult run(GroundPlog::Program *groundProgram, Plog::Program* inputProgram, Clingo::Control *cControl) override;
         static void extend(GroundPlog::State &S, Clingo::Control *cControl);
         static std::unordered_set<ATTID> bfs(const std::unordered_set<ATTID> &init,DepGraph *dg);
         static std::unordered_set<unsigned int> P(const State &S);
@@ -57,10 +58,18 @@ namespace GroundPlog {
 
     class NaiveSolve : public SolveAlgorithm {
     private:
-
+        struct ModelStats {
+            double probability;
+            bool isQueryTrue;
+        };
+        std::map<std::string,size_t> attributeRangeElemCountCache;
+        std::pair<bool, double> computeProbabilityFromModels(Clingo::SolveHandle models, Plog::Program* inputProgram);
+        ModelStats getModelStats(const Clingo::Model & model,  Plog::Program* inputProgram);
+        size_t getAttributeRangeElemCount(const std::string& attribute, Plog::Program* inputProgram);
     public:
         NaiveSolve(){};
-        virtual SolveResult run(Program *pr, Clingo::Control *pControl) override;
+
+        virtual SolveResult run(GroundPlog::Program *groundProgram, Plog::Program* inputProgram, Clingo::Control *cControl) override;
     };
 }
 

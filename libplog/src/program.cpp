@@ -57,6 +57,15 @@ namespace Plog {
         throw "not implemented yet";
     }
 
+    // temporary workaround for computing probability using naive algorithm
+    std::vector<Clingo::AST::Term>  Program::getAttributeRangeElements(const std::string& attribute) {
+            for(const UAttDecl& attDecl : attdecls_) {
+                if(attDecl->attname.c_str() == attribute ) {
+                    return attDecl->se->generate(sortdefs_);
+                }
+            }
+            assert(false);
+    }
 
     void Program::loadToControl(Clingo::Control &ctl, AlgorithmKind algo) {
         auto b = ctl.builder();
@@ -83,6 +92,8 @@ namespace Plog {
                 b.add({defaultLoc, f_r});
             }
         }
+
+
 
         //add axioms:
         // 1. The same attribute cannot take two different values at the same time,

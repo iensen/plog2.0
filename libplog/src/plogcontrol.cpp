@@ -144,11 +144,15 @@ std::string PlogControl::str() {
 }
 
 Gringo::SolveResult PlogControl::solve() {
-    auto res = groundplog_->solve(&clingoControl, solvingDCO? AlgorithmKind::for_dco:AlgorithmKind::naive);
+    auto res = groundplog_->solve(&clingoControl, &prg_, solvingDCO? AlgorithmKind::for_dco:AlgorithmKind::naive);
     if(solvingDCO && !res.success) {
         fprintf(stderr, "ERROR: the program is not dynamically causally ordered\n");
     } else {
-        printf("answer: %f\n", res.prob);
+        if(!res.success) {
+            fprintf(stderr, "ERROR: the input program is not coherent, because the sum of the measures of its possible worlds is 0.\n");
+        } else {
+            printf("answer: %f\n", res.prob);
+        }
     }
 }
 

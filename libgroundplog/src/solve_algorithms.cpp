@@ -8,7 +8,7 @@
 #include <groundplog/clingo_control.h>
 
 
-GroundPlog::SolveResult GroundPlog::ExactDCOSolve::run(GroundPlog::Program *prg, Clingo::Control *cControl) {
+GroundPlog::SolveResult GroundPlog::ExactDCOSolve::run(GroundPlog::Program *prg, Plog::Program *inputPrg, Clingo::Control *cControl) {
     dg = new DepGraph(prg);
     State s(dg,prg);
     AttributeSelectionHeuristic ash;
@@ -221,14 +221,138 @@ GroundPlog::ExactDCOSolve::GetCompletionProbA( State &S,Clingo::Control *cContro
     return std::tuple<bool, double, double>{true, satsum, totalsum};
 }
 
-GroundPlog::SolveResult GroundPlog::NaiveSolve::run(GroundPlog::Program *prg, Clingo::Control *cControl) {
+static bool startswith(const char* src, const char* pattern) {
+    while(*pattern !=0) {
+        if(*src == 0){
+            return false;
+        }
+        if(*pattern != *src) {
+            return false;
+        }
+        ++src;
+        ++pattern;
+    }
+    return true;
+
+}
+
+
+size_t GroundPlog::NaiveSolve::getAttributeRangeElemCount(const std::string& attribute, Plog::Program* inputProgram) {
+    auto cache = attributeRangeElemCountCache.find(attribute);
+    if(cache !=  attributeRangeElemCountCache.end()) {
+        return cache->second;
+    } else {
+        auto const valVecSize = inputProgram->getAttributeRangeElements(attribute).size();
+        return attributeRangeElemCountCache[attribute] = valVecSize;
+    }
+}
+
+GroundPlog::NaiveSolve::ModelStats GroundPlog::NaiveSolve::getModelStats(const Clingo::Model & model,  Plog::Program* inputProgram) {
+    const Clingo::SymbolVector &atvec = model.symbols();
+    std::vector<std::string> trulyRandomAtts;
+    // modelAttValue[a] = y if and only if the model contains atom a = y
+    std::unordered_map<std::string, std::string> modelAttValue;
+    // knownProbs[a][y] is c if and only if the model has satisfied pr-atom pr(a = y) = c
+    std::unordered_map<std::string, std::unordered_map<std::string, double>> knownProbs;
+
+    bool isQueryTrue = false;
+
+    for (const Clingo::Symbol &s : atvec) {
+        auto const name = s.name();
+        // truly_random:
+        if(startswith(name,"__t")) {
+            trulyRandomAtts.emplace_back(s.arguments()[0].to_string());
+            continue;
+        }
+        if(startswith(name,"__q")) {
+            isQueryTrue = true;
+            continue;
+        }
+        //pr-atom
+        if(startswith(name, "__pr")) {
+            auto const attribute_term = s.arguments()[0].to_string();
+            auto const value = s.arguments()[1].to_string();
+            auto const numQuotedString = s.arguments()[2].to_string();
+            auto const num = std::stoi(numQuotedString.substr(1,numQuotedString.size()-2));
+            auto const denumQuotedString = s.arguments()[3].to_string();
+            auto const denum = std::stoi(denumQuotedString.substr(1,denumQuotedString.size()-2));
+            knownProbs[attribute_term][value] = double(num)/denum;
+            continue;
+        }
+
+        if(strcmp(name,"random") !=0 && !startswith(name, "_")) {
+            std::string attribute_term = name;
+            if(s.arguments().size() > 1) {
+                attribute_term += "(";
+                for(size_t i = 1; i < s.arguments().size(); i++) {
+                    if(i != 1) {
+                        attribute_term +=",";
+                    }
+                    attribute_term += s.arguments()[i].to_string();
+                }
+                attribute_term +=")";
+            }
+            auto const& value = s.arguments().back().to_string();
+            modelAttValue[attribute_term] = value;
+        }
+    }
+
+    double probability = 1.0;
+    for(auto const & truly_random_att : trulyRandomAtts){
+        auto const & value = modelAttValue.at(truly_random_att);
+        // defined probability:
+        auto knownProbsForAtt = knownProbs.find(truly_random_att);
+        if(knownProbsForAtt != knownProbs.end()) {
+            auto knownProbForAttValue = knownProbsForAtt->second.find(value);
+            if(knownProbForAttValue != knownProbsForAtt->second.end()) {
+                probability *= knownProbForAttValue->second;
+                continue;
+            }
+        }
+
+        // default probability:
+        if(knownProbsForAtt != knownProbs.end()) {
+            double sumKnownProb = 0.0;
+            for(auto const attProb: knownProbsForAtt->second) {
+                sumKnownProb+=attProb.second;
+            }
+            std::string attName;
+            auto lParenPos = truly_random_att.find('(');
+            if( lParenPos == std::string::npos) {
+                attName = truly_random_att;
+            } else {
+                attName = truly_random_att.substr(0,lParenPos);
+            }
+            // assume no dyhnamic range
+            probability *=(1.0 - sumKnownProb)/(getAttributeRangeElemCount(attName, inputProgram) - knownProbsForAtt->second.size());
+            continue;
+        }
+    }
+    return {probability, isQueryTrue};
+}
+
+std::pair<bool, double> GroundPlog::NaiveSolve::computeProbabilityFromModels(Clingo::SolveHandle models, Plog::Program* inputProgram) {
+    double totalProbability = 0.0;
+    double queryProbability = 0.0;
+    bool status = true;
+    for(auto const & model : models) {
+        ModelStats stats = getModelStats(model, inputProgram);
+        totalProbability += stats.probability;
+        if(stats.isQueryTrue) {
+            queryProbability += stats.probability;
+        }
+    }
+    if(totalProbability == 0.0) {
+        status = false;
+    }
+    return {status, queryProbability/totalProbability};
+}
+
+GroundPlog::SolveResult GroundPlog::NaiveSolve::run(GroundPlog::Program *groundProgram, Plog::Program* inputProgram, Clingo::Control *cControl) {
     std::function<bool(unsigned int)> isRuleActive = [](unsigned int) {
         return true;
     };
     auto control = PlogClingoControl(cControl, isRuleActive);
-    for(auto const & model : control.getModels()) {
-        //std::cout << model << std::endl;
-    }
-
-    return {true, 0.0};
+    std::pair<bool, double> result = computeProbabilityFromModels(control.getModels(), inputProgram);
+    return {result.first, result.second};
 }

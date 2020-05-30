@@ -6,6 +6,7 @@
 #include <groundplog/solve_algorithms.h>
 #include<clasp/util/timer.h>
 #include <clingo.hh>
+#include <plog/plogcontrol.hh>
 
 
 GroundPlog::GroundPlogFacade::GroundPlogFacade():config_(0) {
@@ -27,9 +28,9 @@ GroundPlog::Program &GroundPlog::GroundPlogFacade::start(GroundPlog::GroundPlogC
 
 
 GroundPlog::GroundPlogFacade::Result
-GroundPlog::GroundPlogFacade::solve(Clingo::Control *clctl, AlgorithmKind algoKind) {
+GroundPlog::GroundPlogFacade::solve(Clingo::Control * cCtl,Plog::Program* prg, AlgorithmKind algoKind) {
     std::unique_ptr<SolveAlgorithm>  algo(config_->solve.createSolveObject(algoKind));
-    return algo->run(static_cast<GroundPlog::Program *>(this->program()), clctl);
+    return algo->run(static_cast<GroundPlog::Program *>(this->program()), prg, cCtl);
 }
 
 void GroundPlog::GroundPlogFacade::init(GroundPlog::GroundPlogConfig &cfg) {

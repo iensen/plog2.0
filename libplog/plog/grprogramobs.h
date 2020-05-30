@@ -81,7 +81,7 @@ private:
 
     std::unordered_map<std::string, ATTID > attids;
     std::unordered_map<std::string, unsigned > sortids;
-    std::unordered_map<std::string, ValueRep > atids;
+    std::unordered_map<std::string, ValueRep > atids; // term ids (e.g, sort elemetns)
     std::unordered_map<std::string, unsigned> aids;
 
     std::unordered_map<AId, AId> a_range_sort;

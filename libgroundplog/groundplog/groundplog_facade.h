@@ -10,6 +10,7 @@
 #include<groundplog/program.h>
 #include<vector>
 #include <clingo.hh>
+#include <plog/input/program.h>
 #include "plog/plog.h"
 
 //! Provides a simplified interface to the services of the Ground Plog library.
@@ -89,7 +90,7 @@ namespace GroundPlog {
         //! Starts definition of a P-log problem
         Program& start(GroundPlogConfig & config);
 
-        Result solve(Clingo::Control *ctl, AlgorithmKind algo);
+        Result solve(Clingo::Control *ctl, Plog::Program* inputProgram, AlgorithmKind algo);
 
 
     private:

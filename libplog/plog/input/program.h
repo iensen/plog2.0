@@ -17,6 +17,8 @@ namespace Plog {
 
         Program(Program &&x);
 
+        // temporary workaround for computing probability using naive algorithm
+        std::vector<Clingo::AST::Term>  getAttributeRangeElements(const std::string& range);
 
         void add(USortDef sDef);
 

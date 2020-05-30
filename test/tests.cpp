@@ -414,8 +414,7 @@ TEST(PERF_NEWVERSION_SQ, _1) {
 }
 
 TEST(NEWVERSION_NAIVE, _5x3) {
-    // TODO: the correct answer is not 0.0, just locking down that the code reaches the correct place.
-    ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Poker/poker_5_3.txt", NewPlogMode::QUERY_NAIVE), 0.0, 1e-5);
+    ASSERT_NEAR(run_plog("plogapp/tests/rshortwithpratom.plog", NewPlogMode::QUERY_NAIVE), 0.25, 1e-5);
 }
 
 

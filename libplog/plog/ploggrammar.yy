@@ -1,7 +1,7 @@
 // {{{ GPL License
 
-// This file is part of gringo - a grounder for logic programs.
-// Copyright (C) 2013  Roland Kaminski
+// This file is part of plog - a solver for probabilistic logic programs.
+// Copyright (C) 2019  Eugene Balai
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
