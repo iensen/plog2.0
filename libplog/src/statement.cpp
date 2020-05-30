@@ -170,22 +170,26 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
     result.push_back(ext);
     ++rule_id;
 
-    // if the rule is of the form a(t) = y :- B, where a!=random, a!= obs and a!= do,
+    std::string f_str = term_to_string(f_);
+    // for dco-based solving, if the rule is of the form a(t) = y :- B, where a!=random, a!= obs and a!= do,
     // 1. add the rule a(t,y) :- __ext(a(t,y)) to the program
     // 2. add the rule #external __ext(a(t,y)):sorts for the head to the program
-    std::string f_str = term_to_string(f_);
-    if(f_str.find("obs(")!=0 && f_str.find("random(")!=0 && f_str.find("do(")!=0) {
-        std::vector<Clingo::AST::Term> args;
-        args.push_back(f_);
-        Clingo::AST::BodyLiteral bodyLit = make_body_lit("__ext", args);
-        std::vector<Clingo::AST::BodyLiteral> body;
-        body.push_back(bodyLit);
-        Clingo::AST::Rule f_r{{defaultLoc, f_l}, body};
-        result.emplace_back(Clingo::AST::Statement{defaultLoc, f_r}); //1
-        Clingo::AST::Term ext_term = make_term("__ext", args);
-        std::vector<Clingo::AST::BodyLiteral> bodylits = getSortAtoms(head_,sortDefVec, attdecls);
-        Clingo::AST::External ext = Clingo::AST::External{ext_term,bodylits, make_term("false")};
-        result.emplace_back(Clingo::AST::Statement{defaultLoc, ext}); //2
+    // this allows to quickly assign values to attributes based on a given interpretation
+    if(algo == AlgorithmKind::for_dco) {
+
+        if (f_str.find("obs(") != 0 && f_str.find("random(") != 0 && f_str.find("do(") != 0) {
+            std::vector<Clingo::AST::Term> args;
+            args.push_back(f_);
+            Clingo::AST::BodyLiteral bodyLit = make_body_lit("__ext", args);
+            std::vector<Clingo::AST::BodyLiteral> body;
+            body.push_back(bodyLit);
+            Clingo::AST::Rule f_r{{defaultLoc, f_l}, body};
+            result.emplace_back(Clingo::AST::Statement{defaultLoc, f_r}); //1
+            Clingo::AST::Term ext_term = make_term("__ext", args);
+            std::vector<Clingo::AST::BodyLiteral> bodylits = getSortAtoms(head_, sortDefVec, attdecls);
+            Clingo::AST::External ext = Clingo::AST::External{ext_term, bodylits, make_term("false")};
+            result.emplace_back(Clingo::AST::Statement{defaultLoc, ext}); //2
+        }
     }
 
     // if the rule is of the form random(a(t),p) :- B, and the algo is for_dco
@@ -275,6 +279,24 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
 
 
         }
+    }
+
+    // :- obs(a(t),v,true), not a(t,v).
+    if(f_str.find("obs(") == 0 && algo==AlgorithmKind::naive) {// if the head is a random atom
+        FunctionTerm* fgterm = (FunctionTerm*) (fterm.first.get()); //
+        // this will need to change when we will introduce labels
+        const UTerm & aterm = fgterm->args[0];
+        const UTerm & value = fgterm->args[1];
+        auto valueClingo = termToClingoTerm(value);
+        std::vector<Clingo::AST::Term> argsc = getAttrArgs(aterm);
+        argsc.push_back(valueClingo);
+        String termName = getAttrName(aterm);
+        Clingo::AST::Disjunction d;
+        Clingo::AST::BodyLiteral bodyLit =
+                make_body_lit(termName, argsc, Clingo::AST::Sign::Negation);
+        auto obs_lit = Clingo::AST::BodyLiteral{defaultLoc,Clingo::AST::Sign::None, f_l};
+        Clingo::AST::Rule trulyrandomDef{{defaultLoc, d}, {obs_lit, bodyLit}};
+        result.push_back(Clingo::AST::Statement{defaultLoc, trulyrandomDef});
     }
 
     //std::cout << "result for the rule" << std::endl;

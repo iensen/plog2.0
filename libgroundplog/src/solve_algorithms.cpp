@@ -284,8 +284,8 @@ GroundPlog::NaiveSolve::ModelStats GroundPlog::NaiveSolve::getModelStats(const C
             std::string attribute_term = name;
             if(s.arguments().size() > 1) {
                 attribute_term += "(";
-                for(size_t i = 1; i < s.arguments().size(); i++) {
-                    if(i != 1) {
+                for(size_t i = 0; i < s.arguments().size()-1; i++) {
+                    if(i != 0) {
                         attribute_term +=",";
                     }
                     attribute_term += s.arguments()[i].to_string();
@@ -336,6 +336,7 @@ std::pair<bool, double> GroundPlog::NaiveSolve::computeProbabilityFromModels(Cli
     double queryProbability = 0.0;
     bool status = true;
     for(auto const & model : models) {
+        //std::cout << model << std::endl;
         ModelStats stats = getModelStats(model, inputProgram);
         totalProbability += stats.probability;
         if(stats.isQueryTrue) {

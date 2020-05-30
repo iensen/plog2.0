@@ -188,9 +188,9 @@ TEST(OLDVERSION_DCO_BLOCKS, _20x4) {
 
 
 
-//TEST(OLDVERSION_NAIVE_BLOCKS, _20x5) {
-//    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap20_5.plg",OldPlogMode::NAIVE), 0.191692, 1e-5);
-//}
+TEST(OLDVERSION_NAIVE_BLOCKS, _20x5) {
+    ASSERT_NEAR(run_old_plog("oldplog/Examples/BlockWorld/blockmap20_5.plg",OldPlogMode::NAIVE), 0.191692, 1e-5);
+}
 
 
 
@@ -363,11 +363,9 @@ TEST(PERF_NEWVERSION_BLOCKS, _20x5) {
     ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Blocks/blockmap20_5.plg"), 0.191692, 1e-5);
 }
 
-
-TEST(OLDVERSION_NAIVE_BLOCKS, _20x5) {
-    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap20_5.plg",OldPlogMode::NAIVE), 0.191692, 1e-5);
+TEST(PERF_NEWVERSION_NAIVE_BLOCKS, _20x5) {
+    ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Blocks/blockmap20_5.plg", NewPlogMode::QUERY_NAIVE), 0.191692, 1e-5);
 }
-
 
 TEST(OLDVERSION_DCO_BLOCKS, _20x5) {
     ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/BlockWorld/blockmap20_5.plg",OldPlogMode::DCOOPTIMIZED), 0.191692, 1e-5);
@@ -413,7 +411,7 @@ TEST(PERF_NEWVERSION_SQ, _1) {
     ASSERT_NEAR(run_plog("plogapp/tests/squirrel.plog"), 0.152380, 1e-4);
 }
 
-TEST(NEWVERSION_NAIVE, _5x3) {
+TEST(NEWVERSION_NAIVE, _simple) {
     ASSERT_NEAR(run_plog("plogapp/tests/rshortwithpratom.plog", NewPlogMode::QUERY_NAIVE), 0.25, 1e-5);
 }
 
@@ -427,6 +425,10 @@ int main(int argc, char **argv) {
     //::testing::GTEST_FLAG(filter) = "OLDVERSION_SQ*";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS._20x5*";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._5x4x36*";
+
+    //::testing::GTEST_FLAG(filter) = "OLDVERSION_NAIVE_BLOCKS._20x5";
+
+
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._l4";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._fgl4";
     // ::testing::GTEST_FLAG(filter) = "OLDVERSION_NAIVE_POKER._*";
