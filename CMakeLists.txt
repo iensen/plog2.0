@@ -4,7 +4,7 @@
 # remove CmakeCache.txt file between runs.
 
 cmake_minimum_required(VERSION 3.3)
-set(BUILD_TESTS 1)
+#set(BUILD_TESTS 1)
 if(BUILD_TESTS)
 project(tests)
 else()
