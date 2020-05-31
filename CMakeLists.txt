@@ -4,12 +4,17 @@
 # remove CmakeCache.txt file between runs.
 
 cmake_minimum_required(VERSION 3.3)
+set(BUILD_TESTS 1)
+if(BUILD_TESTS)
+project(tests)
+else()
 project(plog)
-#project(tests)
+endif(BUILD_TESTS)
+
 set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3")
 #set(CMAKE_BUILD_TYPE Debug)
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pg")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 
 file(GLOB_RECURSE PLOG_SOURCES
@@ -77,7 +82,7 @@ add_definitions(-DWITH_PYTHON)
 
 #add_executable(clingo1 ${CLINGO_MAIN_FILE} ${CLINGO_SOURCES})
 #TARGET_LINK_LIBRARIES(clingo1  python2.7 tbb pthread dl)
-#set(BUILD_TESTS 1)
+
 if(BUILD_TESTS)
 add_executable(tests   ${OLD_PLOG_SOURCES} ${TEST_SOURCES} ${PLOG_SOURCES} ${CLINGO_SOURCES}   test/utils.h)
 TARGET_LINK_LIBRARIES(tests  python2.7 tbb dl gtest pthread )

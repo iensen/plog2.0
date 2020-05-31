@@ -46,13 +46,13 @@ private:
     Clingo::AST::ComparisonOperator getComparisonOpFromRelation(Gringo::Relation rel);
 
     Clingo::AST::BodyLiteral  gringobodyexlit(Plog::ULit &lit,const UAttDeclVec &attdecls);
-    std::vector<Clingo::AST::BodyLiteral> gringobody(const UAttDeclVec &attdecls, const USortDefVec &sortDefVec);
+    std::vector<Clingo::AST::BodyLiteral> gringobody(const UAttDeclVec &attdecls, const USortDefVec &sortDefVec, bool solvingDCO);
     std::pair<Gringo::UTerm,bool> term(Plog::ULit & lit);
 
     std::unordered_set<std::string> getVariables();
     std::unordered_set<std::string> getVariables(const UTerm &term);
 
-    std::vector<Clingo::AST::Statement> prAtomToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec);
+    std::vector<Clingo::AST::Statement> prAtomToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec, AlgorithmKind algo);
     std::vector<Clingo::AST::Statement>queryToGringoAST(const UAttDeclVec & attdecls,  AlgorithmKind algo);
     std::vector<Clingo::AST::Statement> ruleToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec, AlgorithmKind algo);
 

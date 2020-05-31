@@ -136,6 +136,11 @@ namespace Plog {
             Clingo::AST::Rule f_r{{defaultLoc, d}, body};
             b.add({defaultLoc, f_r});
         }
+        if(algo==AlgorithmKind::naive) {
+            b.add({defaultLoc, Clingo::AST::ShowSignature{Clingo::Signature("__pr", 4, true), false}});
+            b.add({defaultLoc, Clingo::AST::ShowSignature{Clingo::Signature("__query", 0, true), false}});
+            b.add({defaultLoc, Clingo::AST::ShowSignature{Clingo::Signature("__truly_random", 1, true), false}});
+        }
     }
 
 }

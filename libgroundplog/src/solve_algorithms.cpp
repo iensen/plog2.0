@@ -351,7 +351,7 @@ std::pair<bool, double> GroundPlog::NaiveSolve::computeProbabilityFromModels(Cli
 
 GroundPlog::SolveResult GroundPlog::NaiveSolve::run(GroundPlog::Program *groundProgram, Plog::Program* inputProgram, Clingo::Control *cControl) {
     std::function<bool(unsigned int)> isRuleActive = [](unsigned int) {
-        return true;
+        return false;
     };
     auto control = PlogClingoControl(cControl, isRuleActive);
     std::pair<bool, double> result = computeProbabilityFromModels(control.getModels(), inputProgram);

@@ -135,18 +135,18 @@ TEST(OLDVERSION_NAIVE_BLOCKS, _20x4) {
 
 
 
-TEST(OLDVERSION_NAIVE_NASA, _l4) {
-    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/NASA/A4_prmod.plog",OldPlogMode::NAIVE), 0.059235, 1e-5);
+TEST(PERF_OLDVERSION_NAIVE_NASA, _l4) {
+    ASSERT_NEAR(run_old_plog("oldplog/Examples/NASA/A4_prmod.plog",OldPlogMode::NAIVE), 0.059235, 1e-5);
 }
 
 
 
-TEST(OLDVERSION_NAIVE_NASA, _fgl4) {
-    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/NASA/Fprmod.plog",OldPlogMode::NAIVE), 0.905719, 1e-5);
+TEST(PERF_OLDVERSION_NAIVE_NASA, _fgl4) {
+    ASSERT_NEAR(run_old_plog("oldplog/Examples/NASA/Fprmod.plog",OldPlogMode::NAIVE), 0.905719, 1e-5);
 }
 
 TEST(OLDVERSION_NAIVE_NASA, _fgl4rdn) {
-    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/NASA/Fprmod2.plog",OldPlogMode::NAIVE), 0.905719, 1e-5);
+    ASSERT_NEAR(run_old_plog("oldplog/Examples/NASA/Fprmod2.plog",OldPlogMode::NAIVE), 0.905719, 1e-5);
 }
 
 
@@ -160,6 +160,7 @@ TEST(PERF_NEWVERSION_NASA, _fgl4) {
     ASSERT_NEAR(run_plog("plogapp/tests/nasa/F.plog"), 0.905719, 1e-5);
 }
 
+// this example never finishes the run
 //TEST(NEWVERSION_NASA, _fgl4rdn) {
 //    ASSERT_NEAR(run_plog("../../plog/plogapp/tests/nasa/F2.plog"), 0.905719, 1e-5);
 //}
@@ -188,7 +189,7 @@ TEST(OLDVERSION_DCO_BLOCKS, _20x4) {
 
 
 
-TEST(OLDVERSION_NAIVE_BLOCKS, _20x5) {
+TEST(PERF_OLDVERSION_NAIVE_BLOCKS, _20x5) {
     ASSERT_NEAR(run_old_plog("oldplog/Examples/BlockWorld/blockmap20_5.plg",OldPlogMode::NAIVE), 0.191692, 1e-5);
 }
 
@@ -307,8 +308,8 @@ TEST(OLDVERSION_NAIVE_POKER, _5x6) {
     ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/Poker/poker_5_6.txt",OldPlogMode::NAIVE), 0.547344, 1e-5);
 }
 
-TEST(OLDVERSION_NAIVE_POKER, _5x4x36) {
-    ASSERT_NEAR(run_old_plog("../../plog/oldplog/Examples/Poker/poker_5_4_36.txt",OldPlogMode::NAIVE), 0.372804, 1e-5);
+TEST(PERF_OLDVERSION_NAIVE_POKER, _5x4x36) {
+    ASSERT_NEAR(run_old_plog("oldplog/Examples/Poker/poker_5_4_36.txt",OldPlogMode::NAIVE), 0.372804, 1e-5);
 }
 
 
@@ -396,8 +397,8 @@ TEST(PERF_NEWVERSION_POKER, _5x4x36) {
 }
 
 
-TEST(OLDVERSION_NAIVE_SQ, _1) {
-    ASSERT_NEAR(run_old_plog("../oldplog/Examples/Squirrel/pr.plog",OldPlogMode::NAIVE),0.152380, 1e-4);
+TEST(PERF_OLDVERSION_NAIVE_SQ, _1) {
+    ASSERT_NEAR(run_old_plog("oldplog/Examples/Squirrel/pr.plog",OldPlogMode::NAIVE),0.152380, 1e-4);
 }
 
 
@@ -434,10 +435,10 @@ int main(int argc, char **argv) {
     // ::testing::GTEST_FLAG(filter) = "OLDVERSION_NAIVE_POKER._*";
     // ::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._5x3";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_NASA._fgl4rdn";
-    //::testing::GTEST_FLAG(filter) = "NEWVERSION_NAIVE*";
+    ::testing::GTEST_FLAG(filter) = "NEWVERSION*";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_POKER._*";
     //::testing::GTEST_FLAG(filter) = "NEWVERSION_BLOCKS._*";
-    ::testing::GTEST_FLAG(filter) = "NEWVERSION*";
+    //::testing::GTEST_FLAG(filter) = "PERF_OLDVERSION_NAIVE_POKER*";
 
     return RUN_ALL_TESTS();
 }

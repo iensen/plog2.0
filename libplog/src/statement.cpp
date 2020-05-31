@@ -96,7 +96,7 @@ StatementType Statement::getType() {
 std::vector<Clingo::AST::Statement> Statement::toGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec,
         AlgorithmKind algo) {
     switch(type_) {
-        case StatementType::PR_ATOM: return prAtomToGringoAST(attdecls, sortDefVec);
+        case StatementType::PR_ATOM: return prAtomToGringoAST(attdecls, sortDefVec, algo);
         case StatementType::QUERY:   return queryToGringoAST(attdecls, algo);
         default: return ruleToGringoAST(attdecls, sortDefVec, algo);
     }
@@ -105,7 +105,8 @@ std::vector<Clingo::AST::Statement> Statement::toGringoAST(const UAttDeclVec & a
 
 
 // TODO: rename sortDefVec
-std::vector<Clingo::AST::Statement> Statement::prAtomToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec) {
+std::vector<Clingo::AST::Statement> Statement::prAtomToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec,
+        AlgorithmKind algo) {
     // construct head:
     Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
     std::vector<Clingo::AST::Term> args;
@@ -120,7 +121,7 @@ std::vector<Clingo::AST::Statement> Statement::prAtomToGringoAST(const UAttDeclV
     Clingo::AST::Function f_ = {"__pr", args};
     Clingo::AST::Term f_t{loc, f_};
     Clingo::AST::Literal f_l{loc, Clingo::AST::Sign::None, f_t};
-    Clingo::AST::Rule f_r{{loc, f_l}, gringobody(attdecls, sortDefVec)};
+    Clingo::AST::Rule f_r{{loc, f_l}, gringobody(attdecls, sortDefVec, algo == AlgorithmKind::for_dco)};
     return {{loc, f_r},make_external_atom_rule(attdecls, sortDefVec)};
 }
 // for dco algo, and query ?p(a) we construct __query(p(a), true) -- full representation of the query
@@ -157,18 +158,21 @@ std::vector<Clingo::AST::Statement> Statement::queryToGringoAST(const UAttDeclVe
 
 std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec, AlgorithmKind algo) {
     std::vector<Clingo::AST::Statement> result;
-    // generate a rule of the form head :- body, sort_atoms, ex_atom
+    // generate a rule of the form head :- body, sort_atoms, [ex_atom]
+    // (ex_atom is only present for dco solving)
     auto    fterm = term(head_);
     // f_ is either random(a,p), or a = y
     Clingo::AST::Term f_ = termToClingoTerm(fterm.first);
     Clingo::AST::Literal f_l{defaultLoc, Clingo::AST::Sign::None, f_};
-    Clingo::AST::Rule f_r{{defaultLoc, f_l}, gringobody(attdecls, sortDefVec)};
+    Clingo::AST::Rule f_r{{defaultLoc, f_l}, gringobody(attdecls, sortDefVec, algo == AlgorithmKind::for_dco)};
     //std::cout <<"f_r: "<< f_r << std::endl;
     result.emplace_back(Clingo::AST::Statement{defaultLoc, f_r});
     // generate a rule of the form #external ex_atom:sort_atoms
-    Clingo::AST::Statement ext = make_external_atom_rule(attdecls, sortDefVec);
-    result.push_back(ext);
-    ++rule_id;
+    if(algo == AlgorithmKind::for_dco) {
+        Clingo::AST::Statement ext = make_external_atom_rule(attdecls, sortDefVec);
+        result.push_back(ext);
+        ++rule_id;
+    }
 
     std::string f_str = term_to_string(f_);
     // for dco-based solving, if the rule is of the form a(t) = y :- B, where a!=random, a!= obs and a!= do,
@@ -276,6 +280,8 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
             auto random_lit = Clingo::AST::BodyLiteral{defaultLoc,Clingo::AST::Sign::None, f_l};
             Clingo::AST::Rule trulyrandomDef{{defaultLoc, truly_random_lit}, {random_lit, intervene_lit}};
             result.push_back(Clingo::AST::Statement{defaultLoc, trulyrandomDef});
+            // show a/n
+            result.push_back({defaultLoc,Clingo::AST::ShowSignature{Clingo::Signature(termName.c_str(),  getAttrArgs(aterm).size() + 1, true), false}});
 
 
         }
@@ -391,7 +397,8 @@ std::vector<Clingo::AST::BodyLiteral> Statement::getSortAtoms(const Plog::ULit &
     return result;
 }
 
-std::vector<Clingo::AST::BodyLiteral> Statement::gringobody(const UAttDeclVec &attdecls, const USortDefVec &sortDefVec) {
+std::vector<Clingo::AST::BodyLiteral> Statement::gringobody(const UAttDeclVec &attdecls, const USortDefVec &sortDefVec
+, bool solvingDCO) {
     std::vector<Clingo::AST::BodyLiteral> resvec;
 
     // add literals obtain from the given body:
@@ -402,9 +409,11 @@ std::vector<Clingo::AST::BodyLiteral> Statement::gringobody(const UAttDeclVec &a
     std::vector<Clingo::AST::BodyLiteral> sortAtoms = getSortAtoms(sortDefVec, attdecls);
     resvec.insert(resvec.end(), sortAtoms.begin(), sortAtoms.end());
     // add external __ext(id, X1,...,Xn) to the body of the rule
-    Clingo::AST::Term extterm = make_external_term();
-    Clingo::AST::Literal extlit ={defaultLoc, Clingo::AST::Sign::None, extterm};
-    resvec.emplace_back(Clingo::AST::BodyLiteral{defaultLoc,Clingo::AST::Sign::None, extlit});
+    if(solvingDCO) {
+        Clingo::AST::Term extterm = make_external_term();
+        Clingo::AST::Literal extlit = {defaultLoc, Clingo::AST::Sign::None, extterm};
+        resvec.emplace_back(Clingo::AST::BodyLiteral{defaultLoc, Clingo::AST::Sign::None, extlit});
+    }
     return resvec;
 }
 
