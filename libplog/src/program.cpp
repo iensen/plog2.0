@@ -140,6 +140,7 @@ namespace Plog {
             b.add({defaultLoc, Clingo::AST::ShowSignature{Clingo::Signature("__pr", 4, true), false}});
             b.add({defaultLoc, Clingo::AST::ShowSignature{Clingo::Signature("__query", 0, true), false}});
             b.add({defaultLoc, Clingo::AST::ShowSignature{Clingo::Signature("__truly_random", 1, true), false}});
+            b.add({defaultLoc, Clingo::AST::ShowSignature{Clingo::Signature("__truly_random", 2, true), false}});
         }
     }
 

@@ -23,7 +23,7 @@ using Gringo::String;
 // manipulations with gringo and clingo terms:
 Clingo::AST::Term termToClingoTerm(const UTerm & term);
 UTermVec clone(const UTermVec &vec);
-std::string term_to_string (Clingo::AST::Term term);
+std::string term_to_string (const Clingo::AST::Term &term);
 Gringo::String getAttrName(const UTerm &term);
 std::vector<Clingo::AST::Term> getAttrArgs(const UTerm &term);
 

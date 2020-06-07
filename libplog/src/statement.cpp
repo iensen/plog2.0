@@ -270,19 +270,41 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
             result.push_back(Clingo::AST::Statement{defaultLoc, f_r});
             // __interveted(a(t)) :- do(a(t),_)
             auto a_t = termToClingoTerm(aterm);
+
+
             Clingo::AST::BodyLiteral bodyLit = make_body_lit("do", {a_t,Clingo::AST::Term{defaultLoc,Clingo::AST::Variable{"_"}}});
             Clingo::AST::Literal lit = make_lit("__intervene",{a_t});
             Clingo::AST::Rule interveneDef{{defaultLoc, lit}, {bodyLit}};
             result.push_back(Clingo::AST::Statement{defaultLoc, interveneDef});
-            // __truly_random(a(t)) :- random(a(t), true), not __intervene(a(t))
-            Clingo::AST::Literal truly_random_lit = make_lit("__truly_random",{a_t});
+            // __truly_random(a(t)) :- random(a(t), true), not __intervene(a(t)), or
+            // __truly_random(a(t),p) :- random(a(t),p, true), not __intervene(a(t)) if random has p
+            std::vector<Clingo::AST::Term> truly_random_args = {a_t};
+            if(fgterm->args.size() == 3) {
+                const UTerm & dynRangeTerm = fgterm->args[1];
+                truly_random_args.push_back(termToClingoTerm(dynRangeTerm));
+                // :- a(t,Y), not p(Y, true)
+                Clingo::AST::Disjunction d;
+                std::vector<Clingo::AST::Term> argsc = getAttrArgs(aterm);
+                auto var = Clingo::AST::Variable{"_X"};
+                argsc.push_back(Clingo::AST::Term{defaultLoc,var});
+                auto dynRangeBodyLit = make_body_lit(getAttrName(dynRangeTerm),{Clingo::AST::Term{defaultLoc,var}, make_term("true")}, Clingo::AST::Sign::Negation);
+                auto  attrBodyLit = make_body_lit(termName, argsc);
+                Clingo::AST::Rule trulyrandomDef{{defaultLoc, d}, {dynRangeBodyLit, attrBodyLit}};
+                result.push_back(Clingo::AST::Statement{defaultLoc, trulyrandomDef});
+
+            }
+            Clingo::AST::Literal truly_random_lit = make_lit("__truly_random",truly_random_args);
             auto intervene_lit = make_body_lit("__intervene",{a_t},Clingo::AST::Sign::Negation);
             auto random_lit = Clingo::AST::BodyLiteral{defaultLoc,Clingo::AST::Sign::None, f_l};
             Clingo::AST::Rule trulyrandomDef{{defaultLoc, truly_random_lit}, {random_lit, intervene_lit}};
             result.push_back(Clingo::AST::Statement{defaultLoc, trulyrandomDef});
             // show a/n
             result.push_back({defaultLoc,Clingo::AST::ShowSignature{Clingo::Signature(termName.c_str(),  getAttrArgs(aterm).size() + 1, true), false}});
-
+            // show p/2 if dynamic range p it is present
+            if(truly_random_args.size() > 1) {
+                auto const dynRangeAttr = truly_random_args[1];
+                result.push_back({defaultLoc,Clingo::AST::ShowSignature{Clingo::Signature(getAttrName(fgterm->args[1]).c_str(),  2, true), false}});
+            }
 
         }
     }

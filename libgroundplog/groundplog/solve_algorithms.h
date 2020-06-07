@@ -65,7 +65,8 @@ namespace GroundPlog {
         std::map<std::string,size_t> attributeRangeElemCountCache;
         std::pair<bool, double> computeProbabilityFromModels(Clingo::SolveHandle models, Plog::Program* inputProgram);
         ModelStats getModelStats(const Clingo::Model & model,  Plog::Program* inputProgram);
-        size_t getAttributeRangeElemCount(const std::string& attribute, Plog::Program* inputProgram);
+        size_t getAttributeRangeElemCount(const std::string& attribute, const std::string & dynRangeAtt,
+                                          std::unordered_map<std::string, std::string> &modelAttValue, Plog::Program* inputProgram);
     public:
         NaiveSolve(){};
 

@@ -2,7 +2,7 @@
 // Created by iensen on 9/3/16.
 //
 
-
+#include <plog/input/utils.h>
 #include <groundplog/solve_algorithms.h>
 #include<queue>
 #include <groundplog/clingo_control.h>
@@ -236,20 +236,44 @@ static bool startswith(const char* src, const char* pattern) {
 
 }
 
-
-size_t GroundPlog::NaiveSolve::getAttributeRangeElemCount(const std::string& attribute, Plog::Program* inputProgram) {
-    auto cache = attributeRangeElemCountCache.find(attribute);
-    if(cache !=  attributeRangeElemCountCache.end()) {
-        return cache->second;
-    } else {
-        auto const valVecSize = inputProgram->getAttributeRangeElements(attribute).size();
-        return attributeRangeElemCountCache[attribute] = valVecSize;
+// Computes the number of possible values of a given attribute term in a given model
+// @param dynRangeAtt is the name of the attribute term which is used to specify dynamic range of the attribute term
+// in a given model. If there is no dynamic range, dynRangeAtt is empty.
+// @param modelAttValue represents a model. modelAttvalue[a(t)] = y iff a(t) = y in a given model.
+// @param inputProgram is the program for which the model was computed
+size_t GroundPlog::NaiveSolve::getAttributeRangeElemCount(const std::string &attribute, const std::string &dynRangeAtt,
+                                                          std::unordered_map<std::string, std::string> &modelAttValue,
+                                                          Plog::Program *inputProgram) {
+    if (dynRangeAtt.empty()) {
+        auto cache = attributeRangeElemCountCache.find(attribute);
+        if (cache != attributeRangeElemCountCache.end()) {
+            return cache->second;
+        } else {
+            return attributeRangeElemCountCache[attribute] = inputProgram->getAttributeRangeElements(attribute).size();
+        }
     }
+    auto attributeValues = inputProgram->getAttributeRangeElements(attribute);
+    return std::count_if(attributeValues.begin(), attributeValues.end(),
+                         [&](const Clingo::AST::Term &value) {
+                             auto att =  dynRangeAtt + "(" + term_to_string(value) + ")";
+                             auto it =  modelAttValue.find(att);
+                             return it != modelAttValue.end() && it->second == "true";
+                         });
+
 }
 
+static bool isTrueInModel(const std::string& att, const  std::unordered_map<std::string, std::string> modelAttValue)  {
+    auto it = modelAttValue.find(att);
+    if(it!=modelAttValue.end()) {
+        return it->second == "true";
+    }
+}
+// Compute statistics for the given model.
 GroundPlog::NaiveSolve::ModelStats GroundPlog::NaiveSolve::getModelStats(const Clingo::Model & model,  Plog::Program* inputProgram) {
     const Clingo::SymbolVector &atvec = model.symbols();
-    std::vector<std::string> trulyRandomAtts;
+    // trulyRandomAtts[i].first is the attribute name, trylyRandomAtts[i].second is the name of dynamic range
+    // if there is no dynamic range, stores empty string.
+    std::vector<std::pair<std::string, std::string>> trulyRandomAtts;
     // modelAttValue[a] = y if and only if the model contains atom a = y
     std::unordered_map<std::string, std::string> modelAttValue;
     // knownProbs[a][y] is c if and only if the model has satisfied pr-atom pr(a = y) = c
@@ -261,7 +285,12 @@ GroundPlog::NaiveSolve::ModelStats GroundPlog::NaiveSolve::getModelStats(const C
         auto const name = s.name();
         // truly_random:
         if(startswith(name,"__t")) {
-            trulyRandomAtts.emplace_back(s.arguments()[0].to_string());
+            if(s.arguments().size() == 1) {
+                trulyRandomAtts.emplace_back(std::make_pair<std::string, std::string>(s.arguments()[0].to_string(),""));
+            } else {
+                trulyRandomAtts.emplace_back(std::make_pair<std::string, std::string>(s.arguments()[0].to_string(),s.arguments()[1].to_string()));
+            }
+
             continue;
         }
         if(startswith(name,"__q")) {
@@ -280,7 +309,7 @@ GroundPlog::NaiveSolve::ModelStats GroundPlog::NaiveSolve::getModelStats(const C
             continue;
         }
 
-        if(strcmp(name,"random") !=0 && !startswith(name, "_")) {
+        if(!startswith(name, "_")) {
             std::string attribute_term = name;
             if(s.arguments().size() > 1) {
                 attribute_term += "(";
@@ -298,7 +327,9 @@ GroundPlog::NaiveSolve::ModelStats GroundPlog::NaiveSolve::getModelStats(const C
     }
 
     double probability = 1.0;
-    for(auto const & truly_random_att : trulyRandomAtts){
+    for(auto const & truly_random_att_pair : trulyRandomAtts){
+        auto const & truly_random_att = truly_random_att_pair.first;
+        auto const & dyn_range_att = truly_random_att_pair.second;
         auto const & value = modelAttValue.at(truly_random_att);
         // defined probability:
         auto knownProbsForAtt = knownProbs.find(truly_random_att);
@@ -313,8 +344,14 @@ GroundPlog::NaiveSolve::ModelStats GroundPlog::NaiveSolve::getModelStats(const C
         // default probability:
         if(knownProbsForAtt != knownProbs.end()) {
             double sumKnownProb = 0.0;
-            for(auto const attProb: knownProbsForAtt->second) {
-                sumKnownProb+=attProb.second;
+            // the number of values for which we have a defined probability
+            size_t definedProbValueCount = 0;
+            for(auto const & attProb: knownProbsForAtt->second) {
+                // only add this probability if it belongs to dynamic range
+                if(dyn_range_att.empty() || isTrueInModel(dyn_range_att + "(" + value + ")", modelAttValue)) {
+                    sumKnownProb += attProb.second;
+                    ++ definedProbValueCount;
+                }
             }
             std::string attName;
             auto lParenPos = truly_random_att.find('(');
@@ -324,7 +361,7 @@ GroundPlog::NaiveSolve::ModelStats GroundPlog::NaiveSolve::getModelStats(const C
                 attName = truly_random_att.substr(0,lParenPos);
             }
             // assume no dyhnamic range
-            probability *=(1.0 - sumKnownProb)/(getAttributeRangeElemCount(attName, inputProgram) - knownProbsForAtt->second.size());
+            probability *=(1.0 - sumKnownProb)/(getAttributeRangeElemCount(attName, dyn_range_att, modelAttValue, inputProgram) - definedProbValueCount);
             continue;
         }
     }

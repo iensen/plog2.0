@@ -38,6 +38,8 @@ Clingo::AST::Term negate(const UTerm &term) {
 
 }
 
+// Converts P-log term to Clingo Term. Does not change the representation,
+// a(t)  remains to be a(t), just the data structure changes.
 Clingo::AST::Term termToClingoTerm(const UTerm & term) {
 
     if(term.get()== nullptr) {
@@ -107,12 +109,10 @@ UTermVec clone(const UTermVec &vec) {
 }
 
 
-std::string term_to_string (Clingo::AST::Term term) {
+std::string term_to_string (const Clingo::AST::Term & term) {
     std::stringstream ss;
     ss << term;
-    std::string res;
-    ss >> res;
-    return res;
+    return ss.str();
 }
 
 // not sure if this leaks.
