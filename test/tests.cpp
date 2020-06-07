@@ -8,7 +8,7 @@
 
 
 static void run_naive_query_tests() {
-    ::testing::GTEST_FLAG(filter) = "NEWVERSION_NAIVE*";
+    ::testing::GTEST_FLAG(filter) = "*NEWVERSION_NAIVE*";
 }
 
 int main(int argc, char **argv) {

@@ -259,13 +259,14 @@ size_t GroundPlog::NaiveSolve::getAttributeRangeElemCount(const std::string &att
                              auto it =  modelAttValue.find(att);
                              return it != modelAttValue.end() && it->second == "true";
                          });
-
 }
 
 static bool isTrueInModel(const std::string& att, const  std::unordered_map<std::string, std::string> modelAttValue)  {
     auto it = modelAttValue.find(att);
     if(it!=modelAttValue.end()) {
         return it->second == "true";
+    } else {
+        return false;
     }
 }
 // Compute statistics for the given model.
@@ -342,15 +343,16 @@ GroundPlog::NaiveSolve::ModelStats GroundPlog::NaiveSolve::getModelStats(const C
         }
 
         // default probability:
-        if(knownProbsForAtt != knownProbs.end()) {
             double sumKnownProb = 0.0;
             // the number of values for which we have a defined probability
             size_t definedProbValueCount = 0;
-            for(auto const & attProb: knownProbsForAtt->second) {
-                // only add this probability if it belongs to dynamic range
-                if(dyn_range_att.empty() || isTrueInModel(dyn_range_att + "(" + value + ")", modelAttValue)) {
-                    sumKnownProb += attProb.second;
-                    ++ definedProbValueCount;
+            if(knownProbsForAtt != knownProbs.end()) {
+                for (auto const &attProb: knownProbsForAtt->second) {
+                    // only add this probability if it belongs to dynamic range
+                    if (dyn_range_att.empty() || isTrueInModel(dyn_range_att + "(" + value + ")", modelAttValue)) {
+                        sumKnownProb += attProb.second;
+                        ++definedProbValueCount;
+                    }
                 }
             }
             std::string attName;
@@ -362,8 +364,6 @@ GroundPlog::NaiveSolve::ModelStats GroundPlog::NaiveSolve::getModelStats(const C
             }
             // assume no dyhnamic range
             probability *=(1.0 - sumKnownProb)/(getAttributeRangeElemCount(attName, dyn_range_att, modelAttValue, inputProgram) - definedProbValueCount);
-            continue;
-        }
     }
     return {probability, isQueryTrue};
 }
