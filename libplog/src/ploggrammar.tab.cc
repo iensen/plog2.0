@@ -80,7 +80,7 @@ int PlogGrammar_lex(void *value, Gringo::Location* loc, PlogParser *lexer) {
 #  endif
 # endif
 
-#include "ploggrammar.tab.hh"
+#include "plog/ploggrammar.tab.hh"
 
 // User implementation prologue.
 
