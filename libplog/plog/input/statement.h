@@ -20,7 +20,7 @@
 #include <plog/plog.h>
 
 
-enum class StatementType { RULE, PR_ATOM, QUERY};
+enum class StatementType { RULE, CRRULE, PR_ATOM, QUERY};
 using Gringo::Input::ToGroundArg;
 using UGLit = std::unique_ptr<Gringo::Input::Literal>;
 using Gringo::Input::UHeadAggr ;
@@ -30,7 +30,7 @@ using Gringo::Input::UBodyAggr;
 
 struct Statement : Gringo::Printable, Gringo::Locatable {
     Statement(Plog::ULit &&query);
-    Statement(Plog::ULit &&head, Plog::ULitVec &&body);
+    Statement(Plog::ULit &&head, Plog::ULitVec &&body, bool isCrRule = false);
     Statement(Plog::ULit &&head, Plog::ULitVec &&body,UProb && prob);
 
     virtual void print(std::ostream &out) const;
@@ -64,7 +64,9 @@ private:
     std::vector<Clingo::AST::BodyLiteral> getSortAtoms(const Plog::ULit &lit,const USortDefVec &sortDefVec,const UAttDeclVec & attdecls);
     std::vector<Clingo::AST::BodyLiteral> getSortAtoms(const USortDefVec &sortDefVec,const UAttDeclVec & attdecl);
     static  std::vector<String> findArgSorts(String attName, const UAttDeclVec & attdecls);
+    Clingo::AST::Term make_unique_term_with_name(const char *);
     Clingo::AST::Term make_external_term();
+    Clingo::AST::Term make_apply_term(bool negation);
     Clingo::AST::Statement make_external_atom_rule(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec);
 
 

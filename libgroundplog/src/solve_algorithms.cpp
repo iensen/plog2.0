@@ -373,7 +373,12 @@ std::pair<bool, double> GroundPlog::NaiveSolve::computeProbabilityFromModels(Cli
     double queryProbability = 0.0;
     bool status = true;
     for(auto const & model : models) {
-        //std::cout << model << std::endl;
+       // std::cout << model << std::endl;
+        // don't care about 'intermediate' models computed by clingo
+        // when optimize statement is present (ie., when the original program had cr-rules)
+        if(!model.optimality_proven() && !model.cost().empty()) {
+            continue;
+        }
         ModelStats stats = getModelStats(model, inputProgram);
         totalProbability += stats.probability;
         if(stats.isQueryTrue) {

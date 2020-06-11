@@ -28,7 +28,7 @@ int Statement::rule_id = 0;
 
 
 
-Statement::Statement(Plog::ULit &&head, Plog::ULitVec &&body):head_(std::move(head)),body_(std::move(body)),type_(StatementType::RULE){
+Statement::Statement(Plog::ULit &&head, Plog::ULitVec &&body, bool isCrRule):head_(std::move(head)),body_(std::move(body)),type_(isCrRule?StatementType::CRRULE:StatementType::RULE){
 }
 
 Statement::Statement(Plog::ULit &&head, Plog::ULitVec &&body, UProb &&prob):head_(std::move(head)),body_(std::move(body)),probability_(std::move(prob)),type_(StatementType::PR_ATOM){
@@ -164,7 +164,28 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
     // f_ is either random(a,p), or a = y
     Clingo::AST::Term f_ = termToClingoTerm(fterm.first);
     Clingo::AST::Literal f_l{defaultLoc, Clingo::AST::Sign::None, f_};
-    Clingo::AST::Rule f_r{{defaultLoc, f_l}, gringobody(attdecls, sortDefVec, algo == AlgorithmKind::for_dco)};
+    auto body = gringobody(attdecls, sortDefVec, algo == AlgorithmKind::for_dco);
+    Clingo::AST::Rule f_r{{defaultLoc, f_l}, body};
+    if(getType() == StatementType::CRRULE) {
+        auto positiveApplyTerm = make_apply_term(false);
+        auto negativeApplyTerm = make_apply_term(true);
+        // TODO: figure out how to do this using a choice rule
+        // add appl | -appl :- body
+        Clingo::AST::Literal alit1{defaultLoc, Clingo::AST::Sign::None, positiveApplyTerm};
+        Clingo::AST::Literal alit2{defaultLoc, Clingo::AST::Sign::None, negativeApplyTerm};
+        Clingo::AST::Disjunction d;
+        d.elements.push_back(Clingo::AST::ConditionalLiteral{alit1,{}});
+        d.elements.push_back(Clingo::AST::ConditionalLiteral{alit2,{}});
+        Clingo::AST::Rule disjunctiveApplyRule{{defaultLoc, d}, body};
+        result.emplace_back(Clingo::AST::Statement{defaultLoc, disjunctiveApplyRule});
+        // append appl(r) to the body of the cr-rule created
+        f_r.body.push_back({defaultLoc, Clingo::AST::Sign::None, alit1});
+        // add weak constraint
+        Clingo::Symbol one_symbol = Clingo::Number(1);
+        Clingo::AST::Term one{defaultLoc, one_symbol};
+        auto minimizeS = Clingo::AST::Minimize{one,one,{positiveApplyTerm}, {Clingo::AST::BodyLiteral{defaultLoc, Clingo::AST::Sign::None, alit1}}};
+        result.push_back(Clingo::AST::Statement{defaultLoc, minimizeS});
+    }
     //std::cout <<"f_r: "<< f_r << std::endl;
     result.emplace_back(Clingo::AST::Statement{defaultLoc, f_r});
     // generate a rule of the form #external ex_atom:sort_atoms
@@ -225,7 +246,7 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
         const USortExpr  & resSort = getResultSort(termName,attdecls);
         std::vector<Clingo::AST::Term> instances = resSort->generate(sortDefVec);
         if(algo == AlgorithmKind::for_dco) {
-            // add the rule add a(t,instance) :- ext(a(t,instance)) for every instance in intances
+            // add the rule add a(t,instance) :- ext(a(t,instance)) for every instance in instances
             for (const Clingo::AST::Term &y: instances) {
                 std::vector<Clingo::AST::Term> argsc = getAttrArgs(aterm);
                 argsc.push_back(y);
@@ -543,8 +564,7 @@ Statement::getSortAtoms(const USortDefVec &sortDefVec, const UAttDeclVec &attdec
     }
     return resvec;
 }
-
-Clingo::AST::Term Statement::make_external_term() {
+Clingo::AST::Term Statement::make_unique_term_with_name(const char *name) {
     std::vector<Clingo::AST::Term> args;
     Clingo::AST::Term idarg = Clingo::AST::Term{defaultLoc,Clingo::Id(int_to_str(rule_id).c_str())};
     args.push_back(idarg);
@@ -556,9 +576,18 @@ Clingo::AST::Term Statement::make_external_term() {
         Clingo::AST::Term vararg = Clingo::AST::Term{defaultLoc,Clingo::AST::Variable{buf}};
         args.push_back(vararg);
     }
-    Clingo::AST::Function f_ = {"__ext", args};
+    Clingo::AST::Function f_ = {name, args};
     return {defaultLoc, f_};
 }
+
+Clingo::AST::Term Statement::make_external_term() {
+    return make_unique_term_with_name("__ext");
+}
+
+Clingo::AST::Term Statement::make_apply_term(bool negation) {
+    return make_unique_term_with_name(negation?"-__appl":"_appl");
+}
+
 
 Clingo::AST::Statement Statement::make_external_atom_rule(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec) {
     Clingo::AST::Term exheadterm = make_external_term();

@@ -143,6 +143,7 @@ void PlogGrammar::parser::error(DefaultLocation const &l, std::string const &msg
     ARROW       "->"
     GT          ">"
     IF          ":-"
+    CRIF        ":+"
     LBRACE      "{"
     LBRACK      "["
     VBAR        "|"
@@ -313,6 +314,9 @@ stmt : head[hd] DOT           {  BUILDER.rule(@$, $hd); }
     | head[hd] IF DOT         {  BUILDER.rule(@$, $hd); }
     | head[hd] IF body[bd] DOT{  BUILDER.rule(@$, $hd, $bd); }
     | IF body[bd]  DOT        {  BUILDER.rule(@$, BUILDER.lit(false), $bd); }
+    | head[hd] CRIF DOT         {  BUILDER.crrule(@$, $hd); }
+    | head[hd] CRIF body[bd] DOT{  BUILDER.crrule(@$, $hd, $bd); }
+    | CRIF body[bd]  DOT        {  BUILDER.crrule(@$, BUILDER.lit(false), $bd); }
     | IF DOT                  {  BUILDER.rule(@$, BUILDER.lit(false)); }
     ;
 

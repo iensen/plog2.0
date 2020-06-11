@@ -1,0 +1,18 @@
+sorts
+
+#boolean = {true, false}.
+
+attributes
+p: #boolean.
+q: #boolean.
+r: #boolean.
+
+statements
+
+random(p) :+.
+r :- not q.
+r = false.
+q :- p = true.
+q :- p = false.
+
+?p.

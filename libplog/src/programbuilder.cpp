@@ -232,6 +232,16 @@ void NonGroundProgramBuilder::rule(Location const &loc, LitUid head) {
     rule(loc, head, body());
 }
 
+void NonGroundProgramBuilder::crrule(Location const &loc, LitUid head, BdLitVecUid body) {
+    bool isCrRule = true;
+    prg_.add(make_locatable<Statement>(loc, lits_.erase(head), bodies_.erase(body), isCrRule));
+}
+
+void NonGroundProgramBuilder::crrule(Location const &loc, LitUid head) {
+    crrule(loc, head, body());
+}
+
+
 void NonGroundProgramBuilder::pratom(Location const &loc, LitUid head, BdLitVecUid body, ProbUid prob) {
     prg_.add(make_locatable<Statement>(loc, lits_.erase(head), bodies_.erase(body),probs_.erase(prob)));
 }

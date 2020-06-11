@@ -75,7 +75,7 @@ namespace Plog {
         for (const UStm &stm: stms_) {
             auto rules = stm->toGringoAST(attdecls_, sortdefs_, algo);
             for (const auto &rule: rules) {
-                // std::cout << rule << std::endl;
+                //std::cout << rule << std::endl;
                 b.add(rule);
             }
         }
@@ -115,9 +115,9 @@ namespace Plog {
                 Args1.push_back(vararg);
                 Args2.push_back(vararg);
             }
-            auto const &V1 = Clingo::AST::Term{defaultLoc,Clingo::AST::Variable{"V1"}};
+            auto const &V1 = Clingo::AST::Term{defaultLoc,Clingo::AST::Variable{"_V1"}};
             Args1.emplace_back(V1);
-            auto const &V2 = Clingo::AST::Term{defaultLoc,Clingo::AST::Variable{"V2"}};
+            auto const &V2 = Clingo::AST::Term{defaultLoc,Clingo::AST::Variable{"_V2"}};
             Args2.emplace_back(V2);
             auto bodyLit1 = Statement::make_body_lit(name, Args1);
             auto bodyLit2 = Statement::make_body_lit(name, Args2);

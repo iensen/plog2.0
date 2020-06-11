@@ -117,7 +117,7 @@ PlogControl::PlogControl(GroundPlog::GroundPlogFacade *groundplog,
 , pgf_(pgf)
 , psf_(psf)
 ,logger_(printer),
- clingoControl{{"0"}, [](Clingo::WarningCode, char const *message) {}, messageLimit},
+ clingoControl{{"0","--opt-mode=optN"}, [](Clingo::WarningCode, char const *message) {}, messageLimit},
  solvingDCO(solvingDCO)
 {
 

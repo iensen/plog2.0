@@ -130,6 +130,9 @@ public:
     void rule(Location const &loc, LitUid head) ;
     void rule(Location const &loc, LitUid head, BdLitVecUid body);
 
+    void crrule(Location const &loc, LitUid head) ;
+    void crrule(Location const &loc, LitUid head, BdLitVecUid body);
+
     // bodies:
     BdLitVecUid body();
     BdLitVecUid body(BdLitVecUid bid, LitUid elit);

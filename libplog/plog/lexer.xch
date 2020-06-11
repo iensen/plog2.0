@@ -18,6 +18,8 @@
 
 // }}}
 
+
+
 #include <gringo/locatable.hh>
 #include "plogparser.h"
 
@@ -81,6 +83,7 @@ int PlogParser::lex_impl(void *pValue, Location &loc) {
         <normal> "."        { return PlogGrammar::parser::token::DOT; }
         <normal> ":"        { return PlogGrammar::parser::token::COLON; }
         <normal> ":-"                  { return PlogGrammar::parser::token::IF; }
+        <normal> ":+"                  { return PlogGrammar::parser::token::CRIF; }
         <normal> ","        { return PlogGrammar::parser::token::COMMA; }
         <normal> "|"                          { return PlogGrammar::parser::token::VBAR; }
         <normal> "["                   { return PlogGrammar::parser::token::LBRACK; }

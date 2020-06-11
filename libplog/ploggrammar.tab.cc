@@ -37,8 +37,8 @@
 #line 47 "plog/ploggrammar.yy" // lalr1.cc:404
 
 
-#include "plog/plogparser.h"
-#include "plog/programbuilder.h"
+#include "plogparser.h"
+#include "programbuilder.h"
 #include <gringo/base.hh>
 #include <climits>
 using Relation = Gringo::Relation;

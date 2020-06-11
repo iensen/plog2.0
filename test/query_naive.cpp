@@ -108,13 +108,17 @@ TEST(NEWVERSION_NAIVE_BLOCKS, _20x2) {
     ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Blocks/blockmap20_2.plg",NewPlogMode::QUERY_NAIVE), 0.621053, 1e-5);
 }
 
+TEST(NEWVERSION_NAIVE, _CR_RULE) {
+    ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Blocks/blockmap20_2.plg",NewPlogMode::QUERY_NAIVE), 0.621053, 1e-5);
+}
+
 TEST(PERF_NEWVERSION_NAIVE_BLOCKS, _20x3) {
     ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Blocks/blockmap20_3.plg",NewPlogMode::QUERY_NAIVE), 0.454386, 1e-5);
 }
 
 
 TEST(PERF_NEWVERSION_NAIVE_BLOCKS, _20x4) {
-    ASSERT_NEAR(run_plog("plogapp/tests/weijuns_testsuite/Blocks/blockmap20_4.plg",NewPlogMode::QUERY_NAIVE), 0.308153, 1e-5);
+    ASSERT_NEAR(run_plog("plogapp/tests/simplecrrule.plog",NewPlogMode::QUERY_NAIVE), 0.5, 1e-5);
 }
 
 TEST(NEWVERSION_NAIVE_POKER, _5x3) {
