@@ -5,7 +5,7 @@
 #pragma once
 
 #include<string>
-
+#include<vector>
 
 enum class OldPlogMode {
     NAIVE, DCOOPTIMIZED
@@ -16,5 +16,15 @@ enum class NewPlogMode {
 };
 
 
-double run_plog(const std::string& file, NewPlogMode mode = NewPlogMode::QUERY_DCO);
+double compute_query(const std::string& file, NewPlogMode mode = NewPlogMode::QUERY_DCO);
+
+// returns a (sorted) vector of possible worlds of a program in the format <"a_1=y_n,...,a_n=y_n", P>,
+// where {a_1 = y_1, ...,a_n = y_n} is a possible world and P is its probability
+std::vector<std::pair<std::string, double>> compute_possible_worlds(const std::string& file);
+
+// returns possible worlds in the same format as compute_possible_worlds, but obtains them from
+// a string solver might output (used for testing).
+std::vector<std::pair<std::string, double>> parse_possible_worlds(const std::string& out);
+
+
 double run_old_plog(std::string file, OldPlogMode mode);

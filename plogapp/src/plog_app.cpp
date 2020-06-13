@@ -96,9 +96,9 @@ void PlogApp::initOptions(Potassco::ProgramOptions::OptionContext &root) {
                      ("query", mode_query)
                      ("pw", mode_possible_worlds)),
              "Run in {query|compute possible wolrds} mode\n")
-            ("algo", storeTo(algo_ = AlgorithmKind::for_dco, values<AlgorithmKind>()
-                     ("for_dco", AlgorithmKind::for_dco)
-                     ("naive", AlgorithmKind::naive)),
+            ("algo", storeTo(qalgo_ = qalgo_naive, values<QAlgo>()
+                     ("dco", QAlgo::qalgo_dco)
+                     ("naive", QAlgo::qalgo_naive)),
              "Use {algorithm for dco programs|naive algorithm that computes all possible worlds}\n");
 
     root.add(basic);
@@ -110,13 +110,25 @@ void PlogApp::validateOptions(const Potassco::ProgramOptions::OptionContext &roo
 	 BaseType::validateOptions(root, parsed, vals);
 }
 
+SolvingMode PlogApp::getSolvingMode() {
+      if(mode_ == Mode::mode_possible_worlds) {
+          return SolvingMode::possible_worlds;
+      } else {
+          if(qalgo_ == QAlgo::qalgo_naive) {
+              return SolvingMode::query_naive;
+          } else {
+              return SolvingMode::query_dco;
+          }
+      }
+
+}
 void PlogApp::run(GroundPlog::GroundPlogFacade &groundPlog) {
     printVersion();
     try {
         using namespace std::placeholders;
         groundPlog.start(groundPlogConfig_);
-        grd = Gringo::gringo_make_unique<PlogControl>(groundPlog_.get(), groundPlogConfig_, std::bind(&PlogApp::handlePostGroundOptions, this, _1), std::bind(&PlogApp::handlePreSolveOptions, this, _1),nullptr,
-                algo_== AlgorithmKind::for_dco);
+        grd = Gringo::gringo_make_unique<PlogControl>(groundPlog_.get(), groundPlogConfig_, std::bind(&PlogApp::handlePostGroundOptions, this, _1), std::bind(&PlogApp::handlePreSolveOptions, this, _1), nullptr,
+                                                      getSolvingMode());
         grd->parse(groundPlogAppOpts_.input, grOpts_);
         if (mode_ == mode_query) {
               grd->computeQuery();

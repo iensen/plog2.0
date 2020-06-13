@@ -95,13 +95,24 @@ void PlogControl::computeQuery(){
 
     // solve (this is needed to make sure that the rules are passed from gringo to clasp:
     clingoControl.solve();
-    solve();
+
+    auto res = groundplog_->solve(&clingoControl, &prg_, solvingMode);
+    if(solvingMode == SolvingMode::query_dco && !res.success) {
+        fprintf(stderr, "ERROR: the program is not dynamically causally ordered\n");
+    } else {
+        if(!res.success) {
+            fprintf(stderr, "ERROR: the input program is not coherent, because the sum of the measures of its possible worlds is 0.\n");
+        } else {
+            printf("answer: %f\n", res.prob);
+        }
+    }
 }
 
 void PlogControl::computePossibleWorlds(){
     groundPlogConfig_.releaseOptions();
     ground();
-    //groundplog_->call_clingo()
+    groundplog_->computePossibleWorlds(&clingoControl, &prg_);
+
 }
 
 
@@ -111,14 +122,14 @@ PlogControl::PlogControl(GroundPlog::GroundPlogFacade *groundplog,
                          PlogControl::PostGroundFunc pgf,
                          PlogControl::PreSolveFunc psf,
                          Gringo::Logger::Printer printer,
-                         bool solvingDCO):
+                         SolvingMode mode):
  groundplog_(groundplog)
 , groundPlogConfig_(groundplogConfig)
 , pgf_(pgf)
 , psf_(psf)
 ,logger_(printer),
  clingoControl{{"0","--opt-mode=optN"}, [](Clingo::WarningCode, char const *message) {}, messageLimit},
- solvingDCO(solvingDCO)
+ solvingMode(mode)
 {
 
 }
@@ -144,16 +155,7 @@ std::string PlogControl::str() {
 }
 
 Gringo::SolveResult PlogControl::solve() {
-    auto res = groundplog_->solve(&clingoControl, &prg_, solvingDCO? AlgorithmKind::for_dco:AlgorithmKind::naive);
-    if(solvingDCO && !res.success) {
-        fprintf(stderr, "ERROR: the program is not dynamically causally ordered\n");
-    } else {
-        if(!res.success) {
-            fprintf(stderr, "ERROR: the input program is not coherent, because the sum of the measures of its possible worlds is 0.\n");
-        } else {
-            printf("answer: %f\n", res.prob);
-        }
-    }
+
 }
 
 void PlogControl::load(std::string const &filename) {
@@ -175,8 +177,8 @@ void PlogControl::ground() {
         }
         parsed = false;
     }
-    prg_.loadToControl(clingoControl, solvingDCO?AlgorithmKind::for_dco:AlgorithmKind::naive);
-    pb = new PlogGroundProgramBuilder(*out_, solvingDCO);
+    prg_.loadToControl(clingoControl, solvingMode);
+    pb = new PlogGroundProgramBuilder(*out_, solvingMode == SolvingMode::query_dco);
     clingoControl.register_observer(*pb);
     clingoControl.ground({{"base", {}}});
 

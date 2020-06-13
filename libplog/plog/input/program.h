@@ -18,7 +18,8 @@ namespace Plog {
         Program(Program &&x);
 
         // temporary workaround for computing probability using naive algorithm
-        std::vector<Clingo::AST::Term>  getAttributeRangeElements(const std::string& range);
+        std::vector<Clingo::AST::Term>  getAttributeRangeElements(const std::string& attribute) const;
+        size_t  getAttributeRangeElementsCount(const std::string& attribute) const;
 
         void add(USortDef sDef);
 
@@ -34,7 +35,7 @@ namespace Plog {
 
         Gringo::Input::Program toGringo();
 
-        void loadToControl(Clingo::Control &ctl, AlgorithmKind algo);
+        void loadToControl(Clingo::Control &ctl, SolvingMode solvingMode);
 
         ~Program();
 
@@ -44,6 +45,7 @@ namespace Plog {
         void rewriteArithmetics();
 
         void unpool();
+
 
         unsigned auxNames_ = 0;
         //Ground::LocSet        locs_;
@@ -55,6 +57,7 @@ namespace Plog {
         USortDefVec sortdefs_;
         UAttDeclVec attdecls_;
 
+        mutable std::unordered_map<std::string, size_t> attributeRangeCountCache;
     };
 }
 

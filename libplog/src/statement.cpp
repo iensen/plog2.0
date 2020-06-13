@@ -94,7 +94,7 @@ StatementType Statement::getType() {
 
 
 std::vector<Clingo::AST::Statement> Statement::toGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec,
-        AlgorithmKind algo) {
+                                                           SolvingMode algo) {
     switch(type_) {
         case StatementType::PR_ATOM: return prAtomToGringoAST(attdecls, sortDefVec, algo);
         case StatementType::QUERY:   return queryToGringoAST(attdecls, algo);
@@ -106,7 +106,7 @@ std::vector<Clingo::AST::Statement> Statement::toGringoAST(const UAttDeclVec & a
 
 // TODO: rename sortDefVec
 std::vector<Clingo::AST::Statement> Statement::prAtomToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec,
-        AlgorithmKind algo) {
+                                                                 SolvingMode algo) {
     // construct head:
     Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
     std::vector<Clingo::AST::Term> args;
@@ -121,14 +121,14 @@ std::vector<Clingo::AST::Statement> Statement::prAtomToGringoAST(const UAttDeclV
     Clingo::AST::Function f_ = {"__pr", args};
     Clingo::AST::Term f_t{loc, f_};
     Clingo::AST::Literal f_l{loc, Clingo::AST::Sign::None, f_t};
-    Clingo::AST::Rule f_r{{loc, f_l}, gringobody(attdecls, sortDefVec, algo == AlgorithmKind::for_dco)};
+    Clingo::AST::Rule f_r{{loc, f_l}, gringobody(attdecls, sortDefVec, algo == SolvingMode::query_dco)};
     return {{loc, f_r},make_external_atom_rule(attdecls, sortDefVec)};
 }
 // for dco algo, and query ?p(a) we construct __query(p(a), true) -- full representation of the query
 // for naive algo, we construct __query :- p(a), since we just need to know whether or not the query was true
-std::vector<Clingo::AST::Statement> Statement::queryToGringoAST(const UAttDeclVec & attdecls, AlgorithmKind algo) {
+std::vector<Clingo::AST::Statement> Statement::queryToGringoAST(const UAttDeclVec & attdecls, SolvingMode algo) {
     Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
-    if(algo == AlgorithmKind::for_dco) {
+    if(algo == SolvingMode::query_dco) {
         std::vector<Clingo::AST::Term> args;
         auto queryargs = term(head_);
         args.push_back(termToClingoTerm(queryargs.first));
@@ -156,7 +156,7 @@ std::vector<Clingo::AST::Statement> Statement::queryToGringoAST(const UAttDeclVe
     }
 }
 
-std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec, AlgorithmKind algo) {
+std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec, SolvingMode solvingMode) {
     std::vector<Clingo::AST::Statement> result;
     // generate a rule of the form head :- body, sort_atoms, [ex_atom]
     // (ex_atom is only present for dco solving)
@@ -164,7 +164,7 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
     // f_ is either random(a,p), or a = y
     Clingo::AST::Term f_ = termToClingoTerm(fterm.first);
     Clingo::AST::Literal f_l{defaultLoc, Clingo::AST::Sign::None, f_};
-    auto body = gringobody(attdecls, sortDefVec, algo == AlgorithmKind::for_dco);
+    auto body = gringobody(attdecls, sortDefVec, solvingMode == SolvingMode::query_dco);
     Clingo::AST::Rule f_r{{defaultLoc, f_l}, body};
     if(getType() == StatementType::CRRULE) {
         auto positiveApplyTerm = make_apply_term(false);
@@ -189,7 +189,7 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
     //std::cout <<"f_r: "<< f_r << std::endl;
     result.emplace_back(Clingo::AST::Statement{defaultLoc, f_r});
     // generate a rule of the form #external ex_atom:sort_atoms
-    if(algo == AlgorithmKind::for_dco) {
+    if(solvingMode == SolvingMode::query_dco) {
         Clingo::AST::Statement ext = make_external_atom_rule(attdecls, sortDefVec);
         result.push_back(ext);
         ++rule_id;
@@ -200,7 +200,7 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
     // 1. add the rule a(t,y) :- __ext(a(t,y)) to the program
     // 2. add the rule #external __ext(a(t,y)):sorts for the head to the program
     // this allows to quickly assign values to attributes based on a given interpretation
-    if(algo == AlgorithmKind::for_dco) {
+    if(solvingMode == SolvingMode::query_dco) {
 
         if (f_str.find("obs(") != 0 && f_str.find("random(") != 0 && f_str.find("do(") != 0) {
             std::vector<Clingo::AST::Term> args;
@@ -217,7 +217,7 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
         }
     }
 
-    // if the rule is of the form random(a(t),p) :- B, and the algo is for_dco
+    // if the rule is of the form random(a(t),p) :- B, and the solvingMode is query_dco
     // 1. add rules a(t,y):- __ext(a(t,y)) for every y from the range of a(t)
     // 2. add rules #external __ext(a(t,y)):sorts for the head to the program
     // f_str stores random(a(t),p)
@@ -245,7 +245,7 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
         // find the list of possible values
         const USortExpr  & resSort = getResultSort(termName,attdecls);
         std::vector<Clingo::AST::Term> instances = resSort->generate(sortDefVec);
-        if(algo == AlgorithmKind::for_dco) {
+        if(solvingMode == SolvingMode::query_dco) {
             // add the rule add a(t,instance) :- ext(a(t,instance)) for every instance in instances
             for (const Clingo::AST::Term &y: instances) {
                 std::vector<Clingo::AST::Term> argsc = getAttrArgs(aterm);
@@ -274,7 +274,7 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
                                   {}};
             result.push_back(Clingo::AST::Statement{defaultLoc, f_r});
         } else {
-            assert(algo == AlgorithmKind::naive);
+            assert(solvingMode == SolvingMode::query_naive || solvingMode == SolvingMode::possible_worlds);
             // add P-log general axioms.
             // a(t,y1) | ... | a(t,yn) :- random(a,p)
             Clingo::AST::Disjunction d;
@@ -331,7 +331,7 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
     }
 
     // :- obs(a(t),v,true), not a(t,v).
-    if(f_str.find("obs(") == 0 && algo==AlgorithmKind::naive) {// if the head is a random atom
+    if(f_str.find("obs(") == 0 && solvingMode == SolvingMode::query_naive) {// if the head is a random atom
         FunctionTerm* fgterm = (FunctionTerm*) (fterm.first.get()); //
         // this will need to change when we will introduce labels
         const UTerm & aterm = fgterm->args[0];

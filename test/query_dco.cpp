@@ -4,6 +4,10 @@
 #include "gtest/gtest.h"
 #include "utils.h"
 
+static double run_plog(const std::string& program) {
+    return compute_query(program);
+}
+
 TEST(NEWVERSION, 0) {
     ASSERT_NEAR(run_plog("plogapp/tests/p1.plog"), 0.30, 1e-8);
 }

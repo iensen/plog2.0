@@ -83,7 +83,7 @@ public:
 
     PlogControl(GroundPlog::GroundPlogFacade *groundplog,
                 GroundPlog::Cli::GroundPlogCliConfig &groundplogConfig, PostGroundFunc pgf, PreSolveFunc psf,Gringo::Logger::Printer printer,
-                bool solvingDCO);
+                SolvingMode mode);
     ~PlogControl() noexcept override;
     void parse();
     void parse(const StringVec&  files, const PlogOptions& opts);
@@ -159,7 +159,7 @@ public:
     bool grounded               = false;
     bool configUpdate_          = false;
     // the flag is true if the mode is query mode, and the algorithm is for dco programs
-    bool solvingDCO = false;
+    SolvingMode solvingMode;
 private:
     PlogGroundProgramBuilder *pb;
 };

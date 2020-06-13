@@ -39,7 +39,7 @@ struct Statement : Gringo::Printable, Gringo::Locatable {
     // this should ground the statement and store the result in stms (collection of gringo statements!)
     virtual void toGround(ToGroundArg &x, UStmVec &stms) const;
     virtual ~Statement();
-    std::vector<Clingo::AST::Statement> toGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec, AlgorithmKind algo);
+    std::vector<Clingo::AST::Statement> toGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec, SolvingMode algo);
     StatementType  getType();
 
 private:
@@ -52,9 +52,9 @@ private:
     std::unordered_set<std::string> getVariables();
     std::unordered_set<std::string> getVariables(const UTerm &term);
 
-    std::vector<Clingo::AST::Statement> prAtomToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec, AlgorithmKind algo);
-    std::vector<Clingo::AST::Statement>queryToGringoAST(const UAttDeclVec & attdecls,  AlgorithmKind algo);
-    std::vector<Clingo::AST::Statement> ruleToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec, AlgorithmKind algo);
+    std::vector<Clingo::AST::Statement> prAtomToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec, SolvingMode algo);
+    std::vector<Clingo::AST::Statement>queryToGringoAST(const UAttDeclVec & attdecls, SolvingMode algo);
+    std::vector<Clingo::AST::Statement> ruleToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec, SolvingMode solvingMode);
 
     static int rule_id;
     Plog::ULit     head_;

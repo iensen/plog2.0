@@ -65,7 +65,7 @@ void GroundPlogBackend::atttoat(unsigned attid, unsigned aid) {
 }
 
 void GroundPlogBackend::finalize() {
-    if (auto p = prg()) { p->finalize(ctl_.solvingDCO);}
+    if (auto p = prg()) { p->finalize(ctl_.solvingMode == SolvingMode::query_dco);}
 }
 
 void GroundPlogBackend::registerTotalAttNumber(size_t num) {

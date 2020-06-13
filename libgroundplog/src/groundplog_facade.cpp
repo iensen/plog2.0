@@ -3,7 +3,9 @@
 //
 
 #include <groundplog/groundplog_facade.h>
+#include <groundplog/possible_worlds.h>
 #include <groundplog/solve_algorithms.h>
+
 #include<clasp/util/timer.h>
 #include <clingo.hh>
 #include <plog/plogcontrol.hh>
@@ -28,9 +30,15 @@ GroundPlog::Program &GroundPlog::GroundPlogFacade::start(GroundPlog::GroundPlogC
 
 
 GroundPlog::GroundPlogFacade::Result
-GroundPlog::GroundPlogFacade::solve(Clingo::Control * cCtl,Plog::Program* prg, AlgorithmKind algoKind) {
-    std::unique_ptr<SolveAlgorithm>  algo(config_->solve.createSolveObject(algoKind));
+GroundPlog::GroundPlogFacade::solve(Clingo::Control * cCtl, Plog::Program* prg, SolvingMode solvingMode) {
+    std::unique_ptr<SolveAlgorithm>  algo(config_->solve.createSolveObject(solvingMode));
     return algo->run(static_cast<GroundPlog::Program *>(this->program()), prg, cCtl);
+}
+
+void
+GroundPlog::GroundPlogFacade::computePossibleWorlds(Clingo::Control *ctl, Plog::Program *inputProgram) {
+   PossibleWorldsComputer computer(nullptr,inputProgram, ctl);
+   computer.run();
 }
 
 void GroundPlog::GroundPlogFacade::init(GroundPlog::GroundPlogConfig &cfg) {

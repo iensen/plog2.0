@@ -58,7 +58,7 @@ namespace Plog {
     }
 
     // temporary workaround for computing probability using naive algorithm
-    std::vector<Clingo::AST::Term>  Program::getAttributeRangeElements(const std::string& attribute) {
+    std::vector<Clingo::AST::Term>  Program::getAttributeRangeElements(const std::string& attribute) const {
             for(const UAttDecl& attDecl : attdecls_) {
                 if(attDecl->attname.c_str() == attribute ) {
                     return attDecl->se->generate(sortdefs_);
@@ -67,13 +67,26 @@ namespace Plog {
             assert(false);
     }
 
-    void Program::loadToControl(Clingo::Control &ctl, AlgorithmKind algo) {
+    size_t Program::getAttributeRangeElementsCount(const std::string &attribute) const {
+        auto it = attributeRangeCountCache.find(attribute);
+        if (it != attributeRangeCountCache.end()) {
+            return it->second;
+        }
+        for (const UAttDecl &attDecl : attdecls_) {
+            if (attDecl->attname.c_str() == attribute) {
+                return attributeRangeCountCache[attribute] = attDecl->se->generate(sortdefs_).size();
+            }
+        }
+        assert(false);
+    }
+
+    void Program::loadToControl(Clingo::Control &ctl, SolvingMode solvingMode) {
         auto b = ctl.builder();
         Clingo::Location loc("<test>", "<test>", 1, 1, 1, 1);
         b.add({loc, Clingo::AST::Program{"base", {}}});
         // add program rules:
         for (const UStm &stm: stms_) {
-            auto rules = stm->toGringoAST(attdecls_, sortdefs_, algo);
+            auto rules = stm->toGringoAST(attdecls_, sortdefs_, solvingMode);
             for (const auto &rule: rules) {
                 //std::cout << rule << std::endl;
                 b.add(rule);
@@ -136,11 +149,17 @@ namespace Plog {
             Clingo::AST::Rule f_r{{defaultLoc, d}, body};
             b.add({defaultLoc, f_r});
         }
-        if(algo==AlgorithmKind::naive) {
+        if(solvingMode == SolvingMode::query_naive || solvingMode == SolvingMode::possible_worlds) {
             b.add({defaultLoc, Clingo::AST::ShowSignature{Clingo::Signature("__pr", 4, true), false}});
             b.add({defaultLoc, Clingo::AST::ShowSignature{Clingo::Signature("__query", 0, true), false}});
             b.add({defaultLoc, Clingo::AST::ShowSignature{Clingo::Signature("__truly_random", 1, true), false}});
             b.add({defaultLoc, Clingo::AST::ShowSignature{Clingo::Signature("__truly_random", 2, true), false}});
+        }
+
+        if(solvingMode == SolvingMode::possible_worlds) {
+            for(const UAttDecl& attDecl : attdecls_) {
+                b.add({defaultLoc, Clingo::AST::ShowSignature{Clingo::Signature(attDecl->attname.c_str(), attDecl->svec.size() + 1, true), false}});
+            }
         }
     }
 

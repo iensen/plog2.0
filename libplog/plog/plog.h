@@ -32,8 +32,13 @@ enum plog_error {
 //! Corresponding type to ::plog_error.
 typedef int plog_error_t;
 
-enum class AlgorithmKind {
-    for_dco,
-    naive
+enum class SolvingMode {
+    // compute query using algorithm for dynamically causally ordered programs
+    query_dco,
+    // compute query using naive algorithm (translation to clingo)
+    query_naive,
+    // compute possible worlds and probabilities
+    possible_worlds
+
 };
 #endif //PLOG_PLOG_H
