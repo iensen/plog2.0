@@ -37,3 +37,13 @@ TEST(NEWVERSION_POSSIBLEWORLDS, FuncSort) {
     assert_eq(compute_possible_worlds("plogapp/tests/funcSort.plog"), expected);
 }
 
+TEST(NEWVERSION_POSSIBLEWORLDS, BinOpSort) {
+    std::string expected = "Possible Worlds:\n"
+                           "1: {p(2), q(1), q(2), q(3), r(1)}\n"
+                           "\n\nProbabilities:\n"
+                           "1: 1.0\n";
+
+    assert_eq(compute_possible_worlds("plogapp/tests/binopSort.plog"), expected);
+}
+
+

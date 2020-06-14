@@ -92,9 +92,9 @@ using UCond = std::unique_ptr<Condition>;
 
 
 struct BinOpCondition:public Condition {
-    BinOpCondition(LogicBinOp op, UCond left, UCond right){};
+    BinOpCondition(LogicBinOp op, UCond left, UCond right):op(op), left(std::move(left)), right(std::move(right)){};
     virtual void print(std::ostream &out) const;
-    SEBinOp op;
+    LogicBinOp op;
     UCond left;
     UCond right;
 };
@@ -113,7 +113,7 @@ private:
 
 
 struct BinOpSortExpr:public SortExpression {
-    BinOpSortExpr(SEBinOp op, USortExpr left, USortExpr right){};
+    BinOpSortExpr(SEBinOp op, USortExpr left, USortExpr right):op(op), left(std::move(left)), right(std::move(right)){};
     std::string toString() const override;
     std::vector<Clingo::AST::Term> generate( const USortDefVec &sortDefVec) override;
     SEBinOp op;

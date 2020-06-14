@@ -44,9 +44,58 @@ std::string Concatenation::toString() const {
     return std::string();
 }
 
+struct ClingoTermHash {
+    size_t operator()(const Clingo::AST::Term& t) const
+    {
+        std::stringstream  ss;
+        ss << t;
+        return std::hash<std::string>{}(ss.str());
+    }
+};
+
+struct ClingoTermEquality {
+    size_t operator()(const Clingo::AST::Term& t1,const Clingo::AST::Term& t2) const
+    {
+        std::stringstream  ss;
+        ss << t1;
+        auto term1Str = ss.str();
+        ss.str("");
+        ss.clear();
+        ss << t2;
+        auto term2Str = ss.str();
+        return term1Str == ss.str();
+    }
+};
 
 std::vector<Clingo::AST::Term> BinOpSortExpr::generate( const USortDefVec &sortDefVec) {
-    throw "not implemented yet";
+    std::vector<Clingo::AST::Term> lhsTerms = left->generate(sortDefVec);
+    std::vector<Clingo::AST::Term> rhsTerms = right->generate(sortDefVec);
+    std::unordered_set<Clingo::AST::Term,ClingoTermHash,  ClingoTermEquality> rhsTermsSet(rhsTerms.begin(), rhsTerms.end());
+    std::vector<Clingo::AST::Term> result;
+    switch(op) {
+        // no C++17, so just do it stupid way:
+        case SEBinOp::INTERSECT: {
+            for (auto const& lElement : lhsTerms) {
+                if (rhsTermsSet.count(lElement) > 0) {
+                    result.push_back(lElement);
+                }
+            }
+            break;
+        }
+        case SEBinOp::SUBTRACT:  {
+            for (auto const& lElement : lhsTerms) {
+                if (rhsTermsSet.count(lElement) == 0) {
+                    result.push_back(lElement);
+                }
+            }
+            break;
+        }
+        default:
+            assert(op == SEBinOp::UNION);
+            result.insert(result.end(), lhsTerms.begin(), lhsTerms.end());
+            result.insert(result.end(), rhsTerms.begin(), rhsTerms.end());
+    }
+    return result;
 }
 
 std::string BinOpSortExpr::toString() const{

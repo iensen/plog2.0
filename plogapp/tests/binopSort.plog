@@ -1,0 +1,21 @@
+sorts
+
+#boolean = {true, false}.
+#n = {1,2}.
+#m = {2,3}.
+
+#sintersection = #n * #m.
+#sunion = #n + #m.
+#ssubtraction = #n - #m.
+
+attributes
+p: #sintersection -> #boolean.
+q: #sunion -> #boolean.
+r: #ssubtraction -> #boolean.
+
+
+statements
+p(X).
+q(X).
+r(X).
+
