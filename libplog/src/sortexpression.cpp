@@ -53,7 +53,7 @@ std::string BinOpSortExpr::toString() const{
     return std::string();
 }
 
-std::vector<Clingo::AST::Term> FuncSortExpr::generate( const USortDefVec &sortDefVec, std::vector<Clingo::AST::Term> args) {
+std::vector<Clingo::AST::Term> FuncSortExpr::generate( const USortDefVec &sortDefVec, std::vector<Clingo::AST::Term> &args) {
    size_t argIndex = args.size();
    if(argIndex >= vec.size()) {
        return {{defaultLoc, Clingo::AST::Function{fname.name().c_str(), args, false}}};
@@ -72,7 +72,8 @@ std::vector<Clingo::AST::Term> FuncSortExpr::generate( const USortDefVec &sortDe
 }
 
 std::vector<Clingo::AST::Term> FuncSortExpr::generate( const USortDefVec &sortDefVec) {
-    return generate(sortDefVec,{});
+    std::vector<Clingo::AST::Term> argSet;// just a holder for current set of arguments
+    return generate(sortDefVec,argSet);
 }
 
 std::string FuncSortExpr::toString() const {

@@ -108,7 +108,7 @@ struct FuncSortExpr:public SortExpression {
     UVarSortExprVec  vec;
     UCond cond;
 private:
-    std::vector<Clingo::AST::Term> generate( const USortDefVec &sortDefVec, std::vector<Clingo::AST::Term> args);
+    std::vector<Clingo::AST::Term> generate( const USortDefVec &sortDefVec, std::vector<Clingo::AST::Term> &args);
 };
 
 
