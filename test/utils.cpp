@@ -114,7 +114,7 @@ std::vector<std::pair<std::string, double>> parse_possible_worlds(const std::str
     return result;
 }
 
-double compute_query(const std::string& file, NewPlogMode mode) {
+double compute_query(const std::string& file, const NewPlogMode mode) {
     PlogApp app;
     char ** argv = new char*[4];
     argv[1] = new char[file.length() + 1];

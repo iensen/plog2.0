@@ -37,7 +37,7 @@ GroundPlog::GroundPlogFacade::solve(Clingo::Control * cCtl, Plog::Program* prg, 
 
 void
 GroundPlog::GroundPlogFacade::computePossibleWorlds(Clingo::Control *ctl, Plog::Program *inputProgram) {
-   PossibleWorldsComputer computer(nullptr,inputProgram, ctl);
+   PossibleWorldsComputer computer(inputProgram, ctl);
    computer.run();
 }
 

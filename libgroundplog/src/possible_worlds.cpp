@@ -9,36 +9,32 @@
 
 namespace GroundPlog {
 
-    PossibleWorldsComputer::PossibleWorldsComputer(GroundPlog::Program *groundProgram, Plog::Program *inputProgram,
+    PossibleWorldsComputer::PossibleWorldsComputer(Plog::Program *inputProgram,
                                                    Clingo::Control *cControl) :
-            groundProgram(groundProgram), nonGroundProgram(inputProgram), cControl(cControl) {}
+            nonGroundProgram(inputProgram), cControl(cControl) {}
 
     void PossibleWorldsComputer::run() {
-        std::function<bool(unsigned int)> isRuleActive = [](unsigned int) {
-            return false;
-        };
-        auto control = PlogClingoControl(cControl, isRuleActive);
         std::vector<double> probabilities;
         std::cout << "Possible Worlds:" << std::endl;
-        for (auto const &model: control.getModels()) {
+        for (auto const &model: cControl->solve()) {
             if (!model.optimality_proven() && !model.cost().empty()) {
                 continue;
             }
             printModel(model);
-            probabilities.push_back(getModelStats(model,nonGroundProgram).probability);
+            probabilities.push_back(getModelStats(model, nonGroundProgram).probability);
         }
-        double sumProb = std::accumulate(probabilities.begin(), probabilities.end(),0.0);
-        if(sumProb == 0.0) {
+        double sumProb = std::accumulate(probabilities.begin(), probabilities.end(), 0.0);
+        if (sumProb == 0.0) {
             std::cout << "Probabilistic function of this program is undefined." << std::endl
                       << "The sum of unnormalized measures of its possible worlds is 0.";
             return;
         }
-        for(int i = 0; i < probabilities.size(); i++) {
-            probabilities[i]/=sumProb;
+        for (int i = 0; i < probabilities.size(); i++) {
+            probabilities[i] /= sumProb;
         }
         std::cout << std::endl << "Probabilities:" << std::endl;
-        for(int i = 0; i < probabilities.size(); i++) {
-           std::cout << (i+1) << ": " << probabilities[i] << std::endl;
+        for (int i = 0; i < probabilities.size(); i++) {
+            std::cout << (i + 1) << ": " << probabilities[i] << std::endl;
         }
 
 
@@ -85,6 +81,6 @@ namespace GroundPlog {
             std::cout << plogAtom;
             firstAtomPrinted = true;
         }
-        std::cout <<"}" << std::endl;
+        std::cout << "}" << std::endl;
     }
 }

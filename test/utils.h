@@ -16,7 +16,7 @@ enum class NewPlogMode {
 };
 
 
-double compute_query(const std::string& file, NewPlogMode mode = NewPlogMode::QUERY_DCO);
+double compute_query(const std::string& file, const NewPlogMode mode = NewPlogMode::QUERY_DCO);
 
 // returns a (sorted) vector of possible worlds of a program in the format <"a_1=y_n,...,a_n=y_n", P>,
 // where {a_1 = y_1, ...,a_n = y_n} is a possible world and P is its probability

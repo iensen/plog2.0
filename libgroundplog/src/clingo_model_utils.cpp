@@ -15,7 +15,7 @@ namespace GroundPlog {
                                       std::unordered_map<std::string, std::string> &modelAttValue,
                                       const Plog::Program *inputProgram) {
         if (dynRangeAtt.empty()) {
-            return  inputProgram->getAttributeRangeElementsCount(attribute);
+            return inputProgram->getAttributeRangeElementsCount(attribute);
         }
 
         auto attributeValues = inputProgram->getAttributeRangeElements(attribute);
