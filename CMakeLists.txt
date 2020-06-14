@@ -50,7 +50,7 @@ file(GLOB_RECURSE CLINGO_SOURCES
 
 
 file(GLOB_RECURSE TEST_SOURCES
-          test/tests.cpp
+          test/*.cpp
         )
 
 
