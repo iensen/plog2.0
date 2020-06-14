@@ -119,6 +119,10 @@ CondUid NonGroundProgramBuilder::cond(LogicBinOp rel, CondUid leftcond, CondUid 
     return conds_.insert(gringo_make_unique<BinOpCondition>(rel,std::move(conds_.erase(leftcond)), std::move(conds_.erase(rightcond))));
 }
 
+VarSortExprUid NonGroundProgramBuilder::varsortexpr(SortExprUid seid) {
+    return varsortexprs_.insert(gringo_make_unique<VarSortExpression>(std::move(sortexprs_.erase(seid))));
+}
+
 VarSortExprUid NonGroundProgramBuilder::varsortexpr(SortExprUid seid, String var) {
     return varsortexprs_.insert(gringo_make_unique<VarSortExpression>(std::move(sortexprs_.erase(seid)),var));
 }

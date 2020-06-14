@@ -53,9 +53,26 @@ std::string BinOpSortExpr::toString() const{
     return std::string();
 }
 
+std::vector<Clingo::AST::Term> FuncSortExpr::generate( const USortDefVec &sortDefVec, std::vector<Clingo::AST::Term> args) {
+   size_t argIndex = args.size();
+   if(argIndex >= vec.size()) {
+       return {{defaultLoc, Clingo::AST::Function{fname.name().c_str(), args, false}}};
+   } else {
+       std::vector<Clingo::AST::Term> ithArgs = vec.at(argIndex)->expr->generate(sortDefVec);
+       std::vector<Clingo::AST::Term> result;
+       for(auto const &t: ithArgs) {
+           args.push_back(t);
+           auto terms = generate(sortDefVec, args);
+           result.insert(result.end(), terms.begin(), terms.end());
+           args.pop_back();
+       }
+       return result;
+   }
+
+}
 
 std::vector<Clingo::AST::Term> FuncSortExpr::generate( const USortDefVec &sortDefVec) {
-    throw "not implemented yet";
+    return generate(sortDefVec,{});
 }
 
 std::string FuncSortExpr::toString() const {

@@ -33,6 +33,7 @@ using UTermVec  = Gringo::UTermVec ;
 
 
 struct VarSortExpression {
+    explicit VarSortExpression(USortExpr expr):expr(std::move(expr)), varName(""){};
     VarSortExpression(USortExpr expr, String var):expr(std::move(expr)), varName(var){};
     USortExpr expr;
     String varName;
@@ -106,6 +107,8 @@ struct FuncSortExpr:public SortExpression {
     Symbol fname;
     UVarSortExprVec  vec;
     UCond cond;
+private:
+    std::vector<Clingo::AST::Term> generate( const USortDefVec &sortDefVec, std::vector<Clingo::AST::Term> args);
 };
 
 

@@ -779,7 +779,7 @@ namespace PlogGrammar {
 
   case 34:
 #line 271 "ploggrammar.yy" // lalr1.cc:859
-    {(yylhs.value.varsortexpr) = BUILDER.varsortexpr((yystack_[0].value.sortexpr), nullptr);}
+    {(yylhs.value.varsortexpr) = BUILDER.varsortexpr((yystack_[0].value.sortexpr));}
 #line 784 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 

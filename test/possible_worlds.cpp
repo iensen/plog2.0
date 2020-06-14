@@ -27,3 +27,13 @@ TEST(NEWVERSION_POSSIBLEWORLDS, 0) {
 
    assert_eq(compute_possible_worlds("plogapp/tests/insomnia_noquery.plog"), expected);
 }
+
+TEST(NEWVERSION_POSSIBLEWORLDS, FuncSort) {
+    std::string expected = "Possible Worlds:\n"
+                           "1: {p(f(1,1)), p(f(1,2)), p(f(2,1)), p(f(2,2)), p(f(3,1)), p(f(3,2))}\n"
+                           "\n\nProbabilities:\n"
+                           "1: 1.0\n";
+
+    assert_eq(compute_possible_worlds("plogapp/tests/funcSort.plog"), expected);
+}
+

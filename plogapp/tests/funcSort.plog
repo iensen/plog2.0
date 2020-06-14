@@ -1,0 +1,14 @@
+sorts
+
+#n = 1..3.
+#m = 1..2.
+
+#f = f(#n,#m).
+#boolean = {true, false}.
+
+attributes
+p: #f -> #boolean.
+
+statements
+p(X).
+

@@ -95,6 +95,7 @@ public:
     SortExprUid  sortexpr(Location const &loc, Symbol smb, VarSortExprVecUid uid, CondUid cond);
     SortExprUid  sortexpr(Location const &loc, SEBinOp op, SortExprUid left, SortExprUid right);
     VarSortExprUid varsortexpr(SortExprUid seid, String var);
+    VarSortExprUid varsortexpr(SortExprUid seid);
 
 
     // sort expression vectors:

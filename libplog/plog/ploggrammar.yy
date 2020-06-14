@@ -46,8 +46,8 @@
 
 %{
 
-#include "plogparser.h"
-#include "programbuilder.h"
+#include "plog/plogparser.h"
+#include "plog/programbuilder.h"
 #include <gringo/base.hh>
 #include <climits>
 using Relation = Gringo::Relation;
@@ -268,7 +268,7 @@ var_sort_expr_list: var_sort_expr_list[a] COMMA var_sort_expr[b] {$$ = BUILDER.v
        | var_sort_expr[a] {$$ = BUILDER.varsortexprvec(BUILDER.varsortexprvec(),$a); }
        ;
 
-var_sort_expr: sort_expr[a] {$$ = BUILDER.varsortexpr($a, nullptr);}|
+var_sort_expr: sort_expr[a] {$$ = BUILDER.varsortexpr($a);}|
                sort_expr[a] LPAREN VARIABLE[v] RPAREN {$$ = BUILDER.varsortexpr($a, String::fromRep($v));}
 
 
