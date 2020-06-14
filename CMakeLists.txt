@@ -66,37 +66,25 @@ include_directories(clingo/libreify)
 include_directories(libgroundplog)
 include_directories(libplog)
 include_directories(oldplog)
-include_directories(/usr/include/python2.7)
-
-
 
 set(CLINGO_MAIN_FILE  clingo/app/clingo/src/main.cc libgroundplog/groundplog/state.h)
 set(PLOG_MAIN_FILE    plogapp/src/main.cpp libgroundplog/src/state.cpp)
 set(OLDPLOG_MAIN_FILE    oldplog/Plog.cpp)
 set(EXAMPLE_MAIN_FILE clingo/examples/cpp/groundobs.cpp)
 
-add_definitions(-DWITH_THREADS=1)
-add_definitions(-DWITH_PYTHON)
-
-
-
 #add_executable(clingo1 ${CLINGO_MAIN_FILE} ${CLINGO_SOURCES})
-#TARGET_LINK_LIBRARIES(clingo1  python2.7 tbb pthread dl)
+#TARGET_LINK_LIBRARIES(clingo1  pthread dl)
 
 if(BUILD_TESTS)
 add_executable(tests   ${OLD_PLOG_SOURCES} ${TEST_SOURCES} ${PLOG_SOURCES} ${CLINGO_SOURCES}   test/utils.h)
-TARGET_LINK_LIBRARIES(tests  python2.7 tbb dl gtest pthread )
+TARGET_LINK_LIBRARIES(tests  gtest pthread)
 else()
 add_executable(plog2  ${PLOG_SOURCES} ${CLINGO_SOURCES} ${PLOG_MAIN_FILE})
-TARGET_LINK_LIBRARIES(plog2  python2.7 tbb pthread dl)
+TARGET_LINK_LIBRARIES(plog2  pthread)
 endif(BUILD_TESTS)
 
-
-
 #add_executable(ex ${EXAMPLE_MAIN_FILE} ${CLINGO_SOURCES})
-#TARGET_LINK_LIBRARIES(ex  python2.7 tbb pthread dl)
-
-
+#TARGET_LINK_LIBRARIES(ex   pthread dl)
 
 #add_executable(wplog ${OLD_PLOG_SOURCES} ${OLDPLOG_MAIN_FILE})
 
