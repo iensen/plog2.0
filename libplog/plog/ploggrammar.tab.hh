@@ -40,7 +40,7 @@
 #ifndef YY_PLOGGRAMMAR_PLOGGRAMMAR_TAB_HH_INCLUDED
 # define YY_PLOGGRAMMAR_PLOGGRAMMAR_TAB_HH_INCLUDED
 // //                    "%code requires" blocks.
-#line 36 "plog/ploggrammar.yy" // lalr1.cc:377
+#line 36 "ploggrammar.yy" // lalr1.cc:377
 
     #include "plog/programbuilder.h"
 
@@ -129,7 +129,7 @@
 # endif /* ! defined YYDEBUG */
 #endif  /* ! defined PLOGGRAMMAR_DEBUG */
 
-#line 19 "plog/ploggrammar.yy" // lalr1.cc:377
+#line 19 "ploggrammar.yy" // lalr1.cc:377
 namespace PlogGrammar {
 #line 135 "ploggrammar.tab.hh" // lalr1.cc:377
 
@@ -145,7 +145,7 @@ namespace PlogGrammar {
     /// Symbol semantic values.
     union semantic_type
     {
-    #line 96 "plog/ploggrammar.yy" // lalr1.cc:377
+    #line 96 "ploggrammar.yy" // lalr1.cc:377
 
       uintptr_t str;
       int num;
@@ -543,7 +543,7 @@ namespace PlogGrammar {
   };
 
 
-#line 19 "plog/ploggrammar.yy" // lalr1.cc:377
+#line 19 "ploggrammar.yy" // lalr1.cc:377
 } // PlogGrammar
 #line 549 "ploggrammar.tab.hh" // lalr1.cc:377
 

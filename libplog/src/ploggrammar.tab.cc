@@ -34,7 +34,7 @@
 #define yylex   PlogGrammar_lex
 
 // First part of user declarations.
-#line 47 "plog/ploggrammar.yy" // lalr1.cc:404
+#line 47 "ploggrammar.yy" // lalr1.cc:404
 
 
 #include "plog/plogparser.h"
@@ -86,7 +86,7 @@ int PlogGrammar_lex(void *value, Gringo::Location* loc, PlogParser *lexer) {
 
 #line 88 "ploggrammar.tab.cc" // lalr1.cc:412
 // Unqualified %code blocks.
-#line 83 "plog/ploggrammar.yy" // lalr1.cc:413
+#line 83 "ploggrammar.yy" // lalr1.cc:413
 
 
 void PlogGrammar::parser::error(DefaultLocation const &l, std::string const &msg) {
@@ -178,7 +178,7 @@ void PlogGrammar::parser::error(DefaultLocation const &l, std::string const &msg
 #define YYERROR         goto yyerrorlab
 #define YYRECOVERING()  (!!yyerrstatus_)
 
-#line 19 "plog/ploggrammar.yy" // lalr1.cc:479
+#line 19 "ploggrammar.yy" // lalr1.cc:479
 namespace PlogGrammar {
 #line 184 "ploggrammar.tab.cc" // lalr1.cc:479
 
@@ -658,517 +658,517 @@ namespace PlogGrammar {
           switch (yyn)
             {
   case 8:
-#line 211 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 211 "ploggrammar.yy" // lalr1.cc:859
     { BUILDER.define(yylhs.location, String::fromRep((yystack_[3].value.str)), (yystack_[1].value.term), true, LOGGER);}
 #line 664 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 12:
-#line 227 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 227 "ploggrammar.yy" // lalr1.cc:859
     {BUILDER.sortdef(yylhs.location, String::fromRep((yystack_[3].value.str)),(yystack_[1].value.sortexpr));}
 #line 670 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 14:
-#line 232 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 232 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.sortexpr) = BUILDER.sortexpr(yylhs.location,(yystack_[0].value.sortexprvec)); }
 #line 676 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 16:
-#line 234 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 234 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.sortexpr) = BUILDER.sortexpr(yylhs.location,String::fromRep((yystack_[0].value.str)));}
 #line 682 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 18:
-#line 236 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 236 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.sortexpr) = BUILDER.sortexpr(yylhs.location,SEBinOp::UNION,(yystack_[2].value.sortexpr),(yystack_[0].value.sortexpr));}
 #line 688 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 19:
-#line 237 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 237 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.sortexpr) = BUILDER.sortexpr(yylhs.location,SEBinOp::INTERSECT,(yystack_[2].value.sortexpr),(yystack_[0].value.sortexpr));}
 #line 694 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 20:
-#line 238 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 238 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.sortexpr) = BUILDER.sortexpr(yylhs.location,SEBinOp::SUBTRACT,(yystack_[2].value.sortexpr),(yystack_[0].value.sortexpr));}
 #line 700 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 21:
-#line 239 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 239 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.sortexpr) = (yystack_[1].value.sortexpr);}
 #line 706 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 22:
-#line 242 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 242 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.sortexpr)=BUILDER.sortexpr(yylhs.location, (yystack_[2].value.term), (yystack_[0].value.term)); }
 #line 712 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 23:
-#line 245 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 245 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.sortexprvec) = BUILDER.sortexprvec( (yystack_[1].value.sortexprvec),(yystack_[0].value.sortexpr));}
 #line 718 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 24:
-#line 246 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 246 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.sortexprvec) = BUILDER.sortexprvec(BUILDER.sortexprvec(), (yystack_[0].value.sortexpr));}
 #line 724 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 25:
-#line 249 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 249 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.sortexpr) = (yystack_[1].value.sortexpr);}
 #line 730 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 26:
-#line 253 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 253 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.sortexpr) = BUILDER.sortexpr(yylhs.location, Symbol::createId(String::fromRep((yystack_[3].value.str))), (yystack_[1].value.varsortexprvec));}
 #line 736 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 27:
-#line 255 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 255 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.sortexpr) = BUILDER.sortexpr(yylhs.location, Symbol::createId(String::fromRep((yystack_[5].value.str))), (yystack_[3].value.varsortexprvec), (yystack_[0].value.cond));}
 #line 742 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 28:
-#line 258 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 258 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.cond) = BUILDER.cond((yystack_[1].value.rel), String::fromRep((yystack_[2].value.str)),String::fromRep((yystack_[0].value.str)));}
 #line 748 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 29:
-#line 259 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 259 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.cond) = BUILDER.cond( LogicBinOp::OR, (yystack_[2].value.cond),(yystack_[0].value.cond)); }
 #line 754 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 30:
-#line 260 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 260 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.cond) = BUILDER.cond( LogicBinOp::AND, (yystack_[2].value.cond),(yystack_[0].value.cond)); }
 #line 760 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 31:
-#line 261 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 261 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.cond) = (yystack_[1].value.cond);}
 #line 766 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 32:
-#line 267 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 267 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.varsortexprvec) = BUILDER.varsortexprvec((yystack_[2].value.varsortexprvec),(yystack_[0].value.varsortexpr)); }
 #line 772 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 33:
-#line 268 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 268 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.varsortexprvec) = BUILDER.varsortexprvec(BUILDER.varsortexprvec(),(yystack_[0].value.varsortexpr)); }
 #line 778 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 34:
-#line 271 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 271 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.varsortexpr) = BUILDER.varsortexpr((yystack_[0].value.sortexpr), nullptr);}
 #line 784 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 35:
-#line 272 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 272 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.varsortexpr) = BUILDER.varsortexpr((yystack_[3].value.sortexpr), String::fromRep((yystack_[1].value.str)));}
 #line 790 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 36:
-#line 275 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 275 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.sortexpr)=BUILDER.sortexpr(yylhs.location, (yystack_[1].value.termvec));}
 #line 796 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 37:
-#line 276 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 276 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.sortexpr)=BUILDER.sortexpr(yylhs.location, BUILDER.termvec());}
 #line 802 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 41:
-#line 289 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 289 "ploggrammar.yy" // lalr1.cc:859
     {BUILDER.attdecl(yylhs.location, String::fromRep((yystack_[5].value.str)),(yystack_[3].value.sortexprvec),(yystack_[1].value.sortexpr));}
 #line 808 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 42:
-#line 290 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 290 "ploggrammar.yy" // lalr1.cc:859
     {BUILDER.attdecl(yylhs.location, String::fromRep((yystack_[3].value.str)), BUILDER.sortexprvec(), (yystack_[1].value.sortexpr));}
 #line 814 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 43:
-#line 293 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 293 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.sortexprvec)= BUILDER.sortexprvec(BUILDER.sortexprvec(), (yystack_[0].value.sortexpr));}
 #line 820 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 44:
-#line 295 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 295 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.sortexprvec)= BUILDER.sortexprvec((yystack_[2].value.sortexprvec),(yystack_[0].value.sortexpr));}
 #line 826 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 48:
-#line 313 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 313 "ploggrammar.yy" // lalr1.cc:859
     {  BUILDER.rule(yylhs.location, (yystack_[1].value.lit)); }
 #line 832 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 49:
-#line 314 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 314 "ploggrammar.yy" // lalr1.cc:859
     {  BUILDER.rule(yylhs.location, (yystack_[2].value.lit)); }
 #line 838 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 50:
-#line 315 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 315 "ploggrammar.yy" // lalr1.cc:859
     {  BUILDER.rule(yylhs.location, (yystack_[3].value.lit), (yystack_[1].value.body)); }
 #line 844 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 51:
-#line 316 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 316 "ploggrammar.yy" // lalr1.cc:859
     {  BUILDER.rule(yylhs.location, BUILDER.lit(false), (yystack_[1].value.body)); }
 #line 850 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 52:
-#line 317 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 317 "ploggrammar.yy" // lalr1.cc:859
     {  BUILDER.crrule(yylhs.location, (yystack_[2].value.lit)); }
 #line 856 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 53:
-#line 318 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 318 "ploggrammar.yy" // lalr1.cc:859
     {  BUILDER.crrule(yylhs.location, (yystack_[3].value.lit), (yystack_[1].value.body)); }
 #line 862 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 54:
-#line 319 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 319 "ploggrammar.yy" // lalr1.cc:859
     {  BUILDER.crrule(yylhs.location, BUILDER.lit(false), (yystack_[1].value.body)); }
 #line 868 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 55:
-#line 320 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 320 "ploggrammar.yy" // lalr1.cc:859
     {  BUILDER.rule(yylhs.location, BUILDER.lit(false)); }
 #line 874 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 57:
-#line 329 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 329 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.lit) = BUILDER.lit(yylhs.location, Symbol::createId(String::fromRep((yystack_[0].value.str)))); }
 #line 880 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 58:
-#line 330 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 330 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.lit) = BUILDER.lit(yylhs.location, String::fromRep((yystack_[3].value.str)), (yystack_[1].value.termvec));  }
 #line 886 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 59:
-#line 331 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 331 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.lit) = BUILDER.lit(yylhs.location, String::fromRep((yystack_[5].value.str)), (yystack_[3].value.termvec), (yystack_[0].value.term)); }
 #line 892 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 60:
-#line 332 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 332 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.lit) = BUILDER.lit(yylhs.location, Symbol::createId(String::fromRep((yystack_[2].value.str))), (yystack_[0].value.term)); }
 #line 898 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 61:
-#line 336 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 336 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.body) = BUILDER.body((yystack_[2].value.body), (yystack_[0].value.lit));}
 #line 904 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 62:
-#line 337 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 337 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.body) = BUILDER.body(BUILDER.body(), (yystack_[0].value.lit));}
 #line 910 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 63:
-#line 342 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 342 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.term) = (yystack_[0].value.term); }
 #line 916 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 64:
-#line 343 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 343 "ploggrammar.yy" // lalr1.cc:859
     {  (yylhs.value.term) = BUILDER.term(yylhs.location, String::fromRep((yystack_[3].value.str)), (yystack_[1].value.termvec));}
 #line 922 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 65:
-#line 347 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 347 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::ADD, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 928 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 66:
-#line 348 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 348 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::SUB, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 934 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 67:
-#line 349 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 349 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::MUL, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 940 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 68:
-#line 350 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 350 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::DIV, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 946 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 69:
-#line 351 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 351 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::MOD, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 952 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 70:
-#line 352 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 352 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::POW, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 958 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 71:
-#line 353 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 353 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.term) = BUILDER.term(yylhs.location, UnOp::NEG, (yystack_[0].value.term)); }
 #line 964 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 72:
-#line 354 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 354 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.term) = BUILDER.term(yylhs.location, UnOp::ABS, (yystack_[1].value.term)); }
 #line 970 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 73:
-#line 355 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 355 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.term) = BUILDER.term(yylhs.location, Symbol::createId(String::fromRep((yystack_[0].value.str)))); }
 #line 976 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 74:
-#line 356 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 356 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.term) = BUILDER.term(yylhs.location, Symbol::createNum((yystack_[0].value.num))); }
 #line 982 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 75:
-#line 357 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 357 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.term) = (yystack_[1].value.term);}
 #line 988 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 76:
-#line 363 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 363 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.termvec) = BUILDER.termvec(BUILDER.termvec(), (yystack_[0].value.term));}
 #line 994 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 77:
-#line 364 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 364 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.termvec) = BUILDER.termvec((yystack_[2].value.termvec), (yystack_[0].value.term)); }
 #line 1000 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 78:
-#line 371 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 371 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::ADD, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 1006 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 79:
-#line 372 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 372 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::SUB, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 1012 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 80:
-#line 373 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 373 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::MUL, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 1018 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 81:
-#line 374 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 374 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::DIV, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 1024 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 82:
-#line 375 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 375 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::MOD, (yystack_[2].value.term), (yystack_[0].value.term));  }
 #line 1030 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 83:
-#line 376 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 376 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.term) = BUILDER.term(yylhs.location, BinOp::POW, (yystack_[2].value.term), (yystack_[0].value.term)); }
 #line 1036 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 84:
-#line 377 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 377 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.term) = BUILDER.term(yylhs.location, UnOp::NEG, (yystack_[0].value.term));  }
 #line 1042 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 85:
-#line 378 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 378 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.term) = BUILDER.term(yylhs.location, String::fromRep((yystack_[3].value.str)), (yystack_[1].value.termvec)); }
 #line 1048 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 86:
-#line 379 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 379 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.term) = BUILDER.term(yylhs.location, UnOp::ABS, (yystack_[1].value.term)); }
 #line 1054 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 87:
-#line 380 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 380 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.term) = BUILDER.term(yylhs.location, Symbol::createId(String::fromRep((yystack_[0].value.str))));}
 #line 1060 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 88:
-#line 381 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 381 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.term) = BUILDER.term(yylhs.location, Symbol::createNum((yystack_[0].value.num))); }
 #line 1066 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 89:
-#line 382 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 382 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.term) = BUILDER.term(yylhs.location, String::fromRep((yystack_[0].value.str)));  }
 #line 1072 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 90:
-#line 383 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 383 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.term) = (yystack_[1].value.term); }
 #line 1078 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 91:
-#line 390 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 390 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.termvec) = BUILDER.termvec(BUILDER.termvec(), (yystack_[0].value.term)); }
 #line 1084 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 92:
-#line 391 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 391 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.termvec) = BUILDER.termvec((yystack_[2].value.termvec), (yystack_[0].value.term)); }
 #line 1090 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 93:
-#line 399 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 399 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.rel) = Relation::GT;  }
 #line 1096 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 94:
-#line 400 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 400 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.rel) = Relation::LT;  }
 #line 1102 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 95:
-#line 401 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 401 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.rel) = Relation::GEQ; }
 #line 1108 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 96:
-#line 402 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 402 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.rel) = Relation::LEQ; }
 #line 1114 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 97:
-#line 403 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 403 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.rel) = Relation::EQ;  }
 #line 1120 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 98:
-#line 404 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 404 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.rel) = Relation::NEQ; }
 #line 1126 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 99:
-#line 407 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 407 "ploggrammar.yy" // lalr1.cc:859
     {  (yylhs.value.lit) = BUILDER.lit(yylhs.location,(yystack_[0].value.term)); }
 #line 1132 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 100:
-#line 408 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 408 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.lit) = BUILDER.lit(yylhs.location,(yystack_[2].value.term), (yystack_[1].value.rel), (yystack_[0].value.term)); }
 #line 1138 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 101:
-#line 410 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 410 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.lit) = BUILDER.elit(yylhs.location,  (yystack_[0].value.lit), false);}
 #line 1144 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 102:
-#line 411 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 411 "ploggrammar.yy" // lalr1.cc:859
     { (yylhs.value.lit) = BUILDER.elit(yylhs.location,  (yystack_[0].value.lit), true); }
 #line 1150 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 103:
-#line 415 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 415 "ploggrammar.yy" // lalr1.cc:859
     {BUILDER.pratom(yylhs.location,(yystack_[6].value.lit),(yystack_[4].value.body),(yystack_[1].value.prob));}
 #line 1156 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 104:
-#line 416 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 416 "ploggrammar.yy" // lalr1.cc:859
     {BUILDER.pratom(yylhs.location,(yystack_[4].value.lit),BUILDER.body(),(yystack_[1].value.prob));}
 #line 1162 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 105:
-#line 419 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 419 "ploggrammar.yy" // lalr1.cc:859
     {(yylhs.value.prob) = BUILDER.prob(yylhs.location,(yystack_[2].value.num),(yystack_[0].value.num));}
 #line 1168 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
 
   case 106:
-#line 422 "plog/ploggrammar.yy" // lalr1.cc:859
+#line 422 "ploggrammar.yy" // lalr1.cc:859
     {BUILDER.query(yylhs.location, (yystack_[1].value.lit));}
 #line 1174 "ploggrammar.tab.cc" // lalr1.cc:859
     break;
@@ -1463,8 +1463,8 @@ namespace PlogGrammar {
   parser::yydefact_[] =
   {
        6,     0,     0,     1,    11,    40,     0,     5,     7,     0,
-       0,     9,    38,     0,     0,    47,     0,     0,    10,     0,
-      39,     0,     0,    45,     0,     3,     0,     0,     0,     0,
+       0,     9,    38,     0,     0,    47,   107,     0,    10,     0,
+      39,     0,   107,    45,     0,     3,     0,     0,     0,     0,
        0,    74,    73,     0,    63,     2,     0,     0,     0,    57,
       46,     0,    56,     0,     0,     0,    88,    87,    89,    99,
        0,     0,     0,     0,    73,    16,     0,    13,    14,    24,
@@ -1616,7 +1616,7 @@ namespace PlogGrammar {
       71,    71,    71,    71,    71,    71,    72,    72,    73,    73,
       73,    73,    73,    73,    73,    73,    73,    73,    73,    73,
       73,    74,    74,    75,    75,    75,    75,    75,    75,    76,
-      76,    77,    77,    66,    66,    78,    79
+      76,    77,    77,    66,    66,    78,    79,    79
   };
 
   const unsigned char
@@ -1632,7 +1632,7 @@ namespace PlogGrammar {
        3,     2,     3,     1,     1,     3,     1,     3,     3,     3,
        3,     3,     3,     3,     2,     4,     3,     1,     1,     1,
        3,     1,     3,     1,     1,     1,     1,     1,     1,     1,
-       3,     1,     2,     9,     7,     3,     3
+       3,     1,     2,     9,     7,     3,     3,     0
   };
 
 
@@ -1673,7 +1673,7 @@ namespace PlogGrammar {
      352,   353,   354,   355,   356,   357,   363,   364,   371,   372,
      373,   374,   375,   376,   377,   378,   379,   380,   381,   382,
      383,   390,   391,   399,   400,   401,   402,   403,   404,   407,
-     408,   410,   411,   415,   416,   419,   422
+     408,   410,   411,   415,   416,   419,   422,   422
   };
 
   // Print the state stack on the debug stream.
@@ -1756,6 +1756,6 @@ namespace PlogGrammar {
       return undef_token_;
   }
 
-#line 19 "plog/ploggrammar.yy" // lalr1.cc:1167
+#line 19 "ploggrammar.yy" // lalr1.cc:1167
 } // PlogGrammar
 #line 1762 "ploggrammar.tab.cc" // lalr1.cc:1167

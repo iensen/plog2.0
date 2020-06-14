@@ -25,5 +25,5 @@ TEST(NEWVERSION_POSSIBLEWORLDS, 0) {
                            "2: 0.3\n"
                            "3: 0.49\n";
 
-   assert_eq(compute_possible_worlds("plogapp/tests/aspocp_amai/section8/insomnia.plog"), expected);
+   assert_eq(compute_possible_worlds("plogapp/tests/insomnia_noquery.plog"), expected);
 }

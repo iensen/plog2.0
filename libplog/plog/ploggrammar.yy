@@ -419,5 +419,5 @@ stmt: PR LPAREN head_atom[a] VBAR body[b] RPAREN EQ probability[p] DOT {BUILDER.
 probability: NUMBER[n1] SLASH NUMBER[n2] {$$ = BUILDER.prob(@$,$n1,$n2);}
            ;
 
-query: QUESTION literal[l] DOT {BUILDER.query(@$, $l);}
+query: QUESTION literal[l] DOT  {BUILDER.query(@$, $l);} |
 
