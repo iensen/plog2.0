@@ -85,6 +85,9 @@ TEST(NEWVERSION_NAIVE, CLINGO_CONSEQUENCES) {
     ASSERT_NEAR(compute_query("plogapp/tests/clingocons.plog", NewPlogMode::QUERY_NAIVE), 0.5, 1e-5);
 }
 
+TEST(NEWVERSION_NAIVE, CONSTRAINT) {
+    ASSERT_NEAR(compute_query("plogapp/tests/constraint.plog", NewPlogMode::QUERY_NAIVE), 0.5, 1e-5);
+}
 
 TEST(PERF_NEWVERSION_NAIVE_NASA, _l4) {
     ASSERT_NEAR(compute_query("plogapp/tests/nasa/A4n.plog", NewPlogMode::QUERY_NAIVE), 0.059235, 1e-5);

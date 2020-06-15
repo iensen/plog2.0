@@ -47,7 +47,6 @@ private:
 
     Clingo::AST::BodyLiteral  gringobodyexlit(Plog::ULit &lit,const UAttDeclVec &attdecls);
     std::vector<Clingo::AST::BodyLiteral> gringobody(const UAttDeclVec &attdecls, const USortDefVec &sortDefVec, bool solvingDCO);
-    std::pair<Gringo::UTerm,bool> term(Plog::ULit & lit);
 
     std::unordered_set<std::string> getVariables();
     std::unordered_set<std::string> getVariables(const UTerm &term);

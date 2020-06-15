@@ -62,7 +62,6 @@ struct ClingoTermEquality {
         ss.str("");
         ss.clear();
         ss << t2;
-        auto term2Str = ss.str();
         return term1Str == ss.str();
     }
 };

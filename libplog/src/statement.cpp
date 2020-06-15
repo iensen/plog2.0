@@ -64,25 +64,26 @@ Statement::~Statement() {
 // for a term of the form term rel term, where term is not con
 // structed from an attribute term, return {term rel term, true}
 // to do: get rid of this and construct clingo terms directly
-std::pair<Gringo::UTerm, bool>  Statement::term(Plog::ULit & lit) {
-        if (FunctionTerm *fterm = dynamic_cast<FunctionTerm *>(lit->lt.get())) {
-            String name = fterm->name;
-            UTermVec &args = fterm->args;
-            std::unique_ptr<Term> ut(lit->rt->clone());
-            args.push_back(std::move(ut));
-            Gringo::UTerm term = make_locatable<FunctionTerm>(DefaultLocation(), name, clone(args));
-            bool pos = lit->rel == Relation::EQ;
-            return {std::move(term), pos};
-        } else {
-            ValTerm* vterm = dynamic_cast<ValTerm *>(lit->lt.get());
-            String name = vterm->value.name();
-            UTermVec  args;
-            std::unique_ptr<Term> ut(lit->rt->clone());
-            args.push_back(std::move(ut));
-            Gringo::UTerm term = make_locatable<FunctionTerm>(DefaultLocation(), name, clone(args));
-            bool pos = lit->rel == Relation::EQ;
-            return {std::move(term), pos};
-        }
+static std::pair<Gringo::UTerm, bool> term(const Plog::ULit &lit) {
+    if (FunctionTerm *fterm = dynamic_cast<FunctionTerm *>(lit->lt.get())) {
+        String name = fterm->name;
+        UTermVec &args = fterm->args;
+        std::unique_ptr<Term> ut(lit->rt->clone());
+        args.push_back(std::move(ut));
+        Gringo::UTerm term = make_locatable<FunctionTerm>(DefaultLocation(), name, clone(args));
+        bool pos = lit->rel == Relation::EQ;
+        return {std::move(term), pos};
+    } else {
+        ValTerm *vterm = dynamic_cast<ValTerm *>(lit->lt.get());
+        String name = vterm->value.name();
+        UTermVec args;
+        std::unique_ptr<Term> ut(lit->rt->clone());
+        args.push_back(std::move(ut));
+        Gringo::UTerm term = make_locatable<FunctionTerm>(DefaultLocation(), name, clone(args));
+        bool pos = lit->rel == Relation::EQ;
+        return {std::move(term), pos};
+
+    }
 }
 
 
@@ -156,14 +157,48 @@ std::vector<Clingo::AST::Statement> Statement::queryToGringoAST(const UAttDeclVe
     }
 }
 
+// checks if this literal is of the form c != c for some constant c.
+// we construct such literals intentionally for constraints
+static bool isFalseHeadLiteral( const Plog::ULit& lit) {
+    if(lit->rel != Relation ::NEQ) {
+        return false;
+    }
+    auto lhs = dynamic_cast<Gringo::ValTerm*>(lit->lt.get());
+    auto rhs = dynamic_cast<Gringo::ValTerm*>(lit->rt.get());
+    if(!lhs || !rhs) {
+        return false;
+    }
+    return lhs->value.rep() == rhs->value.rep();
+}
+
+Clingo::AST::Literal litToClingoLit(const Plog::ULit & lit) {
+   if(lit->lt->isNotNumeric()) {
+       auto fterm = term(lit);
+       Clingo::AST::Term f_ = termToClingoTerm(fterm.first);
+       return {defaultLoc, Clingo::AST::Sign::None, f_};
+   } else {
+       assert(isFalseHeadLiteral(lit));
+       return {defaultLoc, Clingo::AST::Sign::None, Clingo::AST::Boolean{false}};
+   }
+}
+static std::pair<const char*, std::vector<Clingo::AST::Term>> termToNameAndArgs(const Clingo::AST::Term& term) {
+    if(term.data.is<Clingo::AST::Function>()) {
+        auto funcTerm = term.data.get<Clingo::AST::Function>();
+        return {funcTerm.name, funcTerm.arguments};
+    } else {
+        assert(term.data.is<Clingo::Symbol>());
+        auto symbolTerm = term.data.get<Clingo::Symbol>();
+        return {symbolTerm.name(), {}};
+    }
+};
+
 std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec, SolvingMode solvingMode) {
     std::vector<Clingo::AST::Statement> result;
     // generate a rule of the form head :- body, sort_atoms, [ex_atom]
     // (ex_atom is only present for dco solving)
-    auto    fterm = term(head_);
-    // f_ is either random(a,p), or a = y
-    Clingo::AST::Term f_ = termToClingoTerm(fterm.first);
-    Clingo::AST::Literal f_l{defaultLoc, Clingo::AST::Sign::None, f_};
+
+    auto headAttrName = getAttrName(head_->lt);
+    auto f_l = litToClingoLit(head_);
     auto body = gringobody(attdecls, sortDefVec, solvingMode == SolvingMode::query_dco);
     Clingo::AST::Rule f_r{{defaultLoc, f_l}, body};
     if(getType() == StatementType::CRRULE) {
@@ -195,16 +230,14 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
         ++rule_id;
     }
 
-    std::string f_str = term_to_string(f_);
     // for dco-based solving, if the rule is of the form a(t) = y :- B, where a!=random, a!= obs and a!= do,
     // 1. add the rule a(t,y) :- __ext(a(t,y)) to the program
     // 2. add the rule #external __ext(a(t,y)):sorts for the head to the program
     // this allows to quickly assign values to attributes based on a given interpretation
     if(solvingMode == SolvingMode::query_dco) {
-
-        if (f_str.find("obs(") != 0 && f_str.find("random(") != 0 && f_str.find("do(") != 0) {
+        if (headAttrName != "obs" && headAttrName != "random" != 0 && headAttrName != "do" && headAttrName != "") {
             std::vector<Clingo::AST::Term> args;
-            args.push_back(f_);
+            args.push_back(f_l.data.get<Clingo::AST::Term>());
             Clingo::AST::BodyLiteral bodyLit = make_body_lit("__ext", args);
             std::vector<Clingo::AST::BodyLiteral> body;
             body.push_back(bodyLit);
@@ -221,38 +254,25 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
     // 1. add rules a(t,y):- __ext(a(t,y)) for every y from the range of a(t)
     // 2. add rules #external __ext(a(t,y)):sorts for the head to the program
     // f_str stores random(a(t),p)
-    if(f_str.find("random(") == 0 ) {// if the head is a random atom
+
+    if(headAttrName ==  "random" ) {
         // fgterm stores random(
-        FunctionTerm* fgterm = (FunctionTerm*) (fterm.first.get()); //
-
-        std::string attrName ="";
+        auto term = f_l.data.get<Clingo::AST::Term>();
+        auto funcTerm = term.data.get<Clingo::AST::Function>();
+        const char *termName;
         std::vector<Clingo::AST::Term> args;
-
-        if(f_.data.is<Clingo::AST::Function>()) {
-            Clingo::AST::Function ct = f_.data.get<Clingo::AST::Function>();
-            attrName = ct.name;
-            args = ct.arguments;
-
-        } else if(f_.data.is<Clingo::Symbol>()) {
-            Clingo::Symbol st = f_.data.get<Clingo::Symbol>();
-            attrName = st.string();
-        } else {
-            throw std::logic_error("random attribute term not found");
-        }
-
-        const UTerm & aterm = fgterm->args[0];
-        String termName = getAttrName(aterm);
+        std::tie(termName, args) = termToNameAndArgs(funcTerm.arguments[0]);
         // find the list of possible values
         const USortExpr  & resSort = getResultSort(termName,attdecls);
         std::vector<Clingo::AST::Term> instances = resSort->generate(sortDefVec);
         if(solvingMode == SolvingMode::query_dco) {
             // add the rule add a(t,instance) :- ext(a(t,instance)) for every instance in instances
             for (const Clingo::AST::Term &y: instances) {
-                std::vector<Clingo::AST::Term> argsc = getAttrArgs(aterm);
+                std::vector<Clingo::AST::Term> argsc = args;
                 argsc.push_back(y);
-                Clingo::AST::Literal lit = make_lit(termName.c_str(), argsc);
+                Clingo::AST::Literal lit = make_lit(termName, argsc);
                 std::vector<Clingo::AST::Term> exargs;
-                exargs.push_back(make_term(termName.c_str(), argsc));
+                exargs.push_back(make_term(termName, argsc));
                 Clingo::AST::BodyLiteral bodyLit = make_body_lit("__ext", exargs);
                 std::vector<Clingo::AST::BodyLiteral> body;
                 body.push_back(bodyLit);
@@ -270,8 +290,7 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
             rargs.push_back(make_term(termName));
             rargs.push_back(make_term(resSort->toString().c_str()));
             Clingo::AST::Literal lit = make_lit("__range", rargs);
-            Clingo::AST::Rule f_r{{defaultLoc, lit},
-                                  {}};
+            Clingo::AST::Rule f_r{{defaultLoc, lit},{}};
             result.push_back(Clingo::AST::Statement{defaultLoc, f_r});
         } else {
             assert(solvingMode == SolvingMode::query_naive || solvingMode == SolvingMode::possible_worlds);
@@ -279,9 +298,9 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
             // a(t,y1) | ... | a(t,yn) :- random(a,p)
             Clingo::AST::Disjunction d;
             for (const Clingo::AST::Term &y: instances) {
-                std::vector<Clingo::AST::Term> argsc = getAttrArgs(aterm);
+                std::vector<Clingo::AST::Term> argsc = args;
                 argsc.push_back(y);
-                auto lit = make_lit(termName.c_str(), argsc);
+                auto lit = make_lit(termName, argsc);
                 auto conditionalLit = Clingo::AST::ConditionalLiteral{lit,{}};
                 d.elements.push_back(conditionalLit);
             }
@@ -290,9 +309,7 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
             Clingo::AST::Rule f_r{{defaultLoc, d}, body};
             result.push_back(Clingo::AST::Statement{defaultLoc, f_r});
             // __interveted(a(t)) :- do(a(t),_)
-            auto a_t = termToClingoTerm(aterm);
-
-
+            auto a_t = funcTerm.arguments[0];
             Clingo::AST::BodyLiteral bodyLit = make_body_lit("do", {a_t,Clingo::AST::Term{defaultLoc,Clingo::AST::Variable{"_"}}});
             Clingo::AST::Literal lit = make_lit("__intervene",{a_t});
             Clingo::AST::Rule interveneDef{{defaultLoc, lit}, {bodyLit}};
@@ -300,18 +317,24 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
             // __truly_random(a(t)) :- random(a(t), true), not __intervene(a(t)), or
             // __truly_random(a(t),p) :- random(a(t),p, true), not __intervene(a(t)) if random has p
             std::vector<Clingo::AST::Term> truly_random_args = {a_t};
-            if(fgterm->args.size() == 3) {
-                const UTerm & dynRangeTerm = fgterm->args[1];
-                truly_random_args.push_back(termToClingoTerm(dynRangeTerm));
+            if(funcTerm.arguments.size() == 3) {
+                auto const& dynRangeTerm = funcTerm.arguments[1];
+                truly_random_args.push_back(dynRangeTerm);
                 // :- a(t,Y), not p(Y, true)
                 Clingo::AST::Disjunction d;
-                std::vector<Clingo::AST::Term> argsc = getAttrArgs(aterm);
+                std::vector<Clingo::AST::Term> argsc = args;
                 auto var = Clingo::AST::Variable{"_X"};
                 argsc.push_back(Clingo::AST::Term{defaultLoc,var});
-                auto dynRangeBodyLit = make_body_lit(getAttrName(dynRangeTerm),{Clingo::AST::Term{defaultLoc,var}, make_term("true")}, Clingo::AST::Sign::Negation);
+                std::vector<Clingo::AST::Term> dynamicRangeAttArgs;
+                const char* dynRangeAttName;
+                std::tie(dynRangeAttName, dynamicRangeAttArgs) = termToNameAndArgs(dynRangeTerm);
+                auto dynRangeBodyLit = make_body_lit(dynRangeAttName,{Clingo::AST::Term{defaultLoc,var},
+                                                                                make_term("true")}, Clingo::AST::Sign::Negation);
                 auto  attrBodyLit = make_body_lit(termName, argsc);
                 Clingo::AST::Rule trulyrandomDef{{defaultLoc, d}, {dynRangeBodyLit, attrBodyLit}};
                 result.push_back(Clingo::AST::Statement{defaultLoc, trulyrandomDef});
+                // show p/2
+                result.push_back({defaultLoc,Clingo::AST::ShowSignature{Clingo::Signature(dynRangeAttName,  2, true), false}});
 
             }
             Clingo::AST::Literal truly_random_lit = make_lit("__truly_random",truly_random_args);
@@ -320,29 +343,30 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
             Clingo::AST::Rule trulyrandomDef{{defaultLoc, truly_random_lit}, {random_lit, intervene_lit}};
             result.push_back(Clingo::AST::Statement{defaultLoc, trulyrandomDef});
             // show a/n
-            result.push_back({defaultLoc,Clingo::AST::ShowSignature{Clingo::Signature(termName.c_str(),  getAttrArgs(aterm).size() + 1, true), false}});
-            // show p/2 if dynamic range p it is present
-            if(truly_random_args.size() > 1) {
-                auto const dynRangeAttr = truly_random_args[1];
-                result.push_back({defaultLoc,Clingo::AST::ShowSignature{Clingo::Signature(getAttrName(fgterm->args[1]).c_str(),  2, true), false}});
-            }
-
+            result.push_back({defaultLoc,Clingo::AST::ShowSignature{Clingo::Signature(termName,  args.size() + 1, true), false}});
         }
     }
 
     // :- obs(a(t),v,true), not a(t,v).
-    if(f_str.find("obs(") == 0 && solvingMode == SolvingMode::query_naive) {// if the head is a random atom
-        FunctionTerm* fgterm = (FunctionTerm*) (fterm.first.get()); //
+    if(headAttrName == "obs" && (solvingMode == SolvingMode::query_naive||solvingMode == SolvingMode::possible_worlds) ) {// if the head is a random atom
+        auto term = f_l.data.get<Clingo::AST::Term>();
+        auto funcTerm = term.data.get<Clingo::AST::Function>();
+        const char *obs;
+        std::vector<Clingo::AST::Term> args;
         // this will need to change when we will introduce labels
-        const UTerm & aterm = fgterm->args[0];
-        const UTerm & value = fgterm->args[1];
-        auto valueClingo = termToClingoTerm(value);
-        std::vector<Clingo::AST::Term> argsc = getAttrArgs(aterm);
-        argsc.push_back(valueClingo);
-        String termName = getAttrName(aterm);
+        const auto & aterm = funcTerm.arguments[0];
+        const auto & value = funcTerm.arguments[1];
+        std::tie(obs, args) = termToNameAndArgs(aterm);
+
+
+        std::vector<Clingo::AST::Term> argsc = args;
+        argsc.push_back(value);
+        std::vector<Clingo::AST::Term> argargs;
+        const char* argTermName;
+        std::tie(argTermName, argargs) = termToNameAndArgs(aterm);
         Clingo::AST::Disjunction d;
         Clingo::AST::BodyLiteral bodyLit =
-                make_body_lit(termName, argsc, Clingo::AST::Sign::Negation);
+                make_body_lit(argTermName, argsc, Clingo::AST::Sign::Negation);
         auto obs_lit = Clingo::AST::BodyLiteral{defaultLoc,Clingo::AST::Sign::None, f_l};
         Clingo::AST::Rule trulyrandomDef{{defaultLoc, d}, {obs_lit, bodyLit}};
         result.push_back(Clingo::AST::Statement{defaultLoc, trulyrandomDef});

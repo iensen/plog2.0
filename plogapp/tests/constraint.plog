@@ -1,0 +1,14 @@
+sorts
+
+#s = {1,2,3}.
+
+attributes
+p: #s.
+
+
+statements
+
+random(p).
+:- p = 1.
+
+?p = 2.
