@@ -14,11 +14,29 @@ using Gringo::BinOp ;
 
 
 static Clingo::AST::BinaryOperator gringoToClingoBinOp(Gringo::BinOp op) {
-        switch(op) {
-            case Gringo::BinOp::ADD: return Clingo::AST::BinaryOperator::Plus;
-            default:throw "not implemented";
+    switch (op) {
+        case Gringo::BinOp::ADD:
+            return Clingo::AST::BinaryOperator::Plus;
+        case Gringo::BinOp::SUB:
+            return Clingo::AST::BinaryOperator::Minus;
+        case Gringo::BinOp::DIV:
+            return Clingo::AST::BinaryOperator::Division;
+        case Gringo::BinOp::MUL :
+            return Clingo::AST::BinaryOperator::Multiplication;
+        case Gringo::BinOp::AND:
+            return Clingo::AST::BinaryOperator::And;
+        case Gringo::BinOp::MOD:
+            return Clingo::AST::BinaryOperator::Modulo;
+        case Gringo::BinOp::OR:
+            return Clingo::AST::BinaryOperator::Or;
+        case Gringo::BinOp::POW:
+            return Clingo::AST::BinaryOperator::Power;
 
-              }
+        default:
+            assert(op == Gringo::BinOp::XOR);
+            return Clingo::AST::BinaryOperator::XOr;
+
+    }
 }
 
 Clingo::AST::Term negate(const UTerm &term) {
