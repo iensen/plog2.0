@@ -149,3 +149,8 @@ TEST(PERF_NEWVERSION_NAIVE_POKER, _5x4x36) {
 TEST(PERF_NEWVERSION_NAIVE_SQ, _1) {
     ASSERT_NEAR(compute_query("plogapp/tests/squirrel.plog",NewPlogMode::QUERY_NAIVE), 0.152380, 1e-4);
 }
+
+TEST(NEWVERSION_NAIVE, _dostmt) {
+    ASSERT_NEAR(compute_query("plogapp/tests/donaive.plog",NewPlogMode::QUERY_NAIVE), 1.0, 1e-4);
+}
+

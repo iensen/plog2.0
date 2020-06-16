@@ -308,9 +308,9 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
             body.push_back(Clingo::AST::BodyLiteral{defaultLoc,Clingo::AST::Sign::None, f_l});
             Clingo::AST::Rule f_r{{defaultLoc, d}, body};
             result.push_back(Clingo::AST::Statement{defaultLoc, f_r});
-            // __interveted(a(t)) :- do(a(t),_)
+            // __interveted(a(t)) :- do(a(t),_,_) (the second argument is actually true, but it's ok to use anonimous variable)
             auto a_t = funcTerm.arguments[0];
-            Clingo::AST::BodyLiteral bodyLit = make_body_lit("do", {a_t,Clingo::AST::Term{defaultLoc,Clingo::AST::Variable{"_"}}});
+            Clingo::AST::BodyLiteral bodyLit = make_body_lit("do", {a_t,Clingo::AST::Term{defaultLoc,Clingo::AST::Variable{"_"}},Clingo::AST::Term{defaultLoc,Clingo::AST::Variable{"_"}}});
             Clingo::AST::Literal lit = make_lit("__intervene",{a_t});
             Clingo::AST::Rule interveneDef{{defaultLoc, lit}, {bodyLit}};
             result.push_back(Clingo::AST::Statement{defaultLoc, interveneDef});
@@ -348,7 +348,9 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
     }
 
     // :- obs(a(t),v,true), not a(t,v).
-    if(headAttrName == "obs" && (solvingMode == SolvingMode::query_naive||solvingMode == SolvingMode::possible_worlds) ) {// if the head is a random atom
+    // :- do(a(t),v,true), not a(t,v).
+    if ((headAttrName == "obs" || headAttrName == "do") &&
+      (solvingMode == SolvingMode::query_naive || solvingMode ==SolvingMode::possible_worlds)) {// if the head is a random atom
         auto term = f_l.data.get<Clingo::AST::Term>();
         auto funcTerm = term.data.get<Clingo::AST::Function>();
         const char *obs;

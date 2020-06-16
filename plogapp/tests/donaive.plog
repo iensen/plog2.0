@@ -1,0 +1,13 @@
+sorts
+#boolean = {true, false}.
+#step = 1..3.
+
+attributes
+head:  #boolean.
+
+statements
+
+random(head).
+do(head, true).
+
+?head = true.
