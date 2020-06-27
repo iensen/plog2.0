@@ -1,0 +1,66 @@
+sorts
+
+#time = 0..3.
+#boolean = {true, false}.
+#guard = {a,b}.
+#action = captain_order(#time) + shoot(#guard, #time) + court_order(#time).
+#rulename = m1(#time) +  m2(#guard, #time) + m3(#guard,#time).
+
+attributes
+
+captain_order: #time -> #boolean.
+court_order: #time -> #boolean.
+ab: #rulename -> #boolean.
+
+interfere: #action, #boolean -> #boolean.
+do2 : #action ->  #boolean.
+
+shoot: #guard, #time -> #boolean.
+dead : #time -> #boolean.
+
+
+statements
+
+captain_order(T+1) :- court_order(T), 
+                      not ab(m1(T)),
+                      not interfere(captain_order(T+1), true).
+
+shoot(G,T+1) :- captain_order(T), 
+                not ab(m2(G,T)),
+                not interfere(shoot(G,T+1), true).
+
+dead(T+1) :- shoot(G,T), 
+                not ab(m3(G,T)).
+
+ab(M):+.
+
+% closed world assumptions:
+shoot(G,T) = false :- not shoot(G,T).
+captain_order(T) = false :- not captain_order(T).
+court_order(T) = false :- not court_order(T).
+
+court_order(T):+.
+
+% inertia axioms for dead:
+dead(T+1) = false :- dead(T) = false, not dead(T+1).
+dead(T+1) :- dead(T), not dead(T+1) = false.
+
+
+% special axioms:
+court_order(0) :- do2(court_order(0), true).
+interfere(court_order(X), Y) :- do2(court_order(X), true), Y != true.
+
+
+% Scenarios. Uncomment one to run the program. Bold do from the paper is denoted by do2
+% Scenario 1: (obs(dead(0) = false), do2(court_order(0))).
+%dead(0) = false. do2(court_order(0), true).
+
+% Scenario 2: (obs(dead(0) = false), do2(court_order(0)), do2(shoot(a,2), false), do2(shoot(a,2), false).
+%dead(0) = false. do2(court_order(0), true). do2(shoot(a,2), false). do2(shoot(b,2), false).
+
+% Scenario 3: (hobs(-dead(0)), court order(0), obs(-dead(3)).
+%dead(0) = false. do2(court_order(0), true). :- not dead(3) = false.
+
+% Scenario 4: (hobs(-dead(0)), obs(dead(3)).
+dead(0) = false.  :- not dead(3) = true.
+

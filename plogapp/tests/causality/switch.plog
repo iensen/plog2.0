@@ -1,0 +1,74 @@
+sorts
+
+#loc = {s,f, fork}.
+#time = 0..3.
+#boolean = {true, false}.
+#action = {a}.
+#rule_name = m0(#action, #time) + m1(#time).
+#doable_action =a(#time) + flip(#time).
+#route = {left, right}.
+
+attributes
+
+pos: #time-> #loc.
+
+% pos_is_not(T, L) is true iff at time step T pos takes a value L2 different from L
+% this is a temporary solution until solver supports classical negation in regular atoms.
+pos_is_not: #time, #loc-> #boolean.
+
+ab: #rule_name->#boolean.
+a: #time -> #boolean.
+flip: #time -> #boolean.
+
+dest:  #action -> #loc.
+source:  #action -> #loc.
+connected: #loc, #loc -> #boolean.
+available: #time -> #route.
+do2: #doable_action, #boolean -> #boolean.
+
+statements
+% start and finish are connected
+connected(s,f).
+%connected(s,fork).
+%connected(fork,f).
+%connected(X,Y) :- connected(Y,X).
+
+dest(a) = f.
+source(a) =  s.
+
+%effect of action
+pos(I) = L :- a(I-1), dest(a) = L, not ab(m0(a,I-1)).
+:- source(a) = L1, dest(a) = L2, not connected(L1,L2).
+
+% close world assumptions for actions:
+a(I) = false :- not a(I) = true.
+
+% inertia axioms for fluent:
+pos_is_not(I,L) :- pos(I) = L2, L != L2.
+pos(I) = L1 :- pos(I-1) = L1, not pos_is_not(I,L1).
+
+% axioms for do2 (omitting the interferred since it's not uses in any of the scenarious)
+a(I) :- do2(a(I), true).
+flip(I) :- do2(flip(I), true).
+
+available(I) = left :- flip(I-1),
+                       available(I-1) = right,
+                       not ab(m1(I-1)).
+
+available(I) = right :- flip(I-1),
+                       available(I-1) = left,
+                       not ab(m1(I-1)).
+
+% inertia axiom for available:
+available(I) = X :- available(I-1) = X, not available(I) = Y, Y != X.
+
+% S0 = {obs(pos(0) = s, do2(e(0)), obs(pos(1), f).
+pos(0) = s. :- not pos(1) = f. do2(a(0), true).
+
+% S2 = {obs(pos(0) = s, do2(e(0)), obs(pos(1), f), obs(available(0) = right), obs(available(2) = left), do2(flip(1))}
+pos(0) = s. :- not pos(1) = f. do2(a(0), true). available(0) = right.
+%:- not available(2) = left.
+do2(flip(1), true).
+
+% Q: is ab an action or a fluent? It seems to be neither, which contradicts your original partition
+% do we need any axioms for it?

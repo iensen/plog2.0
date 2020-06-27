@@ -1,0 +1,110 @@
+sorts
+
+#loc = {s,f, fork}.
+#time = 0..3.
+#boolean = {true, false}.
+#action = {a0, a1, a2}.
+#doable_action =a(#time) + flip(#time).
+#route = {left, right}.
+#rule_name = m0(#action, #time) + m1(#time) + m2(#time,#loc,#route,#action).
+
+attributes
+
+pos: #time-> #loc.
+
+% pos_is_not(T, L) is true iff at time step T pos takes a value L2 different from L
+% this is a temporary solution until solver supports classical negation in regular atoms.
+pos_is_not: #time, #loc-> #boolean.
+
+ab: #rule_name->#boolean.
+a: #time -> #boolean.
+a0: #time -> #boolean.
+a1: #time -> #boolean.
+a2: #time -> #boolean.
+
+flip: #time -> #boolean.
+
+dest:  #action -> #loc.
+source:  #action -> #loc.
+route:  #action -> #route.
+connected: #loc, #loc -> #boolean.
+available: #time -> #route.
+do2: #doable_action, #boolean -> #boolean.
+arrived_by: #loc, #route, #time -> #boolean.
+
+statements
+% start and finish are connected
+connected(s,f).
+connected(s,fork).
+connected(fork,f).
+connected(X,Y) :- connected(Y,X).
+
+dest(a0) = fork.
+source(a0) =  s.
+
+dest(a1) = f.
+source(a1) =  fork.
+route(a1) = left.
+
+dest(a2) = f.
+source(a2) =  fork.
+route(a2) = right.
+
+%effects of action
+pos(I) = L :- a0(I-1), dest(a0) = L, not ab(m0(a0,I-1)).
+pos(I) = L :- a1(I-1), dest(a1) = L, not ab(m0(a1,I-1)).
+pos(I) = L :- a2(I-1), dest(a2) = L, not ab(m0(a2,I-1)).
+
+
+:- source(a) = L1, dest(a) = L2, not connected(L1,L2).
+
+
+%effect of action
+a0(I) :- a(I).
+a1(I) :- a0(I-1), available(I) = left.
+a2(I) :- a0(I-1), available(I) = right.
+
+arrived_by(D,R,I) :- a0(I-1), dest(a0) = D, route(a0) = R, not ab(m2(I-1,D,R,a0)).
+arrived_by(D,R,I) :- a1(I-1), dest(a1) = D, route(a1) = R, not ab(m2(I-1,D,R,a1)).
+arrived_by(D,R,I) :- a2(I-1), dest(a2) = D, route(a2) = R, not ab(m2(I-1,D,R,a2)).
+
+:- source(A) = L1, dest(A) = L2, not connected(L1,L2).
+
+% close world assumptions for actions:
+a(I) = false :- not a(I) = true.
+a0(I) = false :- not a0(I) = true.
+a1(I) = false :- not a1(I) = true.
+a2(I) = false :- not a2(I) = true.
+
+% inertia axioms for fluent:
+pos_is_not(I,L) :- pos(I) = L2, L != L2.
+pos(I) = L1 :- pos(I-1) = L1, not pos_is_not(I,L1).
+
+% axioms for do2 (omitting the interferred since it's not uses in any of the scenarios)
+a(I) :- do2(a(I), true).
+flip(I) :- do2(flip(I), true).
+
+available(I) = left :- flip(I-1),
+                       available(I-1) = right,
+                       not ab(m1(I-1)).
+
+available(I) = right :- flip(I-1),
+                       available(I-1) = left,
+                       not ab(m1(I-1)).
+
+% inertia axiom for available:
+available(I) = X :- available(I-1) = X, not available(I) = Y, Y != X.
+
+% Scenario 3:
+pos(0) = s.
+do2(a(0), true).
+arrived_by(D,R,0) = false.
+
+available(0) = right.
+:- not arrived_by(f, right, 2).
+
+% Scenario 4 (comment out the two lines  above, and uncomment three lines below):
+available(0) = right.
+%:- not arrived_by(f, left, 2).
+%do2(flip(0), true).
+

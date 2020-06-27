@@ -1,0 +1,81 @@
+sorts
+
+#boolean = {true, false}.
+#time = 0..3.
+#shoot_action = shoot(#time).
+#unload_action = unload(#time).
+#head_action = head(#time).
+#simple_action = #shoot_action + #unload_action + #head_action.
+#random_action = random(#simple_action).
+#intend_action = intend(#simple_action, #time).
+#action = #simple_action + #random_action + #intend_action.
+#rule_name = m1(#time) + m2(#time) + m3(#time).
+
+attributes
+
+shoot: #time -> #boolean.
+intend: #simple_action, #time -> #boolean.
+alive: #time -> #boolean.
+unload: #time -> #boolean.
+loaded: #time-> #boolean.
+head: #time -> #boolean.
+ab: #rule_name -> #boolean.
+do2: #action , #boolean-> #boolean.
+
+
+statements
+
+shoot(T) :- intend(shoot(T), I), I <= T, not shoot(T) = false.
+
+
+alive(T+1) = false :- shoot(T), not ab(m1(T)).
+loaded(T+1) = false :- unload(T), not ab(m2(T)).
+shoot(T) = false :- loaded(T) = false.
+unload(T) :- head(T), not ab(m3(T)).
+
+% inertia axioms for alive and loaded:
+alive(T+1) :- alive(T), not alive(T+1) = false.
+alive(T+1) = false :- alive(T) = false, not alive(T+1) = true.
+
+loaded(T+1) :- loaded(T), not loaded(T+1) = false.
+loaded(T+1) = false :- loaded(T) = false, not loaded(T+1) = true.
+
+% closed world assumptions for actions:
+% special CWA for shoot due to the intentions.
+shoot(T+1) = false :- not intend(shoot,T), not shoot(T+1).
+unload(T)= false :- not unload(T) = true.
+head(T)= false :- not head(T) = true.
+
+%contingency axiom:
+ab(M):+.
+
+
+%Axioms (it is easy to see that axioms not stated here do not have any effect):
+
+intend(A,T) = V:- do2(intend(A,T),V).
+random(head(1)) :- do2(random(head(1)), true). %rax
+
+%Scenario: {obs(alive(0)), obs(loaded(0), intend(shoot(2), 0),
+% random(flip(1), head(1)).
+
+%Encoding of scenarios:
+
+% S:
+alive(0).
+loaded(0).
+do2(intend(shoot(2),0), true).
+do2(random(head(1)), true).
+
+% S1:
+:- not head(1) = true.
+:- not dead(3) = false.
+
+%S2 :
+%:- not head(1) = false.
+%:- not dead(3) = true.
+
+%S3:
+%:- not head(1) = false.
+%:- not dead(3) = false.
+
+

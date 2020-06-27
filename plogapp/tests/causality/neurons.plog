@@ -1,0 +1,82 @@
+sorts
+
+#boolean = {true, false}.
+#time = 0..3.
+#neuron = {a,b,c,d,e,f}.
+#link_type = {stm, inh}.
+#stimulated_action = stimulated(#neuron, #time).
+#stim_act = {s1, s2}.
+
+attributes
+
+stimulated: #neuron, #time -> #boolean.
+stubborn: #neuron -> #boolean.
+inhibited: #neuron, #time -> #boolean.
+link: #neuron, #neuron, #link_type -> #boolean.
+member: #neuron, #stim_act -> #boolean.
+stim: #stim_act, #time -> #boolean.
+do2: #stimulated_action -> #boolean.
+
+
+statements
+
+link(a, d, stm).
+link(a, f, inh).
+link(c, f, stm).
+link(c, b, stm).
+link(f, e, stm).
+link(d, e, stm).
+link(b, e, stm).
+
+member(c, s1).
+member(c, s2).
+member(a, s2).
+
+
+stubborn(e).
+stubborn(N) = false :- N!=e.
+
+% effects of stim action.
+stimulated(N,1) :- stim(S,0), member(N,S).
+
+
+% nonstubborn neuron stimulateds if it was not inhibited, and there is at least
+% one stimulatedd neuron sending signals to it.
+stimulated(Y, 1) :- stubborn(Y) = false, inhibited(Y, 1) = false,
+                stimulated(X,1), link(X,Y, stm).
+
+
+% stubborn neuron is stimulated if it was not inhibited, and there are ate least
+% two stimulatedd neurons sending signals to it.
+% aggregates are not supported, so we replace card{X:link(X,Y,stmt, stimulatedX,1}>1
+% with stimulated(X1,1), stimulated(X2,1), X1 != X2, link(X1,Y, stm),link(X2,Y, stm)
+stimulated(Y, 1) :- stubborn(Y), inhibited(Y, 1) = false,
+                stimulated(X1,1), stimulated(X2,1), X1 != X2, link(X1,Y, stm),link(X2,Y, stm).
+
+% neuron is inhibited if there is an inhibiting link from stimulatedd neuron.
+inhibited(Y,1) :- link(X,Y, inh), stimulated(X,1).
+
+% no parallel stim actions:
+stim(S1,0) = false :- stim(S2,0), S1 != S2.
+
+% close world assumption with indirect exceptions for stim:
+stim(S,0) = false :- not stim(S,0).
+stim(S,0):+.
+
+% inertia axioms for inhibited
+inhibited(N,T+1) :- inhibited(N,T), not inhibited(N,T+1) = false.
+inhibited(N,T+1) = false :- inhibited(N,T) = false, not inhibited(N,T+1) = true.
+
+
+
+%Axioms (it is easy to see that axioms not stated here do not have any effect):
+stimulated(N,T) = V:- do2(stimulated(N,T),V).
+
+
+%Scenario: 
+inhibited(N,0) = false.
+stimulated(N,0) = false.
+:- not stimulated(e,1) = true.
+
+
+

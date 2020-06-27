@@ -1,0 +1,63 @@
+sorts
+
+#time = 0..2.
+#person = {suzy, bill}.
+#boolean = {true, false}.
+#rule_name = m(#person, #time).
+#action = throw(#person, #time).
+
+attributes
+
+duration : #person -> #time.
+shattered : #time -> #boolean.
+throw: #person, #time -> #boolean.
+ab: #rule_name -> #boolean.
+do2: #action, #boolean -> #boolean.
+
+statements
+
+%statics
+duration(suzy) = 1.
+duration(bill) = 2.
+
+% Causal law. We omit interfere atom here, since all the actions we will consider are
+% are not about shattered. The law reads as follows:
+% The bottle is usually shattered at time T2  if the stone was thrown at time step T1, the duration
+% of the stone flying to the bottle  is D, the bottle wasn't shattered before T2.
+shattered(T2) :- throw(A,T1), duration(A) = D, T2 = T1 + D, shattered(T2-1) = false,
+                 not ab(m(A,T1)).
+
+% alternative formulation: the bottle is shattered only if it is hit by both stones:
+% shattered(T2) :- throw(A,T1), duration(A) = D, T2 = T1 + D,
+%                 throw(A2,T3), duration(A2) = D2, T2 = T3 + D2,
+%                 shattered(T2-1) = false,
+%                 not ab(m(A,T1)).
+
+%Contingency axion:
+ab(m(A,T1)):+.
+
+%Inertia for shattered:
+shattered(T+1) :- shattered(T), not shattered(T+1) = false.
+shattered(T+1)=false :- shattered(T)=false, not shattered(T+1) = true.
+
+%CWA for action:
+throw(A,T) = false :- not throw(A,T).
+
+% if Billy an Suzy agree that Suzy will throw after Bill
+% throw(suzy, I + 1) :- throw(bill, I).
+
+% Relevant Special Axioms:
+throw(A,T) = true :- do2(throw(A,T), true).
+
+%Scenario 0: obs(-shattered(0)), do2(throw(suzy,0)), do2(throw(bill,0)).
+%shattered(0) = false. do2(throw(suzy,0), true). do2(throw(bill,0), true).
+%Scenario 1: obs(-shattered(0)), do2(throw(suzy,0)), do2(throw(bill,0)). obs(-shattered(1)).
+%shattered(0) = false. do2(throw(suzy,0), true). do2(throw(bill,0), true). :- not shattered(1) = false.
+%Scenario 2: obs(-shattered(0)), do2(throw(suzy,1)), do2(throw(bill,0)).
+shattered(0) = false. do2(throw(suzy,1), true). do2(throw(bill,0), true).
+
+
+
+
+
+
