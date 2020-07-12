@@ -1,4 +1,4 @@
-The programs in this directory is a product of joint work with Dr.Michael Gelfond.
+The programs in this directory, adapted to the syntax of the solver, is a product of joint work with Dr.Michael Gelfond.
 
 For detailed instructions on how to install the P-log solver and run the programs (compute possible worlds and probabilities), please refer to https://github.com/iensen/plog2.0/wiki.
 
