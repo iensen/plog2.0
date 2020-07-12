@@ -2,7 +2,7 @@ The programs in this directory, adapted to the syntax of the solver, contain pro
 
 For detailed instructions on how to install the P-log solver and run the programs (compute possible worlds and probabilities), please refer to https://github.com/iensen/plog2.0/wiki.
 
-For a quick example, given that P-log executable (named plog2.0) is available in the current folder, and plogapp/tests/causality/courorder.plog contains T(S) for scenario S = {dead(0) = false, obs(dead(3)}, this is how to compute the possible worlds of T(S):
+For a quick example, given that P-log executable (named plog2.0) is available in the current folder, and plogapp/tests/causality/courorder.plog contains T(S) for scenario S = {dead(0) = false, obs(dead(3)}, this is how to compute the unique possible worlds of T(S):
 ```bash
 ./plog2 --mode=pw plogapp/tests/causality/courtorder.plog 
 Plog 2.1
