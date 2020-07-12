@@ -149,15 +149,42 @@ where $plog2$ is the name of the p-log executable. For example, assuming the fil
 \label{fig:plog_output}
 \end{figure}
 
+The solver also allows to compute possible worlds of a given program. For that, pass an option  \texttt{--mode=pw} to the solver.
+For example, in order to compute possible worlds of a program stored in \texttt{plogapp/tests/causal/courtorder.plog}, run the command
+\texttt{./plog2 --mode=pw  plogapp/tests/causal/courtorder.plog}, where plog2 is the system executable.
+Below is an example output:
+\begin{verbatim}
+ ./plog2 --mode=pw plogapp/tests/causality/courtorder.plog 
+Plog 2.1
+Possible Worlds:
+1: {court_order(0), court_order(1) = false, court_order(2) = false,
+ court_order(3) = false, captain_order(1), captain_order(0) = false,
+ captain_order(2) = false, captain_order(3) = false, 
+shoot(a, 2), shoot(b, 2), shoot(a, 0) = false, 
+shoot(a, 1) = false, shoot(a, 3) = false, shoot(b, 0) = false,
+ shoot(b, 1) = false, shoot(b, 3) = false, dead(3), 
+dead(0) = false, dead(1) = false, dead(2) = false}
 
+Probabilities:
+1: 1
+\end{verbatim}
 \st
 The details of the syntax of the language can be found in \cite{Balai2019} and in the following sections. 
 
 \section{Command Line Options}\label{option}
 
 In this section we will describe the meanings of command line options supported by
-P-log. As of right now, the system only accepts a single argument which is a path to the p-log file.
+P-log. As of right now, the system requires  a single argument which is a path to the p-log file.
 
+\medskip\noindent
+In addition, it supports the following named arguments:
+\begin{itemize}
+\item \texttt{--mode=X}, where \texttt{X} is one of \texttt{pw} or \texttt{query}. When \texttt{X} is \texttt{pw}, the solver computes possible worlds of a given program. Otherwise, it computes the probability of the query. The default value is \texttt{query}.
+\end{itemize}
+
+  \begin{itemize}
+  \item \texttt{--algo=X}, where \texttt{X} is one of \texttt{naive} or \texttt{dco}. When \texttt{X} is \texttt{naive}, the solver uses naive algorithm to compute the query by computing possible worlds and iterating over all of them. The algorithm is similar to the translate algorithm from \cite{zhu2012plog}, but, unlike the implementation by its author, our uses a more modern ASP solver, Clingo. When \texttt{X} is \texttt{dco}, the solver uses special algorithm for dynamically causally ordered programs, described in \cite{balai2017investigating}, which can be more efficient. Note that when the input program is not dynamically causally ordered, and \texttt{X} is \texttt{dco}, the solver behavior is undefined. 
+\end{itemize}
 \st
 See Section \ref{sysusage} for an example of using this argument.
 
