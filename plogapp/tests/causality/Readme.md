@@ -1,4 +1,4 @@
-The programs in this directory, adapted to the syntax of the solver, is a product of joint work with Dr.Michael Gelfond.
+The programs in this directory, adapted to the syntax of the solver, contain programs from  joint work with Dr.Michael Gelfond on causality. Note that, in several rare cases, the answer may vary, because our solver uses cardinality-based preference for consistency restoring rules.
 
 For detailed instructions on how to install the P-log solver and run the programs (compute possible worlds and probabilities), please refer to https://github.com/iensen/plog2.0/wiki.
 
