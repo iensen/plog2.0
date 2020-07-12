@@ -1,4 +1,5 @@
-The programs in this directory, adapted to the syntax of the solver, contain programs from  joint research with Dr.Michael Gelfond on causal analysis in trajectories of dynamic domains. Note that, in the example courtorder.plog, for certain scenarious the answers may be different from the one presented in the paper, because our solver uses cardinality-based preference for consistency restoring rules.
+The programs in this directory, adapted to the syntax of the solver, contain programs from  joint research with Dr.Michael Gelfond on causal analysis in trajectories of dynamic domains. Note that  our solver uses cardinality-based preference for consistency restoring rules. 
+Therefore, in the example courtorder.plog, for certain scenarious the answers may be different from the one presented in the paper. We plan to address this limitation in future.
 
 For detailed instructions on how to install the P-log solver and run the programs (compute possible worlds and probabilities), please refer to https://github.com/iensen/plog2.0/wiki.
 
