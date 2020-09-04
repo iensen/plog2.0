@@ -96,6 +96,9 @@ StatementType Statement::getType() {
 
 std::vector<Clingo::AST::Statement> Statement::toGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec,
                                                            SolvingMode algo) {
+
+    // increment rule id to be used in auxiliary terms such as appl, etc. 
+    ++rule_id;
     switch(type_) {
         case StatementType::PR_ATOM: return prAtomToGringoAST(attdecls, sortDefVec, algo);
         case StatementType::QUERY:   return queryToGringoAST(attdecls, algo);
@@ -611,7 +614,7 @@ Clingo::AST::Term Statement::make_external_term() {
 }
 
 Clingo::AST::Term Statement::make_apply_term(bool negation) {
-    return make_unique_term_with_name(negation?"-__appl":"_appl");
+    return make_unique_term_with_name(negation?"-_appl":"_appl");
 }
 
 
