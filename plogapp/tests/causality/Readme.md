@@ -13,4 +13,4 @@ Possible Worlds:
 Probabilities:
 1: 1
 ```
---mode==pw flag is used to indicate that possible worlds should be computed, rather than an answer to certain query.
+--mode=pw flag is used to indicate that possible worlds should be computed, rather than an answer to certain query.
