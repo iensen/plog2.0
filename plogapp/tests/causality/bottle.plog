@@ -34,7 +34,12 @@ shattered(T2) :- throw(A,T1), duration(A) = D, T2 = T1 + D, shattered(T2-1) = fa
 %                 not ab(m(A,T1)).
 
 %Contingency axion:
-ab(m(A,T1)):+.
+ab(m(A,T1)):+ throw(A,T1), duration(A) = D, T2 = T1 + D, shattered(T2-1) = false.
+% Contingency axiom for the alternative formulation:
+%ab(m(A,T1)):+ throw(A,T1), duration(A) = D, T2 = T1 + D,
+%                              throw(A2,T3), duration(A2) = D2, T2 = T3 + D2,
+%                               shattered(T2-1) = false.
+
 
 %Inertia for shattered:
 shattered(T+1) :- shattered(T), not shattered(T+1) = false.
@@ -52,9 +57,9 @@ throw(A,T) = true :- do2(throw(A,T), true).
 %Scenario 0: obs(-shattered(0)), do2(throw(suzy,0)), do2(throw(bill,0)).
 %shattered(0) = false. do2(throw(suzy,0), true). do2(throw(bill,0), true).
 %Scenario 1: obs(-shattered(0)), do2(throw(suzy,0)), do2(throw(bill,0)). obs(-shattered(1)).
-%shattered(0) = false. do2(throw(suzy,0), true). do2(throw(bill,0), true). :- not shattered(1) = false.
+shattered(0) = false. do2(throw(suzy,0), true). do2(throw(bill,0), true). :- not shattered(1) = false.
 %Scenario 2: obs(-shattered(0)), do2(throw(suzy,1)), do2(throw(bill,0)).
-shattered(0) = false. do2(throw(suzy,1), true). do2(throw(bill,0), true).
+%shattered(0) = false. do2(throw(suzy,1), true). do2(throw(bill,0), true).
 
 
 
