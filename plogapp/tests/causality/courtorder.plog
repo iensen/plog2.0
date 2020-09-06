@@ -32,7 +32,11 @@ shoot(G,T+1) :- captain_order(T),
 dead(T+1) :- shoot(G,T), 
                 not ab(m3(G,T)).
 
-ab(M):+.
+% contingency axioms
+ab(m1(T))  :+ court_order(T).
+ab(m2(G,T)) :+ captain_order(T).
+ab(m3(G,T)) :+ shoot(G,T).
+
 
 % closed world assumptions:
 shoot(G,T) = false :- not shoot(G,T).
