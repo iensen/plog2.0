@@ -5,32 +5,30 @@ sorts
 #rulename = m(#time).
 #head_fluent = head(#time).
 #action  = random(#head_fluent).
-#play_action = play(#time).
+#flip_action = flip(#time).
 
 attributes
 
 head: #time -> #boolean.
-play: #time -> #boolean.
 ab: #rulename -> #boolean.
 interfere: #action -> #boolean.
-do2: #play_action -> #boolean.
-
+agreed_to_play: #time -> #boolean.
+do2: #flip_action -> #boolean.
 statements
 
 % the coin usually comes up with head (at random) at time step T+1,
-% if the play was true at T-1, unless the experiment was deliverately interfered with.
-random(head(T+1)) :- play(T-1), not ab(m(T-1)),
+% if the play was true at T-1, unless the experiment was deliberately interfered with.
+random(head(T+1)) :- agreed_to_play(T), not ab(m(T)),
                      not interfere(random(head(T+1))).
 
 %axioms (we have omitted (e.g, for inferred) some axioms that will not change results)
-play(0) :- do2(play(0), true).
-do(head(2), true) :- do2(flip(1), true).
+do(head(1), true) :- do2(flip(0), true).
 
-%scenario 0: do2(play(0)).
-%do2(play(0), true).
+%scenario 0: obs(agreed_to_play(0)).
+%agreed_to_play(0).
 
-%scenario 1: do2(play(0)), obs(heads(2)).
-%do2(play(0), true). :- not head(2) = true.
+%scenario 1: obs(agreed_to_play(0)). obs(heads(1)).
+%agreed_to_play(0). :- not head(1) = true.
 
-%scenario 2: do2(play(0), true), do2(flip(1), true).
-%do2(play(0), true). do2(flip(1), true).
+%scenario 2: obs(agreed_to_play(0)), do2(flip(1), true).
+agreed_to_play(0). do2(flip(0), true).
