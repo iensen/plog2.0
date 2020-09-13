@@ -108,10 +108,10 @@ void PlogControl::computeQuery(){
     }
 }
 
-void PlogControl::computePossibleWorlds(){
+void PlogControl::computePossibleWorlds(Format format_){
     groundPlogConfig_.releaseOptions();
     ground();
-    groundplog_->computePossibleWorlds(&clingoControl, &prg_);
+    groundplog_->computePossibleWorlds(&clingoControl, &prg_, format_);
 
 }
 

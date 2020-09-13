@@ -16,6 +16,8 @@
 #include <pgEngine.h>
 #include<cmath>
 #include <regex>
+//Vu's
+#include <iostream>
 
 static double parse_old_plog_output(std::string out) {
     const std::string pr_str ="probability";
@@ -73,6 +75,79 @@ static double getPossibleWorldProbability(const std::string &line) {
      while(line[currentIndex]!=':') ++currentIndex;
      ++currentIndex;
      return std::stod(line.substr(currentIndex));
+}
+// given output from possible words in json format, returns a set of pairs of the form
+// <"a_1(t)=v_1,...,a_n(t_n)=v_n",p>, where a_1(t)=v_1,...,a_n(t_n)=v_n are atoms
+// of the corresponding possible world, sorted in lexicographical order, and p is its probability
+std::vector<std::pair<std::string, double>> parse_possible_worlds_json(const std::string & out) {
+    std::stringstream ss(out);
+    std::string line;
+
+    std::vector<std::string> data;
+    std::vector<std::string> possibleWorlds;
+    std::vector<double> probabilities;
+
+    std::vector<std::vector<std::string>> test_possibleWorlds;
+    std::vector<std::string> current_possibleWorld;
+    std::vector<std::string> test_probabilities;
+    while (std::getline(ss, line, '\"')) {
+        data.push_back(line);
+    }
+
+    for (int i=0; i<data.size(); ++i) {
+        std::stringstream atom;
+
+        if (data[i] == "possible_world") {
+            if (!current_possibleWorld.empty()) {
+                std::sort(current_possibleWorld.begin(), current_possibleWorld.end());
+                test_possibleWorlds.push_back(current_possibleWorld);
+                current_possibleWorld.clear();
+            }
+            continue;
+        }
+
+        if (data[i] == "attribute_term") {
+            i+=2;
+            atom << data[i] << " = ";
+            i+=2;
+            if (data[i] == "value") {
+                i+=2;
+                atom << data[i];
+            }
+            current_possibleWorld.push_back(atom.str());
+        }
+
+
+        if (data[i] == "probability") {
+            i++;
+            std::remove_if(data[i].begin(), data[i].end(), isspace);
+            int pos = data[i].find('}') - 1;
+            test_probabilities.push_back(data[i].substr(1, pos));
+        }
+    }
+    test_possibleWorlds.push_back(current_possibleWorld);
+    for(auto const & test_possibleWorld: test_possibleWorlds) {
+        std::string possibleWorld;
+        for(int i = 0; i < test_possibleWorld.size(); i++) {
+            if(i!=0) {
+                possibleWorld.push_back(',');
+            }
+            possibleWorld += test_possibleWorld.at(i);
+        }
+        possibleWorlds.push_back(possibleWorld);
+    }
+
+    for(auto const& test_probability: test_probabilities) {
+        probabilities.push_back(std::stod(test_probability));
+    }
+
+    std::vector<std::pair<std::string, double>> result;
+    assert(probabilities.size() == possibleWorlds.size());
+    for (size_t i = 0; i < probabilities.size(); i++) {
+        result.push_back({possibleWorlds[i], probabilities[i]});
+    }
+    std::sort(result.begin(), result.end());
+    return result;
 }
 
 // given output from possible words, returns a set of pairs of the form
@@ -166,6 +241,30 @@ std::vector<std::pair<std::string, double>> compute_possible_worlds(const std::s
     delete[] argv[1];
     delete[] argv;
     return parse_possible_worlds(output);
+}
+std::vector<std::pair<std::string, double>> compute_possible_worlds_json(const std::string& file) {
+    PlogApp app;
+    char ** argv = new char*[5];
+    argv[1] = new char[file.length() + 1];
+    argv[0] = new char[5];
+    argv[2] = nullptr;
+
+    argv[3] = nullptr;
+    // our parser requires that argv[end] is nullptr
+    argv[4] = nullptr;
+    strcpy(argv[0], "plog");
+    strcpy(argv[1], file.c_str());
+    testing::internal::CaptureStdout();
+    const std::string possibleWorldsOption = "--mode=pw";
+    argv[2] = const_cast<char *>(possibleWorldsOption.c_str());
+    const std::string jsonFormatOption = "--format=json";
+    argv[3] = const_cast<char *>(jsonFormatOption.c_str());
+    app.main(4, argv);
+    std::string output = testing::internal::GetCapturedStdout();
+    delete[] argv[0];
+    delete[] argv[1];
+    delete[] argv;
+    return parse_possible_worlds_json(output);
 }
 
 

@@ -36,6 +36,7 @@ public:
     void shutdown() override;
 protected:
     enum Mode { mode_query = 0, mode_possible_worlds = 1 };
+//    enum Format { json = 0, text = 1};
     enum QAlgo { qalgo_naive = 0, qalgo_dco = 1 };
     void        initOptions(Potassco::ProgramOptions::OptionContext& root) override;
     void        validateOptions(const Potassco::ProgramOptions::OptionContext& root, const Potassco::ProgramOptions::ParsedOptions& parsed, const Potassco::ProgramOptions::ParsedValues& vals) override;
@@ -54,6 +55,8 @@ private:
     PlogOptions grOpts_;
 
     Mode mode_;
+
+    Format format_;
     // algorithm used to answer queries
     QAlgo qalgo_;
     SolvingMode getSolvingMode();
