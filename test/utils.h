@@ -26,5 +26,8 @@ std::vector<std::pair<std::string, double>> compute_possible_worlds(const std::s
 // a string solver might output (used for testing).
 std::vector<std::pair<std::string, double>> parse_possible_worlds(const std::string& out);
 
+// the two functions behave similarly to the ones without 'json' suffix, but they use json format instead
+std::vector<std::pair<std::string, double>> parse_possible_worlds_json(const std::string& out);
+std::vector<std::pair<std::string, double>> compute_possible_worlds_json(const std::string& file);
 
 double run_old_plog(std::string file, OldPlogMode mode);
