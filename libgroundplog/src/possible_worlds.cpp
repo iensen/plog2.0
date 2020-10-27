@@ -5,13 +5,12 @@
 #include <groundplog/possible_worlds.h>
 #include <groundplog/clingo_control.h>
 #include <groundplog/util/clingo_model_utils.h>
+#include <memory>
 #include <numeric>
 
 namespace GroundPlog {
 
-    PossibleWorldsComputer::PossibleWorldsComputer(Plog::Program *inputProgram,
-                                                   Clingo::Control *cControl, Format format_) :
-            nonGroundProgram(inputProgram), cControl(cControl), format(format_) {}
+
 
     static std::string getPlogAtomFromSymbol(const Clingo::Symbol &s)  {
         if (s.name()[0] == '_') {
@@ -38,6 +37,7 @@ namespace GroundPlog {
         return ss.str();
     }
 
+
     static std::string getPlogAtomFromSymbolforJSON(const Clingo::Symbol &s) {
         if (s.name()[0] == '_') {
             return "";
@@ -59,121 +59,171 @@ namespace GroundPlog {
         return ss.str();
     }
 
+    // Class used to output possible worlds. The derived classes will vary depending
+    // on the output format (text, json, etc). The output will consist of two main phases:
+    // (1) outputting models (2) outputting probabilities
+    /* abstract */ class PossibleWorldPrinter {
+    public:
+        // function to be called before the first possible world
+        // is output
+        virtual void init() = 0;
+        virtual void outputModel(const Clingo::Model &model) = 0;
+        virtual void outputProbabilities(std::vector<double> &probabilities) = 0;
+        virtual void finalize() = 0;
+        virtual void outputError(const std::string &) = 0;
+        virtual ~PossibleWorldPrinter() = default;
+    };
+
+    // class to output possible worlds in text format
+    class PossibleWorldTextPrinter: public PossibleWorldPrinter {
+
+        void init() override {
+          std::cout << "Possible Worlds:" << std::endl;
+        }
+
+        // keep track how many models have been printed for a nicer output
+        unsigned int modelsPrinted = 0;
+        void outputModel(const Clingo::Model & model) override {
+           bool firstAtomPrinted = false;
+            ++modelsPrinted;
+            std::cout << modelsPrinted << ": {";
+            auto const &atvec = model.symbols();
+            for (const Clingo::Symbol &s : atvec) {
+                std::string plogAtom = getPlogAtomFromSymbol(s);
+                if (plogAtom.empty()) {
+                    continue;
+                }
+                if (firstAtomPrinted) {
+                    std::cout << ", ";
+                }
+                std::cout << plogAtom;
+                firstAtomPrinted = true;
+            }
+            std::cout << "}" << std::endl;
+        }
+
+        void outputProbabilities(std::vector<double> &probabilities) override {
+            std::cout << "\nProbabilities:\n";
+            for (int i = 0; i < probabilities.size(); i++) {
+                std:: cout << i + 1 <<   ": "  << probabilities[i]  << std::endl;
+              }
+        }
+
+        // method called after all models have been output, and probabilities were output
+        // we expect that by the time it finishes, the output is present where it needs to be
+        void finalize() override {
+            // nothing to do
+        }
+
+        void outputError(const std::string & error) override  {
+             std::cerr << error;
+        }
+    };
+
+    // class to output possible worlds in Json Format
+    class PossibleWorldJsonPrinter: public PossibleWorldPrinter {
+        // for this class, we will keep the entire text in memory before being output,
+        // this simplifies the output for probabilities.
+        std::vector<std::string> jsonOutput;
+        // a flag used to decide whether or not we need to print separator
+        bool hasPrintedAtLeastOneModel = false;
+        // function to be called before the first possible world
+        // is output
+        void init() override {
+            jsonOutput.emplace_back("[");
+        }
+
+        void outputModel(const Clingo::Model &model) override {
+            //Store the possible worlds to in json format
+            if (hasPrintedAtLeastOneModel) {
+                jsonOutput.emplace_back(",");
+            }
+            //the start of a possible world
+            jsonOutput.emplace_back("{\n\"possible_world\" : \n[\n");
+
+            //booleans to store to add comma (,) after an atom is printed
+            bool firstAtomPrinted = false;
+
+            auto const &atvec = model.symbols();
+            for (const Clingo::Symbol &s : atvec) {
+                std::string plogAtom = getPlogAtomFromSymbolforJSON(s);
+                if (plogAtom.empty()) {
+                    continue;
+                }
+                //if this is not the first atom record, then add a comma behind it
+                if (firstAtomPrinted) {
+                    jsonOutput.back() += ",\n";
+                }
+                jsonOutput.back()+=plogAtom;
+                if (firstAtomPrinted) {
+                    jsonOutput.back()+="\n";
+                }
+                firstAtomPrinted = true;
+            }
+            jsonOutput.back()+="],\n\"probability\" : ";
+            jsonOutput.emplace_back("\n}");
+            hasPrintedAtLeastOneModel = true;
+        }
+
+        void outputProbabilities(std::vector<double> &probabilities) override {
+            for (int i = 0; i < probabilities.size(); i++) {
+                //add probability in text format
+                int position = 2 + (4 * i);
+                std::string probability = std::to_string(probabilities[i]);
+                jsonOutput.insert(jsonOutput.begin() + position, probability);
+            }
+        }
+
+        void finalize() override {
+            jsonOutput.emplace_back("\n]");
+            for (auto const &str: jsonOutput) {
+                std::cout << str;
+            }
+        }
+
+        void outputError(const std::string &) override {
+            assert(false); // errors in this mode are not handled correctly
+        }
+    };
+
+    PossibleWorldsComputer::PossibleWorldsComputer(Plog::Program *inputProgram,
+                                                   Clingo::Control *cControl, Format format_) :
+            nonGroundProgram(inputProgram), cControl(cControl), format(format_) {}
+
+
+
     void PossibleWorldsComputer::run() {
-        //vector to store the output in json format
-        std::vector<std::string> jsonFile;
-        //vector to store the output in text format
-        std::vector<std::string> textFile;
         //vector to store the probabilities of each possible world for json format
         std::vector<double> probabilities;
 
-        textFile.push_back("Possible Worlds:\n");
-        jsonFile.push_back("[");
+        std::unique_ptr<PossibleWorldPrinter> printer;
+        if(format == text) {
+            printer = std::make_unique<PossibleWorldTextPrinter>();
+        } else {
+            printer =  std::make_unique<PossibleWorldJsonPrinter>();
+        }
 
-        //booleans to store to add comma (,) after a possible world is printed
-        bool firstPossibleWorldPrinted = false;
+        printer->init();
+
         for (auto const &model: cControl->solve()) {
             if (!model.optimality_proven() && !model.cost().empty()) {
                 continue;
             }
-            //Store the possible worlds to in text format
-            std::string modelText = printModel(model);
-            textFile.push_back(modelText);
-
-            //Store the possible worlds to in json format
-            if (firstPossibleWorldPrinted) {
-                jsonFile.push_back(",");
-            }
-            std::string modelJSON = printModelJSON(model);
-            jsonFile.push_back(modelJSON);
-            jsonFile.push_back("\n}");
-            firstPossibleWorldPrinted = true;
-
+            printer->outputModel(model);
             //storing probabilities of each possible world to a vector
             probabilities.push_back(getModelStats(model, nonGroundProgram).probability);
         }
 
         double sumProb = std::accumulate(probabilities.begin(), probabilities.end(), 0.0);
         if (sumProb == 0.0) {
-            textFile.push_back("Probabilistic function of this program is undefined.\n");
-            textFile.push_back("The sum of unnormalized measures of its possible worlds is 0.");
+            printer->outputError("Probabilistic function of this program is undefined.\n"
+                                   "The sum of unnormalized measures of its possible worlds is 0.");
             return;
         }
-        for (int i = 0; i < probabilities.size(); i++) {
-            probabilities[i] /= sumProb;
+        for (double & probability : probabilities) {
+            probability /= sumProb;
         }
-        textFile.push_back("\nProbabilities:\n");
-        for (int i = 0; i < probabilities.size(); i++) {
-            //add probability in text format
-            int number = i + 1;
-            textFile.push_back(std::to_string(number) + ": " + std::to_string(probabilities[i]) + "\n");
-            //add the appropriate probability to the right position (2,6,10) in json format
-            int position = 2 + (4 * i);
-            std::string probability = std::to_string(probabilities[i]);
-            jsonFile.insert(jsonFile.begin() + position, probability);
-        }
-
-        //Decides what format to print the possible worlds in
-        if (format == json) {
-            jsonFile.push_back("\n]");
-            for (int i=0; i<jsonFile.size(); ++i)
-                std::cout << jsonFile[i];
-        } else {
-            for (int i=0; i<textFile.size(); ++i)
-                std::cout << textFile[i];
-        }
-    }
-
-    std::string PossibleWorldsComputer::printModel(const Clingo::Model &model) {
-        bool firstAtomPrinted = false;
-        std::stringstream modelsstext;
-        ++modelsPrinted;
-        modelsstext << modelsPrinted << ": {";
-        auto const &atvec = model.symbols();
-        for (const Clingo::Symbol &s : atvec) {
-            std::string plogAtom = getPlogAtomFromSymbol(s);
-            if (plogAtom.empty()) {
-                continue;
-            }
-            if (firstAtomPrinted) {
-                modelsstext << ", ";
-            }
-            modelsstext << plogAtom;
-            firstAtomPrinted = true;
-        }
-        modelsstext << "}" << std::endl;
-        return modelsstext.str();
-    }
-
-    std::string PossibleWorldsComputer::printModelJSON(const Clingo::Model &model) {
-        std::stringstream modelssjson;
-
-        modelssjson << "\n";
-        auto const &atvec = model.symbols();
-
-        //the start of a possible world
-        modelssjson << "{\n\"possible_world\" : \n[\n";
-
-        //booleans to store to add comma (,) after an atom is printed
-        bool firstAtomPrinted = false;
-        for (const Clingo::Symbol &s : atvec) {
-            std::string plogAtom = getPlogAtomFromSymbolforJSON(s);
-            if (plogAtom.empty()) {
-                continue;
-            }
-            //if this is not the first atom record, then add a comma behind it
-            if (firstAtomPrinted) {
-                modelssjson << ",";
-                modelssjson << "\n";
-            }
-            modelssjson << plogAtom;
-            if (firstAtomPrinted) {
-                modelssjson << "\n";
-            }
-            firstAtomPrinted = true;
-        }
-        modelssjson <<"],\n\"probability\" : ";
-
-        return modelssjson.str();
+        printer->outputProbabilities(probabilities);
+        printer->finalize();
     }
 }
