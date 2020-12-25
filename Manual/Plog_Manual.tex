@@ -201,9 +201,98 @@ This section starts with a keyword $sorts$ followed by a collection of sort defi
 \end{equation*}
 \textit{sort\_name} is an identifier preceeded by the pound sign (\#).
 \textit{sort\_expression}  on the right hand side denotes a collection of strings called $a~sort$.
-\textcolor{red}{As of right now, the system only supports a basic sort definition of the form $sort\_name = \{t_1,\ldots,t_n\}$, where $t_1,\ldots,t_n$
-  are ground terms.}.
-  
+
+
+
+\st \textit{Basic sorts} are defined as named collections of numbers and \textit{identifiers}, i.e, strings consisting of
+\begin{itemize}
+ \item letters: $\{a,b,c,d,...,z,A,B,C,D,...,Z\}$
+ \item digits: $\{0,1,2,...,9\}$
+ \item underscore: $\_$
+\end{itemize}
+and starting with a lowercase letter.
+
+\medskip\noindent
+A \textit{non-basic sort} also contains at least one \textit{record} of the form $id(\alpha_1,\dots, \alpha_n)$ where $id$ is an identifier and 
+$\alpha_1, \dots, \alpha_n$ are either identifiers, numbers or records. 
+
+
+\st We define sorts by means of expressions (in what follows sometimes referred to as statements) of six types:
+\begin{enumerate}
+
+\item\label{numrange}
+\textbf{numeric range} is of the form:
+\begin{equation*}
+number_1..number_2
+\end{equation*}
+where $number_1$ and $number_2$ are non-negative numbers such that $number_1 \le number_2$. The expression defines the set 
+of sequential numbers \\$\{number_1, number_1+1, \dots, number_2\}$.
+
+\textit{Example:}
+
+\begin{verbatim}
+ #sort1=1..3.
+\end{verbatim}
+\texttt{\#sort1} consists of numbers $\{1,2,3\}$.
+
+
+\item\label{groundset} \textbf{set of ground terms} is of the form:
+
+\begin{equation*}
+\{t_1,..,,t_n\}
+\end{equation*}
+The expression denotes a set of \textit{ground terms} $\{t_1,...,t_n\}$, defined as follows:
+\begin{itemize}
+ \item numbers and identifiers are ground terms;
+ \item If $f$ is an identifier and $\alpha_1, \dots, \alpha_n$ are ground terms, 
+then $f(\alpha_1,\dots, \alpha_n)$ is a ground term.
+\end{itemize}
+
+\textit{Example}: 
+\begin{verbatim}
+ #sort1={f(a),a,b,2}.
+\end{verbatim}
+\item\label{recordset} \textbf{set of records} is of the form:
+
+\begin{equation*}
+f(sort\_name_1,..., sort\_name_n)
+\end{equation*}
+where $f$ is an identifier, for $ 1\leq i\leq n$, $sort\_name_i$ occurs in one of the preceeding sort definitions.
+
+The expression defines a collection of ground terms 
+\\ $\{f(t_1,\dots,t_n):  t_1 \in s_i \land \dots \land t_n \in s_n\}$
+
+\textit{Example}
+\begin{verbatim}
+ #s1=1..2.
+ #s2 = {a,b}.
+ #sf=f(#s1, #s2)). 
+\end{verbatim}
+
+The sort \texttt{\#sf} consists of records $\{f(1,1,2),f(1,1,1),f(2,1,1)\}$
+
+
+
+ \item\label{setexpr} \textbf{set-theoretic expression} is in one of the following forms:
+\begin{itemize}
+\item $\#sort\_name$  
+\item an expression of the form 1, 2, or 3, denoting a set of ground terms
+\item $(S_1 \bigtriangledown S_2)$, where $\bigtriangledown \in \{+,-,*\}$ and both $S_1$ and $S_2$ are set theoretic expressions
+\end{itemize}
+
+$\#sort\_name$ must be a name of a sort occurring in one of the preceeding sort definitions. 
+The operations $+$ $*$ and $-$ stand for union, intersection and difference correspondingly.
+
+
+\textit{Example} : 
+\begin{verbatim}
+ #sort1={a,b,2}.
+ #sort2={1,2,3} + {a,b,f(c)} + f(#sort1).
+\end{verbatim}
+ \texttt{\#sort2} consists of ground terms $\{1,2,3,a,b,f(c),f(a),f(b),f(2)\}$.
+
+\end{enumerate}
+
 \subsection{Attribute Declarations}
 
 \noindent  The second part of a  P-log program starts with the keyword \texttt{attributes}
@@ -262,14 +351,24 @@ The atom $a(t) = y$ is referred to as the \textit{head} of the rule, and $l_1,\l
  \textcolor{red}{Please be aware that some of the errors are not implemented yet.}
 
 \st
-Additional error checking is performed when no syntax error is found. Majority of the errors are related to types.
+In this section, we describe  additional errors which are detected when no syntax error is found.
+The majority of the errors are related to types.
 \subsection{Type errors}
 Type errors are considered as serious issues which make it  impossible to compile and execute the program.
 Type errors can occur in all four sections of a P-log program.
 \subsubsection{Sort definition errors}
-The following are possible causes of a sort definition error  that will result in a type error  message from ${\cal SPARC}$:
+The following are possible causes of a sort definition error  that will result in a type error  message.
 \begin{enumerate}
-\item  A set-theoretic expression (statement 5 in section \ref{ss}) containing a sort name that has not been defined.
+\item A numeric range $n_1..n_2$ (statement \ref{numrange} in section \ref{ss}) where  $n_1$ is greater than $n_2$.
+
+\textit{Example:}
+\begin{verbatim}
+ sorts
+ #s=100500..1.
+\end{verbatim}
+
+
+\item  A set-theoretic expression (statement \ref{setexpr} in section \ref{ss}) containing a sort name that has not been defined.
 
 \textit{Example:}
 \begin{verbatim}
@@ -287,89 +386,13 @@ The following are possible causes of a sort definition error  that will result i
  #s={b}.
 \end{verbatim}
 
-\item An identifier range $id_1..id_2$ (statement 2 in section \ref{ss}) where $id_1$ is greater than $id_2$.
-
-\textit{Example:}
-\begin{verbatim}
- sorts
- #s=zbc..cbz.
-\end{verbatim}
-
-\item A numeric range $n_1..n_2$ (statement 1 in section \ref{ss}) where  $n_1$ is greater than $n_2$.
-
-\textit{Example:}
-\begin{verbatim}
- sorts
- #s=100500..1.
-\end{verbatim}
-
-
-\item A numeric range (statement 2 in section \ref{ss}) $n_1..n_2$ that  contains an undefined constant.
-
-\textit{Example:}
-\begin{verbatim}
- #const n1=5.
- sorts
- #s=n1..n2.
-\end{verbatim}
-
-\item An identifier range $id_1..id_2$ (statement 3 in section \ref{ss}) where  the length of $id_1$ is greater than the length of $id_2$. 
-
-
-\textit{Example:}
-\begin{verbatim}
- sorts
- #s=abc..a.
-\end{verbatim}
-
-\item A concatenation (statement  4 in section \ref{ss}) that contains a non-basic sort.
-
-\textit{Example:}
-\begin{verbatim}
- sorts
- #s={f(a)}.
- #sc=[a][#s].
-\end{verbatim}
-
-
-
-\item A record definition (statement 5 in section \ref{ss}) that contains an undefined sort.
+\item A record definition (statement \ref{recordset} in section \ref{ss}) that contains an undefined sort.
 
 \textit{Example:}
 \begin{verbatim}
  sorts
  #s=1..2.
  #fs=f(s,s2).
-\end{verbatim}
-
-
-
-\item A record definition  (statement 5 in section \ref{ss}) that contains a condition with relation $>,<,\geq,\leq$ such that the
-   corresponding sorts are not basic.
-
-\textit{Example:}
-\begin{verbatim}
-#s={a,b}.
-#s1=f(#s). 
-#s2=g(s1(X),s2(Y)):X>Y.
-\end{verbatim}
-
-\item  A variable that is used more than once in a record definition (statement  5 in section \ref{ss}).
-
-\textit{Example:}
-
-\begin{verbatim}
- sorts
- #s1={a}.
- #s=f(#s1(X),#s1(X)):(X!=X).
-\end{verbatim}
-\item A sort that contains an empty collection of ground terms.
-
-\textit{Example}
-\begin{verbatim}
- sorts
- #s1={a,b,c}
- #s=#s1-{a,b,c}.
 \end{verbatim}
 \end{enumerate}
 \subsubsection{Attribute declarations errors}
@@ -392,13 +415,57 @@ The following are possible causes of a sort definition error  that will result i
  attributes
  p:#ss.
 \end{verbatim}
-\end{enumerate}
-\subsubsection{Program statements errors}
 
-In program rules and pr-atoms we first check each atom of the form $a(t_1,\dots,t_n) = y$ and each term occurring in the program $\Pi$ for satisfying
-the definitions of program atom and program term correspondingly (see Section 3 of \cite{Balai2019}).In addition, we check that no sort occurs in a head of a rule of $\Pi$.
+\item An attribute name coincides with the name of a record belonging to one of the sorts.
+\textit{Example:}
+\begin{verbatim}
+ sorts
+ #s1={f(a)}.
+ #s2 = {1,2,3}.
+ attributes
+ f:#s1.
+\end{verbatim}
+Here there is an attribute named $f$ and a record $f(a)$ belonging to \texttt{\#s1}.
+\end{enumerate}
+\subsubsection{Errors in program statements}
+
+To describe errors in program statement, we need an auxiliary definition of a term.
+\begin{enumerate}
+ \item numbers, identifiers and variables are \textit{terms};
+ \item If $f$ is an identifier and $\alpha_1, \dots, \alpha_n$ are \textit{terms}, 
+   then $f(\alpha_1,\dots, \alpha_n)$ is a \textit{term}.
+ \item\label{arithterms} standard arithmetic expressions constructed from numbers, variables and operators $+$, $-$ , $*$, $/$ are terms. 
+\end{enumerate}
+
+\medskip\noindent
+We will refer to terms of the form \ref{arithterms} as \textit{arithmetic terms}.
+
+\medskip\noindent
+For each literal $\tau_1 \odot \tau_2$ occurring in a program,  $\odot \in \{>, \leq, \geq, =, \not=, <\}$, where $\tau_1$, $\tau_2$ are terms, we will produce errors in the following cases:
+
+\begin{enumerate}
+  
+\item $\tau_2$ is of the form $f(t_1,\ldots,t_n)$, $f$ is an attribute name;
+\item $\tau_1$ is of the form $f(t_1,\ldots,t_n)$, $f$ is an attribute name, and $\odot \not\in\{=,\not=\}$;
+\item $\tau_1$ is of the form $f(t_1,\ldots,t_n)$, $f$ is an attribute declared as:
+  $$f: s_1,\ldots,s_m \rightarrow s_{m+1}$$
+  where $n \not=m$
+  
+\item $\tau_1$ is of the form $f(t_1,\ldots,t_n)$, $f$ is an attribute declared as:
+  $$f: s_1,\ldots,s_n \rightarrow s_{n+1}$$
+  and for some $i \in 1...n$, $t_i$ is a ground term not belonging to $s_i$;
+  
+\item $\tau_1$ is of the form $f(t_1,\ldots,t_n)$, $f$ is an attribute declared as:
+  $$f: s_1,\ldots,s_n \rightarrow s_{n+1}$$
+  and $\tau_2$ is a ground term such that $\tau_2 \not\in s_{n+1}$.
+  
+\end{enumerate}
+
+
 \subsection{Type warnings}\label{type_warnings}
-\textcolor{red}{This section is to be completed and implemented. At the very least, we plan to support finite-domain constraint-based typechecking which will flag rules with no ground instances.}
+
+\textcolor{red}{This section is to be completed and implemented. At the very least, we plan to support
+  finite-domain constraint-based typechecking which will flag rules with no ground instances. In addition, we fill flag empty sorts. There should be a user option to disable both warnings.}
 
 \bibliography{mybib}
 \bibliographystyle{plain}
