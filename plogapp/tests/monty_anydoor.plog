@@ -1,0 +1,45 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% The program represents the modified Monty Hall problem
+%% where the host can open any door (including the one where 
+%% there is a goat). This variation is described in The Book of Why
+%% by Judea Pearl, and, unlike the original version, it doesn't matter
+%% whether or not a door is switched, the probability of a goat being 
+%% behind any of the two doors is 1/2.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+sorts
+
+#boolean={true, false}.
+#doors={1,2,3}. 
+
+attributes
+
+prize: #doors.
+prize_is_not_behind_second_door: #boolean.
+
+open: #doors.
+selected: #doors.
+can_open: #doors -> #boolean.
+
+statements
+
+% Values of variables prize and selected are 
+% chosen at random from the set of all doors.
+random(prize).
+random (selected).
+       
+% Value of open is chosen at random from the set of doors
+% which can be open according to the rules of the game.
+random (open, can_open).
+
+% The host cannot open the selected door
+can_open(D)=false :- selected=D.
+% The original version had can_open(D)=false :- prize=D.
+can_open(D) :- not can_open(D)=false.
+
+% Consider the following sequence of events from the perspective of the player. 
+do(selected, 1). % the player selects door 1
+obs(open, 2). % the player observes that Monty opens door 2
+prize_is_not_behind_second_door :- prize = X, X != 2.
+obs(prize_is_not_behind_second_door, true). % player observes that there is no prize behind that door.
+
+? prize=1.
