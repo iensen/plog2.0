@@ -1,0 +1,71 @@
+% This program demostrated so called 'explaining-away' phenomenon using 
+% an example from Chapter 6 of 'The Book of Why'. By Pearl & Mackenzie.
+% Infant's death during birth can be explained by several factors, such as smoking 
+% of his mother, his weight, and a certain defect during birth or his development.
+% Defects are more likely to cause death, however both smoking and birth defects
+% can contribute towards smaller weight. The interesting observation is as 
+% follows. Given that we observed that the birth weight is low, additional 
+% knowledge about the mother being a smoker can actually increase the probability % of death. 
+% In other words, smoking can explain away the child's smaller weight
+  
+sorts
+
+#boolean = {true, false}.
+
+% sort used to store child's weight in pounds
+#weight = {6,8,10}.
+
+attributes
+
+smoking: #boolean.
+birth_defect: #boolean.
+birth_weight: #weight.
+dead: #boolean.
+
+statements
+
+% random attribute declarations
+random(smoking).
+random(birth_weight).
+random(birth_defect).
+random(dead).
+
+% probability statements
+pr(smoking) = 20/100.
+pr(birth_defect) = 1/100.
+
+pr(birth_weight=6|smoking, birth_defect)=9/10.
+pr(birth_weight=8|smoking, birth_defect)=8/100.
+
+pr(birth_weight=6|smoking = false, birth_defect)=3/10.
+pr(birth_weight=8|smoking = false, birth_defect)=4/10.
+
+pr(birth_weight=6|smoking, birth_defect = false)=3/10.
+pr(birth_weight=8|smoking, birth_defect = false)=4/10.
+
+pr(birth_weight=6|smoking = false, birth_defect = false)=2/100.
+pr(birth_weight=8|smoking = false, birth_defect = false)=8/100.
+
+pr(dead = true| smoking, birth_defect, birth_weight = 6) = 2/10.
+pr(dead = true| smoking, birth_defect, birth_weight = 8) = 1/10.
+pr(dead = true | smoking, birth_defect, birth_weight = 10) = 1/15.
+
+pr(dead = true | smoking, birth_defect=false, birth_weight = 6) = 1/100.
+pr(dead = true | smoking, birth_defect=false, birth_weight = 8) = 1/120.
+pr(dead = true | smoking, birth_defect=false, birth_weight = 10) = 1/150.
+
+
+pr(dead = true | smoking = false, birth_defect=false, birth_weight = 6) = 5/1000.
+pr(dead = true | smoking = false, birth_defect=false, birth_weight = 8) = 4/1000.
+pr(dead = true| smoking = false, birth_defect=false, birth_weight = 10) = 3/1000.
+
+
+pr(dead = true | smoking = false, birth_defect, birth_weight = 6) = 2/20.
+pr(dead = true | smoking = false, birth_defect, birth_weight = 8) = 1/20.
+pr(dead = true| smoking = false, birth_defect, birth_weight = 10) = 1/40.
+
+
+obs(birth_weight, 6).
+obs(smoking, true).
+
+?dead.
