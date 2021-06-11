@@ -96,6 +96,10 @@ void PlogApp::initOptions(Potassco::ProgramOptions::OptionContext &root) {
                      ("query", mode_query)
                      ("pw", mode_possible_worlds)),
              "Run in {query|compute possible wolrds} mode\n")
+            ("format", storeTo(format_ = text, values<Format>()
+                     ("json", json)
+                     ("text", text)),
+             "Run in {query|compute possible wolrds} mode\n")
             ("algo", storeTo(qalgo_ = qalgo_naive, values<QAlgo>()
                      ("dco", QAlgo::qalgo_dco)
                      ("naive", QAlgo::qalgo_naive)),
@@ -134,7 +138,7 @@ void PlogApp::run(GroundPlog::GroundPlogFacade &groundPlog) {
               grd->computeQuery();
         }
         else if(mode_ == mode_possible_worlds){
-            grd->computePossibleWorlds();
+            grd->computePossibleWorlds(format_);
         }
     }
     catch (Gringo::GringoError const &e) {
@@ -143,8 +147,6 @@ void PlogApp::run(GroundPlog::GroundPlogFacade &groundPlog) {
     }
     catch (...) { throw; }
 }
-
-
 
 void PlogApp::printHelp(const Potassco::ProgramOptions::OptionContext &root) {
     throw "not implemented yet";

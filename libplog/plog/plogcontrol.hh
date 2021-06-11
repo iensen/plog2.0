@@ -88,7 +88,7 @@ public:
     void parse();
     void parse(const StringVec&  files, const PlogOptions& opts);
     void computeQuery();
-    void computePossibleWorlds();
+    void computePossibleWorlds(Format format);
 
     void onFinish(GroundPlog::GroundPlogFacade::Result ret);
     bool update();

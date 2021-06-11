@@ -91,7 +91,7 @@ namespace GroundPlog {
         Program& start(GroundPlogConfig & config);
 
         Result solve(Clingo::Control *ctl, Plog::Program* inputProgram, SolvingMode solvingMode);
-        void computePossibleWorlds(Clingo::Control *ctl, Plog::Program* inputProgram);
+        void computePossibleWorlds(Clingo::Control *ctl, Plog::Program* inputProgram, Format format_);
 
     private:
         struct Statistics;

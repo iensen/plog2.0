@@ -11,6 +11,7 @@ typedef struct plog_ast_statement {
     };
 }plog_ast_statement_t;
 
+enum Format { json = 0, text = 1};
 
 enum plog_warning {
     plog_warning_file_included       = 0, //!< same file included multiple times
