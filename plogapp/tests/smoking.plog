@@ -5,8 +5,9 @@
 % Defects are more likely to cause death, however both smoking and birth defects
 % can contribute towards smaller weight. The interesting observation is as 
 % follows. Given that we observed that the birth weight is low, additional 
-% knowledge about the mother being a smoker can actually increase the probability % of death. 
-% In other words, smoking can explain away the child's smaller weight
+% knowledge about the mother being a smoker can actually decrease the probability of death. 
+% In other words, smoking can explain away other (more dangerous) factors contributing 
+% to child's smaller weight.
   
 sorts
 
