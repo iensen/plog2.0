@@ -67,6 +67,7 @@ pr(dead = true| smoking = false, birth_defect, birth_weight = 10) = 1/40.
 
 
 obs(birth_weight, 6).
-obs(smoking, true).
+% uncomment this line to see the probabily of dead going down!
+% obs(smoking, true).
 
 ?dead.
