@@ -31,3 +31,5 @@ std::vector<std::pair<std::string, double>> parse_possible_worlds_json(const std
 std::vector<std::pair<std::string, double>> compute_possible_worlds_json(const std::string& file);
 
 double run_old_plog(std::string file, OldPlogMode mode);
+
+std::string get_error(const std::string& file);

@@ -222,6 +222,24 @@ double compute_query(const std::string& file, const NewPlogMode mode) {
     return parse_new_plog_query_output(output);
 }
 
+std::string get_error(const std::string& file) {
+    PlogApp app;
+    char ** argv = new char*[4];
+    argv[1] = new char[file.length() + 1];
+    argv[0] = new char[5];
+    // our parser requires that argv[end] is nullptr
+    argv[2] = nullptr;
+    strcpy(argv[0], "plog");
+    strcpy(argv[1], file.c_str());
+    testing::internal::CaptureStderr();
+    app.main(2, argv);
+    std::string output = testing::internal::GetCapturedStderr();
+    delete[] argv[0];
+    delete[] argv[1];
+    delete[] argv;
+    return output;
+}
+
 std::vector<std::pair<std::string, double>> compute_possible_worlds(const std::string& file) {
     PlogApp app;
     char ** argv = new char*[4];
