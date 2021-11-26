@@ -56,7 +56,6 @@ public:
     bool check(Errors id);
     bool check(Warnings id);
     bool hasError() const;
-
     void enable(Warnings id, bool enable);
     void print(plog_warning_t code, char const *msg);
     ~Logger();
