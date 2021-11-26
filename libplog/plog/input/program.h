@@ -9,8 +9,10 @@
 #include "statement.h"
 
 
+
 namespace Plog {
 
+    class Checker;
     class Program {
     public:
         Program();
@@ -28,8 +30,6 @@ namespace Plog {
         void add(UStm &&stm);
 
         void rewrite(Defines &defs, Logger &log);
-
-        void check(Logger &log);
 
         void print(std::ostream &out) const;
 
@@ -58,6 +58,8 @@ namespace Plog {
         UAttDeclVec attdecls_;
 
         mutable std::unordered_map<std::string, size_t> attributeRangeCountCache;
+
+        friend Checker;
     };
 }
 

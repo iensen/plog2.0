@@ -12,6 +12,6 @@ const String SortDefinition::getSortName() const {
     return sortName;
 }
 
-const USortExpr &SortDefinition::getSortExpr() {
+const USortExpr &SortDefinition::getSortExpr() const {
     return sexpr;
 }

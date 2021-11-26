@@ -1,0 +1,13 @@
+sorts
+
+#boolean = {true, false}.
+
+attributes
+p: #boolean.
+q: #boolean
+
+
+statements
+
+p.
+?q.

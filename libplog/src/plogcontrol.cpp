@@ -1,8 +1,9 @@
 
 #include <plog/plogoutput.h>
 #include <clingo/clingocontrol.hh>
-#include <plog/grprogramobs.h>
+#include "plog/grprogramobs.h"
 #include "plog/plogcontrol.hh"
+#include "plog/checker.h"
 
 class GroundPlogBackend;
 
@@ -171,7 +172,9 @@ void PlogControl::ground() {
         // replace constants with their values, ...
         prg_.rewrite(defs_, logger_);
         // check semantic errors:
-        prg_.check(logger_);
+        Plog::Checker c(prg_,logger_);
+        c.check();
+
         if (logger_.hasError()) {
             throw std::runtime_error("grounding stopped because of errors");
         }
@@ -181,11 +184,6 @@ void PlogControl::ground() {
     pb = new PlogGroundProgramBuilder(*out_, solvingMode == SolvingMode::query_dco);
     clingoControl.register_observer(*pb);
     clingoControl.ground({{"base", {}}});
-
-
-    //solveit.next();
-    // we actually don't need the model, just close it
-    //solveit.close();
 }
 
 Gringo::SymbolicAtoms &PlogControl::getDomain() {

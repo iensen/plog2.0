@@ -56,6 +56,10 @@ public:
     bool check(Errors id);
     bool check(Warnings id);
     bool hasError() const;
+    // used to signal that we found error while calling gringo API. In this case the errors
+    // will not be logged in this logger,
+    void setHasError();
+
     void enable(Warnings id, bool enable);
     void print(plog_warning_t code, char const *msg);
     ~Logger();
