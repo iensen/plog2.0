@@ -33,10 +33,6 @@ namespace Plog {
         //printf("REWRITING IS NOT IMPLEMENTED YET\n");
     }
 
-    void Program::check(Logger &log) {
-        //printf("CHECKING IS NOT IMPLEMENTED YET\n");
-    }
-
     void Program::print(std::ostream &out) const {
         throw "not implemented yet";
     }

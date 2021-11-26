@@ -14,7 +14,7 @@ public:
     SortDefinition(String sortname, USortExpr && sortExpr): sortName(sortname), sexpr(std::move(sortExpr)){}
     virtual void print(std::ostream &out) const;
     const String getSortName() const;
-    const USortExpr & getSortExpr();
+    const USortExpr & getSortExpr() const;
 private:
     String sortName;
     USortExpr  sexpr;

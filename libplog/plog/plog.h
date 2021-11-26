@@ -28,6 +28,7 @@ typedef int plog_warning_t;
 //! object has a free function, this function can and should still be called.
 enum plog_error {
     plog_error_runtime   = 1, //!< wrong usage of the clingo API or invalid input
+    plog_error_sort_definition  = 2, //!< wrong usage of the clingo API or invalid input
 };
 
 //! Corresponding type to ::plog_error.
