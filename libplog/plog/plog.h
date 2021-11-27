@@ -27,8 +27,9 @@ typedef int plog_warning_t;
 //! case of errors associated objects cannot be used further.  If such an
 //! object has a free function, this function can and should still be called.
 enum plog_error {
-    plog_error_runtime   = 1, //!< wrong usage of the clingo API or invalid input
-    plog_error_sort_definition  = 2, //!< wrong usage of the clingo API or invalid input
+    plog_error_runtime   = 1, // wrong usage of the clingo API or invalid input
+    plog_error_sort_definition  = 2, // incorrect sort definition
+    plog_error_attribute_declaration  = 3, // incorrect attribute declaration
 };
 
 //! Corresponding type to ::plog_error.

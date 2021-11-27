@@ -9,7 +9,7 @@
 #include <gringo/locatable.hh>
 #include <plog/sortexpression.h>
 
-class SortDefinition: Gringo::Printable, Gringo::Locatable{
+class SortDefinition: Gringo::Printable, public Gringo::Locatable{
 public:
     SortDefinition(String sortname, USortExpr && sortExpr): sortName(sortname), sexpr(std::move(sortExpr)){}
     virtual void print(std::ostream &out) const;

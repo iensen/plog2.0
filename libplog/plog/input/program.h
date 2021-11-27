@@ -4,7 +4,7 @@
 
 #ifndef FOO_H
 #define FOO_H
-#include<clingo.hh>
+#include <clingo.hh>
 #include <gringo/input/program.hh>
 #include "statement.h"
 
@@ -48,11 +48,6 @@ namespace Plog {
 
 
         unsigned auxNames_ = 0;
-        //Ground::LocSet        locs_;
-        //Ground::SigSet        sigs_;
-        //BlockMap              blocks_;
-        //Block                *current_;
-        //Projections           project_;
         UStmVec stms_;
         USortDefVec sortdefs_;
         UAttDeclVec attdecls_;

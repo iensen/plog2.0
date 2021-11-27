@@ -1,0 +1,7 @@
+sorts
+#s = {a}.
+attributes
+a: #s -> #s.
+a: #s, #s -> #s.
+statements
+

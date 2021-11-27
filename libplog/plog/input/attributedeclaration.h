@@ -24,7 +24,7 @@ struct AttributeDeclaration : Gringo::Printable, Gringo::Locatable {
 
     virtual ~AttributeDeclaration();
 
-    String attname;
+    const String attname;
     USortExprVec     svec;
     USortExpr se;
 };

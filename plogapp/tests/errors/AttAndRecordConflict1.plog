@@ -1,0 +1,6 @@
+sorts
+#s = {f(x)}.
+attributes
+f: #s->#s.
+statements
+

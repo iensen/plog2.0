@@ -1,0 +1,9 @@
+sorts
+
+#s = {a}.
+#s2 = f(#s, #s1).
+
+attributes
+
+statements
+
