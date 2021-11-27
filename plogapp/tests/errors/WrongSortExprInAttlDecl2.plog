@@ -2,6 +2,6 @@ sorts
 #s = {a}.
 #s2 = f(#s).
 attributes
-a: #s2 -> #s3.
+a: #s3 -> #s2.
 statements
 

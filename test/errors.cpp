@@ -25,27 +25,35 @@ TEST(NEWVERSION_SORTREDEFININTION, 0) {
 }
 
 TEST(NEWVERSION_UNDEFINEDSORT, FUNCSORT) {
-    auto error = "4:13-16: undefined sort #s1. Insert a definition of sort #s1 before line 4";
+    auto error = "4:13-16: undefined sort #s1.";
     EXPECT_THAT(get_error("plogapp/tests/errors/undefinedSortInFuncSortExpr.plog"), HasSubstr(error));
 }
 
 TEST(NEWVERSION_ATTRDECLERROR, REDEFINITION) {
-    auto error = "5:1-17: the attribute a was already defined at line 4. Remove one of the definitions.";
+    auto error = "5:1-17: attribute a was already defined in line 4. Remove one of the definitions.";
     EXPECT_THAT(get_error("plogapp/tests/errors/doubleAttDecl.plog"), HasSubstr(error));
 }
 
 TEST(NEWVERSION_ATTRDECLERROR, CONFLICT_WITH_RECORD1) {
-    auto error = "4:1-11: the name and arity of declared attribute f coincide with a record occurring in sort definitions of the program.";
+    auto error = "4:1-11: the definition of attribute f conflicts with a record of the same name";
     EXPECT_THAT(get_error("plogapp/tests/errors/AttAndRecordConflict1.plog"), HasSubstr(error));
 }
 
 TEST(NEWVERSION_ATTRDECLERROR, CONFLICT_WITH_RECORD2) {
-    auto error = "5:1-13: the name and arity of declared attribute f coincide with a record occurring in sort definitions of the program.";
+    auto error = "5:1-13: the definition of attribute f conflicts with a record of the same name";
     EXPECT_THAT(get_error("plogapp/tests/errors/AttAndRecordConflict2.plog"), HasSubstr(error));
 }
 
+// test for wrong sort expression used to define possible attribute values.
 TEST(NEWVERSION_ATTRDECLERROR, WRONG_SORTEXPR) {
-    auto error = "5:1-17: the attribute a was already defined at line 4. Remove one of the definitions.";
-    EXPECT_THAT(get_error("plogapp/tests/errors/doubleAttDecl.plog"), HasSubstr(error));
+    auto error = "5:11-14: undefined sort #s3";
+    EXPECT_THAT(get_error("plogapp/tests/errors/WrongSortExprInAttlDecl.plog"), HasSubstr(error));
 }
+
+// test for wrong sort expression used to define possible attribute arguments.
+TEST(NEWVERSION_ATTRDECLERROR, WRONG_SORTEXPR2) {
+    auto error = "5:4-7: undefined sort #s3";
+    EXPECT_THAT(get_error("plogapp/tests/errors/WrongSortExprInAttlDecl2.plog"), HasSubstr(error));
+}
+
 

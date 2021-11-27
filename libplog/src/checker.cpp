@@ -26,6 +26,9 @@ namespace {
         return *defPtr;
     }
 
+    // Retrieve all records and their arities occurring in a given sort expression.
+    // For example, consider expression f(#s) + {g(a,b), c}. The function will return
+    // {f/1, g/2}.
     std::unordered_set<Plog::Record> getRecords(const SortExpression* sortExpr) {
         std::unordered_set<Plog::Record> records;
 
@@ -152,9 +155,7 @@ namespace Plog {
         if (definedSorts.find(sortNameSortExpr.name) == definedSorts.end()) {
             auto loc = sortNameSortExpr.loc();
             PLOG_REPORT(log, plog_error_sort_definition)
-                << loc << ": undefined sort #" << sortNameSortExpr.name << ". "
-                << "Insert a definition of sort #" << sortNameSortExpr.name
-                << " before line " << loc.beginLine << ".";
+                << loc << ": undefined sort #" << sortNameSortExpr.name << ".";
         }
     }
 
@@ -209,7 +210,7 @@ namespace Plog {
                 auto const &prevDeclaration = getAttributeDeclaration(attDecl->attname);
                 PLOG_REPORT(log, plog_error_attribute_declaration)
                     << attDecl->loc()
-                    << ": the attribute " << attDecl->attname << " was already defined at line "
+                    << ": attribute " << attDecl->attname << " was already defined in line "
                     << prevDeclaration.loc().beginLine << ". Remove one of the definitions.";
             }
 
@@ -234,14 +235,16 @@ namespace Plog {
         Plog::Record record(declaration.attname, declaration.svec.size());
         if(records.find(record) != records.end()) {
             PLOG_REPORT(log, plog_error_attribute_declaration) << declaration.loc() << ":"
-                << " the name and arity of declared attribute " << declaration.attname
-                << " coincide with a record occurring in sort definitions of the program." <<
+                << " the definition of attribute " << declaration.attname
+                << " conflicts with a record of the same name occurring in sort definitions of the program." <<
                    " Rename the attribute to resolve the issue.";
         }
 
-        // check that the sort expressions used to define sorts
+        // check the sort expressions used to define sorts of attribute's arguments
         for(auto const & sortExpr: declaration.svec) {
             checkSortExpr(sortExpr.get(), programSorts);
         }
+        // check the sort expression used to define the values of the attribute
+        checkSortExpr(declaration.se.get(), programSorts);
     }
 }
