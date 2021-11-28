@@ -12,6 +12,7 @@
 \usepackage{fontenc}
 \usepackage{footnote}
 \usepackage[breaklinks]{hyperref}
+\usepackage{enumitem}
 \usepackage{palatino, multicol, listings} % for multiple columns
 \lstset{mathescape=true, basicstyle=\ttfamily,}
 
@@ -189,7 +190,7 @@ In addition, it supports the following named arguments:
 See Section \ref{sysusage} for an example of using this argument.
 
 
-\section{Syntax Description}
+\section{Syntax Description}\label{syntax}
 
 
 \subsection{Sort definitions}\label{ss}
@@ -319,25 +320,29 @@ Attributes with no arguments must be declared as $attr\_symbol:sortName_1$ (exam
 P-log rules are of the following form:
 
 \begin{equation}
-   a(t) = y \leftarrow l_1,  \ldots, l_k, not~l_{k+1} \ldots not~l_{n}.
+   a(\vec{t}) = y \leftarrow l_1,  \ldots, l_k, not~l_{k+1} \ldots not~l_{n}.
  \end{equation}
-where $a(t) = y$ is a program atom and $l_1,\ldots,l_k$ are program literals.
-The atom $a(t) = y$ is referred to as the \textit{head} of the rule, and $l_1,\ldots,l_k$ is referred to as the \textit{body} of the rule.
+where $a(\vec{t}) = y$ is a program atom and $l_1,\ldots,l_n$ are program literals.
+The atom $a(\vec{t}~) = y$ is referred to as the \textit{head} of the rule, and $l_1,\ldots,l_k$ is referred to as the \textit{body} of the rule.
  A rule with $k=0$ is referred to as a \textit{fact}.
  The system allows for a shorthand $a(t)$ for $a(t) = true$, and standard arithmetic relations of the form $t_1~op~t_2$, where $op \in \{\texttt{>=},\texttt{<=},\texttt{>},\texttt{<},\texttt{=},\texttt{!=}\}$ in the body of the rule .
  Three special kinds of rules are \textit{random selection rules}, \textit{observations} and \textit{actions}.
  As defined in \cite{Balai2019},
- random selection rule is a rule whose head is of one of the forms $random(a,p)$ or $random(a)$. Action is a fact whose head is $do(a,y)$\footnote{The system doesn't support rule labels and actions of the form $do(r,a,y)$ defined in \cite{Balai2019}. Therefore there has to be at most one action of each attribute term. This is a limitation we plan to overcome in future.}.
- Observation is a fact whose head is of the form $obs(a,y)$ \textcolor{red}{Right now, the system only supports observations and actions whose arguments are positive atoms}.
-
+ random selection rule is a rule whose head is of one of the forms $random(a,p)$ or $random(a)$. Action is a fact whose head is $do(a,y)$\footnote{The system doesn't support rule labels and actions of the form $do(r,a,y)$ defined in \cite{Balai2019}. Therefore there has to be at most one action for each attribute term. This limitation will be removed in future.}.
+ Observation is a fact whose head is of the form $obs(a,y)$ \textcolor{red}{Right now, the system only supports observations and actions whose arguments are positive atoms.}. Note that an observation of a negative atom, say $b \not= z$, can be easily modeled by introducing an extra rule $a = y \leftarrow b \not=z$, where $a$ is a fresh attribute term, and adding an observation $obs(a,y)$. 
+ 
  \subsubsection{Pr-Atoms}
 
  Probability atoms (in short, pr-atoms) are of the form 
- $$pr(a(t) = y | B) = v.$$
- where $a(t) = y$ is a program atom, $B$ is a collection of e-literals and $v$  written as a fraction of the form $n/m$, where $n$ and $m$ are natural numbers.  Example:
+ $$pr(a(\vec{t}) = y | B) = v.$$
+ where $a(\vec{t}) = y$ is a program atom, $B$ is a collection of e-literals and $v$  written as a fraction of the form $n/m$, where $n$ and $m$ are natural numbers.  Example:
 \begin{center}
  \texttt{pr(roll(D)=6 | not owns(D,mike))=1/4.}
 \end{center}
+
+\subsubsection{Query}
+
+The last (optional) part of a P-log program is a query of the form $?l$, where $l$ is a program literal. 
  \subsection{Program Examples}
 
  For a collection of working P-log programs used for system testing and development, please refer to
@@ -350,13 +355,30 @@ The atom $a(t) = y$ is referred to as the \textit{head} of the rule, and $l_1,\l
 
  \textcolor{red}{Please be aware that some of the errors are not implemented yet.}
 
-\st
-In this section, we describe  additional errors which are detected when no syntax error is found.
-The majority of the errors are related to types.
-\subsection{Type errors}
-Type errors are considered as serious issues which make it  impossible to compile and execute the program.
-Type errors can occur in all four sections of a P-log program.
-\subsubsection{Sort definition errors}
+ \st
+ In this section, we describe  additional errors which are detected for a program satisfying P-log grammar\footnote{\url{https://github.com/iensen/plog2.0/blob/ecd3e243383fa75b4a88baf254f4702baaef838f/libplog/plog/ploggrammar.yy\#L191}}. They are necessary to ensure the syntax and semantic requirements of P-log not captured by the grammar.
+ We expect this section to be more useful for developers of the system , but we hope that users will find it helpful as well.
+
+ \st
+ For example, consider the following program:
+
+\begin{verbatim}
+ sorts
+ #s=1..5.
+ attributes
+ a : #s.
+ statements
+ a = 6. 
+\end{verbatim}
+
+ \st
+ The language grammar accepts this program, but its only statement \texttt{a = 6} contains a type error, since $6$ doesn't belong to sort \texttt{\#s}. This is not a correct program per our language specification. Therefore, the solver will produce an error about it.
+
+ \st
+ In what follows we describe the kind of errors the system can produce. The first three subsections correspond to three sections of the program: sorts, attributes and statements. The last section describes errors for program's query.
+ \medskip\noindent
+ 
+\subsection{Sort Definition Errors}
 The following are possible causes of a sort definition error  that will result in a type error  message.
 \begin{enumerate}
 \item A numeric range $n_1..n_2$ (statement \ref{numrange} in section \ref{ss}) where  $n_1$ is greater than $n_2$.
@@ -394,8 +416,9 @@ The following are possible causes of a sort definition error  that will result i
  #s=1..2.
  #fs=f(#s,#s2).
 \end{verbatim}
+Sort \texttt{\#s2} is not defined by the program.
 \end{enumerate}
-\subsubsection{Attribute declarations errors}
+\subsection{Attribute Declarations Errors}
 
 \begin{enumerate}
 \item An attribute with the same name is declared more than once.
@@ -427,39 +450,72 @@ The following are possible causes of a sort definition error  that will result i
 \end{verbatim}
 Here there is an attribute named $f$ and a record $f(a)$ belonging to \texttt{\#s1}.
 \end{enumerate}
-\subsubsection{Errors in program statements}
+\subsection{Errors in Program Statements}\label{errorsinstatements}
 
-To describe errors in program statement, we need an auxiliary definition of a term.
-\begin{enumerate}
+To describe errors in program statements, we need the following definitions.
+
+\begin{definition}[Term]
+{\rm \textit{Terms} are divided into three kinds:
+\begin{enumerate}[label=(\arabic*),itemsep=5pt]
  \item numbers, identifiers and variables are \textit{terms};
- \item If $f$ is an identifier and $\alpha_1, \dots, \alpha_n$ are \textit{terms}, 
+ \item\label{fterm} if $f$ is an identifier and $\alpha_1, \dots, \alpha_n$ are \textit{terms}, 
    then $f(\alpha_1,\dots, \alpha_n)$ is a \textit{term}.
  \item\label{arithterms} standard arithmetic expressions constructed from numbers, variables and operators $+$, $-$ , $*$, $/$ are terms. 
 \end{enumerate}
-
-\medskip\noindent
+\noindent
 We will refer to terms of the form \ref{arithterms} as \textit{arithmetic terms}.
+We will also say that the term of the form $\ref{fterm}$ is \textit{formed by} f. 
+
+$\hfill \Box$
+}
+\end{definition}
+
+\st
+Consider a program rule $r$:
+  
+\begin{equation}
+   a(\vec{t}) = y \leftarrow l_1,  \ldots, l_k, not~l_{k+1} \ldots not~l_{n}.
+\end{equation}
+where $a(\vec{t}) = y$, referred to as the head $r$, is an atom, and  $l_1,\ldots,l_n$ are literals of the program of the form $\tau_1 \odot \tau_2$,
+where $\tau_1$ may be formed by an attribute of the program, and $\tau_2$ is a term from the program's signature (not containing terms formed by an attribute).
+
 
 \medskip\noindent
-For each literal $\tau_1 \odot \tau_2$ occurring in a program,  $\odot \in \{>, \leq, \geq, =, \not=, <\}$, where $\tau_1$, $\tau_2$ are terms, we will produce errors in the following cases:
+To ensure correctness of the program, we require that $r$ satisfies the following constraints:
+\begin{enumerate}[label=(\arabic*),itemsep=5pt]
+\item $a$ is an attribute name;
+\item if $a$ is $obs$ or $do$, then $n=0$ (that is, the body of the rule is empty)
+\item if $a$ is $obs$ or $do$, then $\vec{t} = \langle a(\vec{q}),y \rangle$, where $a(\vec{q})$ is an attribute term of program's signature not containing variables,
+  and $y$ is a term not containing variables such that $y \in range(a)$.
+\end{enumerate}
 
-\begin{enumerate}
+\st
+Additionally, for each literal $\tau_1 \odot \tau_2$ occurring in a program rule, where $\odot \in \{>, \leq, \geq, =, \not=, <\}$ and $\tau_1$, $\tau_2$ are terms, the system will produce an error in the following cases:
+
+\begin{enumerate}[label=(\arabic*),itemsep=5pt]
   
-\item $\tau_2$ is of the form $f(t_1,\ldots,t_n)$, $f$ is an attribute name;
-\item $\tau_1$ is of the form $f(t_1,\ldots,t_n)$, $f$ is an attribute name, and $\odot \not\in\{=,\not=\}$;
-\item $\tau_1$ is of the form $f(t_1,\ldots,t_n)$, $f$ is an attribute declared as:
+\item $\tau_2$ contains a term of the form $f(t_1,\ldots,t_n)$, where $f$ is an attribute name;
+\item $\tau_1$ is of the form $f(t_1,\ldots,t_n) = y$, $f$ is an attribute name, and $\odot \not\in\{=,\not=\}$;
+\item $\tau_1$ is of the form $f(t_1,\ldots,t_n) = y$, $f$ is an attribute name, and one of $t_1,\ldots t_n$ contains a term $g(q_1,\ldots,q_n)$, where $g$ is an attribute name;
+\item $\tau_1$ is of the form $f(t_1,\ldots,t_n) = y$, $f$ is an attribute declared as:
   $$f: s_1,\ldots,s_m \rightarrow s_{m+1}$$
-  where $n \not=m$
+  where $n \not=m$;
   
-\item $\tau_1$ is of the form $f(t_1,\ldots,t_n)$, $f$ is an attribute declared as:
+\item $\tau_1$ is of the form $f(t_1,\ldots,t_n) = y$, $f$ is an attribute declared as:
   $$f: s_1,\ldots,s_n \rightarrow s_{n+1}$$
   and for some $i \in 1...n$, $t_i$ is a ground term not belonging to $s_i$;
   
 \item $\tau_1$ is of the form $f(t_1,\ldots,t_n)$, $f$ is an attribute declared as:
   $$f: s_1,\ldots,s_n \rightarrow s_{n+1}$$
-  and $\tau_2$ is a ground term such that $\tau_2 \not\in s_{n+1}$.
-  
+  and $\tau_2$ is a ground term such that $\tau_2 \not\in s_{n+1}$;
+\item at least one of terms $\tau_1$ or $\tau_2$ contains a term $f(t_1,\ldots,t_n)$, where $f$ is neither a record name nor an attribute term of the program.
 \end{enumerate}
+
+\st
+Pr-atom $pr(a(\vec{t}) = y~|~B ) = v$ has to satisfy all the constraints for the rule $a(\vec{t}) = y \leftarrow B$, and, additionally, $a$ cannot be formed by $obs$ or $do$.
+
+\subsection{Errors in Query}
+The literal in program's query has to satisfy the same requirements as literal in the body of program rules, as defined in Section \ref{errorsinstatements}.
 
 
 \subsection{Type warnings}\label{type_warnings}
