@@ -154,3 +154,7 @@ TEST(NEWVERSION_NAIVE, _dostmt) {
     ASSERT_NEAR(compute_query("plogapp/tests/donaive.plog",NewPlogMode::QUERY_NAIVE), 1.0, 1e-4);
 }
 
+TEST(NEWVERSION_NAIVE, _issue18) {
+    ASSERT_NEAR(compute_query("plogapp/tests/multipleabdsupports.plog",NewPlogMode::QUERY_NAIVE), 0.5, 1e-4);
+}
+
