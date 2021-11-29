@@ -200,7 +200,7 @@ This section starts with a keyword $sorts$ followed by a collection of sort defi
 \begin{equation*}
   sort\_name=sort\_expression.
 \end{equation*}
-\textit{sort\_name} is an identifier preceeded by the pound sign (\#).
+\textit{sort\_name} is an identifier preceded by the pound sign (\#).
 \textit{sort\_expression}  on the right hand side denotes a collection of strings called $a~sort$.
 
 
@@ -258,7 +258,7 @@ then $f(\alpha_1,\dots, \alpha_n)$ is a ground term.
 \begin{equation*}
 f(sort\_name_1,..., sort\_name_n)
 \end{equation*}
-where $f$ is an identifier, for $ 1\leq i\leq n$, $sort\_name_i$ occurs in one of the preceeding sort definitions.
+where $f$ is an identifier, for $ 1\leq i\leq n$, $sort\_name_i$ occurs in one of the preceding sort definitions.
 
 The expression defines a collection of ground terms 
 \\ $\{f(t_1,\dots,t_n):  t_1 \in s_i \land \dots \land t_n \in s_n\}$
@@ -281,7 +281,7 @@ The sort \texttt{\#sf} consists of records $\{f(1,1,2),f(1,1,1),f(2,1,1)\}$
 \item $(S_1 \bigtriangledown S_2)$, where $\bigtriangledown \in \{+,-,*\}$ and both $S_1$ and $S_2$ are set theoretic expressions
 \end{itemize}
 
-$\#sort\_name$ must be a name of a sort occurring in one of the preceeding sort definitions. 
+$\#sort\_name$ must be a name of a sort occurring in one of the preceding sort definitions. 
 The operations $+$ $*$ and $-$ stand for union, intersection and difference correspondingly.
 
 
@@ -320,16 +320,24 @@ Attributes with no arguments must be declared as $attr\_symbol:sortName_1$ (exam
 P-log rules are of the following form:
 
 \begin{equation}
-   a(\vec{t}) = y \leftarrow l_1,  \ldots, l_k, not~l_{k+1} \ldots not~l_{n}.
+   a(\vec{t}) = y \Leftarrow l_1,  \ldots, l_k, not~l_{k+1} \ldots not~l_{n}.
  \end{equation}
-where $a(\vec{t}) = y$ is a program atom and $l_1,\ldots,l_n$ are program literals.
+where $\Leftarrow \in \{\leftarrow, \stackrel{+}{\leftarrow}\}$,
+$a(\vec{t}) = y$ is a program atom and $l_1,\ldots,l_n$ are program literals.
+
+\st
 The atom $a(\vec{t}~) = y$ is referred to as the \textit{head} of the rule, and $l_1,\ldots,l_k$ is referred to as the \textit{body} of the rule.
  A rule with $k=0$ is referred to as a \textit{fact}.
  The system allows for a shorthand $a(t)$ for $a(t) = true$, and standard arithmetic relations of the form $t_1~op~t_2$, where $op \in \{\texttt{>=},\texttt{<=},\texttt{>},\texttt{<},\texttt{=},\texttt{!=}\}$ in the body of the rule .
+
+ \st
+The rules with $\stackrel{+}{\leftarrow}$ are called consistency restoring rules (cr-rules) \cite{crrule}. The system implements cr-rules semantics with preference relation based on minimal cardinality of the selected rules. Cr-rules are only supported for naive algorithm.
+
+\st
  Three special kinds of rules are \textit{random selection rules}, \textit{observations} and \textit{actions}.
  As defined in \cite{Balai2019},
  random selection rule is a rule whose head is of one of the forms $random(a,p)$ or $random(a)$. Action is a fact whose head is $do(a,y)$\footnote{The system doesn't support rule labels and actions of the form $do(r,a,y)$ defined in \cite{Balai2019}. Therefore there has to be at most one action for each attribute term. This limitation will be removed in future.}.
- Observation is a fact whose head is of the form $obs(a,y)$ \textcolor{red}{Right now, the system only supports observations and actions whose arguments are positive atoms.}. Note that an observation of a negative atom, say $b \not= z$, can be easily modeled by introducing an extra rule $a = y \leftarrow b \not=z$, where $a$ is a fresh attribute term, and adding an observation $obs(a,y)$. 
+ Observation is a fact whose head is of the form $obs(a,y)$ \textcolor{red}{The system only supports observations and actions whose arguments are positive atoms.} Note that an observation of a negative atom, say $b \not= z$, can be easily modeled by introducing an extra rule $a = y \leftarrow b \not=z$, where $a$ is a fresh attribute term, and adding an observation $obs(a,y)$. 
  
  \subsubsection{Pr-Atoms}
 
@@ -465,28 +473,28 @@ To describe errors in program statements, we need the following definitions.
 \noindent
 We will refer to terms of the form \ref{arithterms} as \textit{arithmetic terms}.
 We will also say that the term of the form $\ref{fterm}$ is \textit{formed by} f. 
-
+Terms formed by attributes are called \textit{attribute terms}.
 $\hfill \Box$
 }
 \end{definition}
 
 \st
-Consider a program rule $r$:
+Consider  program rule $r$:
   
 \begin{equation}
-   a(\vec{t}) = y \leftarrow l_1,  \ldots, l_k, not~l_{k+1} \ldots not~l_{n}.
+   a(\vec{t}) = y \Leftarrow l_1,  \ldots, l_k, not~l_{k+1} \ldots not~l_{n}.
 \end{equation}
-where $a(\vec{t}) = y$, referred to as the head $r$, is an atom, and  $l_1,\ldots,l_n$ are literals of the program of the form $\tau_1 \odot \tau_2$,
-where $\tau_1$ may be formed by an attribute of the program, and $\tau_2$ is a term from the program's signature (not containing terms formed by an attribute).
+where $a(\vec{t}) = y$, is an atom, and  $l_1,\ldots,l_n$ are literals of the program of the form $\tau_1 \odot \tau_2$,
+where $\tau_1$ may be formed by an attribute, and $\tau_2$ is a term from the program's signature (not containing attribute terms).
 
 
 \medskip\noindent
 To ensure correctness of the program, we require that $r$ satisfies the following constraints:
 \begin{enumerate}[label=(\arabic*),itemsep=5pt]
 \item $a$ is an attribute name;
-\item if $a$ is $obs$ or $do$, then $n=0$ (that is, the body of the rule is empty)
-\item if $a$ is $obs$ or $do$, then $\vec{t} = \langle a(\vec{q}),y \rangle$, where $a(\vec{q})$ is an attribute term of program's signature not containing variables,
-  and $y$ is a term not containing variables such that $y \in range(a)$.
+\item if $\Leftarrow$ is $\stackrel{+}{\leftarrow}$, then $a \not\in \{obs,do\}$;
+\item if $a\in \{obs, do\}$, then $n=0$ (that is, the body of the rule is empty);
+\item if $a$ is $obs$ or $do$, then $\vec{t} = \langle a(\vec{q}),y \rangle$, where $a(\vec{q})$ is an attribute term of program's signature.
 \end{enumerate}
 
 \st
@@ -508,7 +516,8 @@ Additionally, for each literal $\tau_1 \odot \tau_2$ occurring in a program rule
 \item $\tau_1$ is of the form $f(t_1,\ldots,t_n)$, $f$ is an attribute declared as:
   $$f: s_1,\ldots,s_n \rightarrow s_{n+1}$$
   and $\tau_2$ is a ground term such that $\tau_2 \not\in s_{n+1}$;
-\item at least one of terms $\tau_1$ or $\tau_2$ contains a term $f(t_1,\ldots,t_n)$, where $f$ is neither a record name nor an attribute term of the program.
+\item at least one of terms $\tau_1$ or $\tau_2$ contains a term $f(t_1,\ldots,t_n)$, where $f$ is neither a record name nor an attribute term of the program;
+\item for each atom $do(a,y)$ occurring in the program, if $y$ doesn't contain variables, then $y \in range(a)$; similarly for $obs(a,y)$.
 \end{enumerate}
 
 \st
