@@ -30,6 +30,7 @@ enum plog_error {
     plog_error_runtime   = 1, // wrong usage of the clingo API or invalid input
     plog_error_sort_definition  = 2, // incorrect sort definition
     plog_error_attribute_declaration  = 3, // incorrect attribute declaration
+    plog_error_statement  = 4, // incorrect attribute declaration
 };
 
 //! Corresponding type to ::plog_error.

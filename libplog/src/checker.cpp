@@ -5,15 +5,20 @@
 #include "plog/checker.h"
 #include "plog/input/attributedeclaration.h"
 #include "plog/input/sortdefinition.h"
+#include "plog/input/statement.h"
 #include "plog/sortexpression.h"
+
+const char * OBS = "obs";
+const  char * DO = "do";
+const char * RANDOM = "random";
 
 namespace {
 
     // Return the first definition D from the vector of definitions such that
-    // nameFromDef(D) == name. Asserts that the vector contains at least one such
-    // definition. In case there are multiple such definitions, returns the first one.
+    // nameFromDef(D) == name. In case no definitions found, returns nullptr.
+    // In case there are multiple such definitions, returns the first one.
     template<typename T>
-    const T& getDefinition(const Gringo::String name, const std::vector<std::unique_ptr<T>> & defs,
+    const T* getDefinition(const Gringo::String name, const std::vector<std::unique_ptr<T>> & defs,
                            std::function<const Gringo::String(const T&)> nameFromDef) {
         const T* defPtr = nullptr;
         for (auto const &def: defs) {
@@ -22,8 +27,7 @@ namespace {
                 break;
             }
         }
-        assert(defPtr);
-        return *defPtr;
+        return defPtr;
     }
 
     // Retrieve all records and their arities occurring in a given sort expression.
@@ -81,6 +85,7 @@ namespace Plog {
     void Checker::check() {
         checkSortDefs();
         checkAttributeDecls();
+        checkStatements();
     }
 
     // Return sort definition for the sort with a given name.
@@ -91,15 +96,15 @@ namespace Plog {
     const SortDefinition& Checker::getSortDefinition(Gringo::String sortName) {
         std::function<const Gringo::String(const SortDefinition&)> nameFromSortDef =
                 [](const SortDefinition &sortDef) {return sortDef.getSortName();};
-        return getDefinition(sortName, program.sortdefs_, nameFromSortDef);
+        return *getDefinition(sortName, program.sortdefs_, nameFromSortDef);
     }
 
     // Return attribute declaration for the attribute with a given name.
-    // Asserts that the program contains at least one declaration.
     // In case when the program is not well formed and there
     // are several declarations, returns the first one as stored
-    // in program.attdecls_ vector.
-    const AttributeDeclaration& Checker::getAttributeDeclaration(Gringo::String attributeName) {
+    // in program.attdecls_ vector. In case there are no declarations,
+    // returns nullptr.
+    const AttributeDeclaration* Checker::getAttributeDeclaration(Gringo::String attributeName) {
         std::function<const Gringo::String(const AttributeDeclaration&)> nameFromAttDecl =
                 [](const AttributeDeclaration &attDecl) {return attDecl.attname;};
        return getDefinition(attributeName, program.attdecls_, nameFromAttDecl);
@@ -180,7 +185,6 @@ namespace Plog {
         auto const &fromTerm = rSortExpr.from;
         auto const &toTerm = rSortExpr.to;
         bool hasUndefinedSymbols = false;
-        Gringo::Logger glog;
         int fromNum = fromTerm->toNum(hasUndefinedSymbols, glog);
         int toNum = toTerm->toNum(hasUndefinedSymbols, glog);
         if (hasUndefinedSymbols) {
@@ -207,11 +211,12 @@ namespace Plog {
             // error if this attribute was already defined in previous lines:
             if (definedAttributes.find(attDecl->attname) != definedAttributes.end()) {
                 // locate previous sort definition with the same name
-                auto const &prevDeclaration = getAttributeDeclaration(attDecl->attname);
+                auto const prevDeclaration = getAttributeDeclaration(attDecl->attname);
+                assert(prevDeclaration);
                 PLOG_REPORT(log, plog_error_attribute_declaration)
                     << attDecl->loc()
                     << ": attribute " << attDecl->attname << " was already defined in line "
-                    << prevDeclaration.loc().beginLine << ". Remove one of the definitions.";
+                    << prevDeclaration->loc().beginLine << ". Remove one of the definitions.";
             }
 
             // check current attribute declaration (independently from others)
@@ -230,6 +235,14 @@ namespace Plog {
     void Checker::checkAttDecl(const AttributeDeclaration &declaration,
                                const std::unordered_set<Gringo::String> & programSorts) {
 
+        // check if attribute name is not DO, OBS or RANDOM:
+        if(declaration.attname == DO || declaration.attname == OBS || declaration.attname == RANDOM) {
+            PLOG_REPORT(log, plog_error_attribute_declaration) << declaration.loc() << ":"
+                                                               << " the name of attribute " << declaration.attname
+                                                               << " coincides with a built-in P-log keyword." <<
+                                                                  " Do not name attributes as 'do', 'obs' or 'random'.";
+        }
+
         // check if record with the same name and arity exists. If so, produce an error to avoid
         // resolve ambiguity in, for example,  f(a) = 5 (is this record "f(a)", or attribute term?)
         Plog::Record record(declaration.attname, declaration.svec.size());
@@ -246,5 +259,118 @@ namespace Plog {
         }
         // check the sort expression used to define the values of the attribute
         checkSortExpr(declaration.se.get(), programSorts);
+    }
+
+    void Checker::checkStatements() {
+       for(auto const &stmt: program.stms_) {
+           checkStatement(*stmt);
+       }
+    }
+
+    void Checker::checkStatement(const Statement &statement) {
+       switch(statement.getType()) {
+           case StatementType::RULE: {
+               if(statement.head_->getAttrName()==OBS) {
+                   checkObsStatement(statement);
+               } else if(statement.head_->getAttrName()==DO) {
+                   checkDoStatement(statement);
+               } else {
+                   checkRule(statement);
+               }
+               break;
+           }
+           case StatementType::CRRULE:
+               checkCRRule(statement);
+               break;
+           case StatementType::PR_ATOM:
+               checkPrAtom(statement);
+               break;
+           case StatementType::QUERY:
+               checkQuery(statement);
+               break;
+       }
+    }
+
+    // Check a rule of the form head :- body, where head is not formed by obs or do.
+    void Checker::checkRule(const Statement& statement) {
+         checkHead(statement.head_);
+         checkBody(statement.body_);
+    }
+
+    void Checker::checkCRRule(const Statement& statement) {
+
+    }
+
+    void Checker::checkPrAtom(const Statement& statement) {
+
+    }
+
+    void Checker::checkQuery(const Statement& statement) {
+
+    }
+
+    // Returns true if given term is a zero value term
+    // Warning: Call only if you are sure that term is a constant value term!
+    //          The function will print errors to stderr if it's not the case
+    bool Checker::isZeroValTerm(const Gringo::Term* term) {
+        auto valTerm =  dynamic_cast<const Gringo::ValTerm*>(term);
+        if(!valTerm) {
+            return false;
+        }
+        return valTerm->isZero(glog);
+    }
+
+    void Checker::checkHead(const ULit &head) {
+        auto attrName = head->getAttrName();
+
+        // the grammar requires that the head is literal with =
+        assert(head->rel == Relation::EQ);
+
+        if (attrName == RANDOM) {
+            checkRandomAtom(head);
+            return;
+        }
+
+        // this head is a part of a constraint?
+        bool isConstraint = false;
+
+        // constraints are constructed as 0!=0, we need to recognize it here!
+        auto headLeftTerm = static_cast<Gringo::Term *>(head->lt.get());
+        if (!headLeftTerm->isNotNumeric()) {
+            // assert that the term we have is actually 0 != 0:
+            assert(isZeroValTerm(headLeftTerm));
+            auto headRightTerm = static_cast<Gringo::Term *>(head->rt.get());
+            assert(isZeroValTerm(headRightTerm));
+            isConstraint = true;
+        }
+        if (!isConstraint) {
+            checkAttributeAtom(head);
+        }
+    }
+
+    void Checker::checkBody(const ULitVec &vector) {
+
+    }
+
+    void Checker::checkObsStatement(const Statement &statement) {
+
+    }
+
+    void Checker::checkDoStatement(const Statement &statement) {
+
+    }
+
+    void Checker::checkRandomAtom(const ULit &uniquePtr) {
+
+    }
+
+    // Checks an atom of the form a(t) = y, where a is an attribute term of the program
+    void Checker::checkAttributeAtom(const ULit &atom) {
+        auto attrName = atom->getAttrName();
+        auto attrDecl = getAttributeDeclaration(attrName);
+        if(attrDecl == nullptr) {
+            PLOG_REPORT(log, plog_error_statement) << atom->loc() << ":"
+            << " literal is formed by an undeclared attribute " << attrName << ".";
+        }
     }
 }

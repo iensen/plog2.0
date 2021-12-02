@@ -1,0 +1,6 @@
+sorts
+#s = {a}.
+attributes
+a: #s.
+statements
+b = true.

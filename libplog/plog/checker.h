@@ -23,6 +23,8 @@ namespace Plog {
     private:
         const Program &program;
         Logger &log;
+        // helper logger to use Gringo API (such as eval)
+        Gringo::Logger glog;
         std::unordered_set<Record> records;
 
         void checkSortDefs();
@@ -43,10 +45,36 @@ namespace Plog {
 
         void checkAttributeDecls();
 
-        const AttributeDeclaration &getAttributeDeclaration(String attributeName);
+        const AttributeDeclaration* getAttributeDeclaration(String attributeName);
 
         void checkAttDecl(const AttributeDeclaration &declaration,
                           const std::unordered_set<String> &definedSorts);
+
+        void checkStatements();
+
+        void checkStatement(const Statement &statement);
+
+        void checkRule(const Statement &statement);
+
+        void checkCRRule(const Statement &statement);
+
+        void checkPrAtom(const Statement &statement);
+
+        void checkQuery(const Statement &statement);
+
+        void checkHead(const ULit &uniquePtr);
+
+        void checkBody(const ULitVec &vector);
+
+        void checkObsStatement(const Statement &statement);
+
+        void checkDoStatement(const Statement &statement);
+
+        void checkRandomAtom(const ULit &uniquePtr);
+
+        void checkAttributeAtom(const ULit &uniquePtr);
+
+        bool isZeroValTerm(const Term *term);
     };
 }
 

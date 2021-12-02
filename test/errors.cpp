@@ -56,4 +56,13 @@ TEST(NEWVERSION_ATTRDECLERROR, WRONG_SORTEXPR2) {
     EXPECT_THAT(get_error("plogapp/tests/errors/WrongSortExprInAttlDecl2.plog"), HasSubstr(error));
 }
 
+TEST(NEWVERSION_ATTRDECLERROR, BUILTINKEYWORD) {
+    auto error = "1-18: the name of attribute random coincides with a built-in P-log keyword.";
+    EXPECT_THAT(get_error("plogapp/tests/errors/KeywordAsAttrName.plog"), HasSubstr(error));
+}
+
+TEST(NEWVERSION_STATEMENTERROR, UNDECLAREDATTRIBUTE) {
+    auto error = "6:1-9: literal is formed by an undeclared attribute b.";
+    EXPECT_THAT(get_error("plogapp/tests/errors/UndeclaredAttribute.plog"), HasSubstr(error));
+}
 

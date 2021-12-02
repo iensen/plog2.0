@@ -1,0 +1,6 @@
+sorts
+#s = {a}.
+attributes
+random: #s -> #s.
+statements
+

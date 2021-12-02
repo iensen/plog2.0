@@ -88,7 +88,7 @@ static std::pair<Gringo::UTerm, bool> term(const Plog::ULit &lit) {
 
 
 
-StatementType Statement::getType() {
+StatementType Statement::getType() const{
     return type_;
 }
 
@@ -350,10 +350,11 @@ std::vector<Clingo::AST::Statement> Statement::ruleToGringoAST(const UAttDeclVec
         }
     }
 
-    // :- obs(a(t),v,true), not a(t,v).
-    // :- do(a(t),v,true), not a(t,v).
+    // :- obs(a(t),v), not a(t,v).
+    // :- do(a(t),v), not a(t,v).
+    // TODO: what about obs(a(t),y,false)? DON'T WE NEED :- obs(a(t), v, false), not -a(t,v)???
     if ((headAttrName == "obs" || headAttrName == "do") &&
-      (solvingMode == SolvingMode::query_naive || solvingMode ==SolvingMode::possible_worlds)) {// if the head is a random atom
+      (solvingMode == SolvingMode::query_naive || solvingMode ==SolvingMode::possible_worlds)) {// if the head is do or obs
         auto term = f_l.data.get<Clingo::AST::Term>();
         auto funcTerm = term.data.get<Clingo::AST::Function>();
         const char *obs;

@@ -28,7 +28,12 @@ using UGStm = Gringo::Input::UStm ;
 using Gringo::Input::UBodyAggrVec ;
 using Gringo::Input::UBodyAggr;
 
+namespace Plog {
+    class Checker;
+}
+
 struct Statement : Gringo::Printable, Gringo::Locatable {
+    friend Plog::Checker;
     Statement(Plog::ULit &&query);
     Statement(Plog::ULit &&head, Plog::ULitVec &&body, bool isCrRule = false);
     Statement(Plog::ULit &&head, Plog::ULitVec &&body,UProb && prob);
@@ -40,7 +45,7 @@ struct Statement : Gringo::Printable, Gringo::Locatable {
     virtual void toGround(ToGroundArg &x, UStmVec &stms) const;
     virtual ~Statement();
     std::vector<Clingo::AST::Statement> toGringoAST(const UAttDeclVec & attdecls, const USortDefVec &sortDefVec, SolvingMode algo);
-    StatementType  getType();
+    StatementType  getType() const;
 
 private:
     Clingo::AST::ComparisonOperator getComparisonOpFromRelation(Gringo::Relation rel);
