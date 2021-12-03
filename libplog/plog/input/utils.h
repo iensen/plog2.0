@@ -25,7 +25,7 @@ Clingo::AST::Term termToClingoTerm(const UTerm & term);
 UTermVec clone(const UTermVec &vec);
 std::string term_to_string (const Clingo::AST::Term &term);
 Gringo::String getAttrName(const UTerm &term);
-std::vector<Clingo::AST::Term> getAttrArgs(const UTerm &term);
+const Gringo::UTermVec & getAttrArgs(const UTerm &term);
 
 // manipulations with gringo strings:
 String  concat(char prefix, String s);

@@ -66,3 +66,8 @@ TEST(NEWVERSION_STATEMENTERROR, UNDECLAREDATTRIBUTE) {
     EXPECT_THAT(get_error("plogapp/tests/errors/UndeclaredAttribute.plog"), HasSubstr(error));
 }
 
+TEST(NEWVERSION_STATEMENTERROR, WRONGARGSNUM) {
+    auto error = "6:1: wrong number of arguments in attribute term a(o).";
+    EXPECT_THAT(get_error("plogapp/tests/errors/WrongNumberOfArgs.plog"), HasSubstr(error));
+}
+

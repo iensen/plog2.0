@@ -1,0 +1,6 @@
+sorts
+#s = {o}.
+attributes
+a: #s,#s -> #s.
+statements
+a(o) = o.

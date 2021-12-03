@@ -182,16 +182,13 @@ Gringo::String getAttrName(const UTerm &term) {
 // given a term,
 // if it is of the form f(t1,..,tn), return a vector of clingo terms {t1,,,tn}
 // if it is of the form a, return {}
-std::vector<Clingo::AST::Term> getAttrArgs(const UTerm &term) {
-    FunctionTerm * faterm = (FunctionTerm*) term.get();
-    String termName = "";
-    std::vector<Clingo::AST::Term> result;
+const Gringo::UTermVec& getAttrArgs(const UTerm &term) {
+    static Gringo::UTermVec emptyVec;
+    auto * faterm = dynamic_cast<FunctionTerm*> (term.get());
     if(faterm) {
-        for(const UTerm &arg: faterm->args) {
-            result.emplace_back(termToClingoTerm(arg));
-        }
+        return faterm->args;
     }
-    return result;
+    return emptyVec;
 }
 
 

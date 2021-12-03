@@ -35,6 +35,9 @@ namespace Plog {
 
         virtual String getAttrName();
 
+        const Gringo::UTermVec & getAttrArgs();
+
+
         virtual bool isRelational(const UAttDeclVec &attdecls);
 
     };

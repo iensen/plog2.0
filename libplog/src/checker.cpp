@@ -9,7 +9,7 @@
 #include "plog/sortexpression.h"
 
 const char * OBS = "obs";
-const  char * DO = "do";
+const char * DO = "do";
 const char * RANDOM = "random";
 
 namespace {
@@ -364,13 +364,29 @@ namespace Plog {
 
     }
 
+
     // Checks an atom of the form a(t) = y, where a is an attribute term of the program
-    void Checker::checkAttributeAtom(const ULit &atom) {
-        auto attrName = atom->getAttrName();
+    void Checker::checkAttributeAtom(const ULit &lit) {
+        auto attrName = lit->getAttrName();
         auto attrDecl = getAttributeDeclaration(attrName);
         if(attrDecl == nullptr) {
-            PLOG_REPORT(log, plog_error_statement) << atom->loc() << ":"
+            PLOG_REPORT(log, plog_error_statement) << lit->loc() << ":"
             << " literal is formed by an undeclared attribute " << attrName << ".";
+            return;
         }
+        auto const & args = lit->getAttrArgs();
+        if(args.size() != attrDecl->svec.size()) {
+            std::ostringstream stream;
+            lit->getAttr()->print(stream);
+            // Parser sets default 0:0 location on lit->getAttr() (see NonGroundProgramBuilder::lit).
+            // Therefore we will reuse the location from lit with a hacky  'fix-up':
+            auto loc = lit->loc();
+            loc.endColumn = loc.beginColumn;
+            PLOG_REPORT(log, plog_error_statement)
+                     << loc << ": wrong number of arguments in attribute term "<< stream.str() <<
+                                       ". Attribute \'"<< attrName << "\' was declared to accept " <<
+                                       std::to_string(attrDecl->svec.size()) << " arguments.";
+        }
+
     }
 }

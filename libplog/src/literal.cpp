@@ -30,6 +30,10 @@ namespace  Plog {
         return ::getAttrName(lt);
     }
 
+    const Gringo::UTermVec  & Literal::getAttrArgs() {
+        return ::getAttrArgs(lt);
+    }
+
     bool Literal::isRelational(const UAttDeclVec &attdecls) {
 
         String attrName = getAttrName();
