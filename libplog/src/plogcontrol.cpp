@@ -181,7 +181,7 @@ void PlogControl::ground() {
         parsed = false;
     }
     prg_.loadToControl(clingoControl, solvingMode);
-    pb = new PlogGroundProgramBuilder(*out_, solvingMode == SolvingMode::query_dco);
+    pb = std::make_unique<PlogGroundProgramBuilder>(*out_, solvingMode == SolvingMode::query_dco);
     clingoControl.register_observer(*pb);
     clingoControl.ground({{"base", {}}});
 }
@@ -250,7 +250,6 @@ void PlogControl::parse() {
 }
 
 PlogControl::~PlogControl() {
-    delete pb;
 }
 
 bool PlogControl::fact(Gringo::SymbolicAtomIter it) const {

@@ -145,7 +145,7 @@ public:
     std::unique_ptr<GroundPlogBackend>                        out_;
     Plog::Program                                                   prg_;
     Defines                                                   defs_;
-    std::unique_ptr<NonGroundProgramBuilder>   pb_;
+    std::unique_ptr<NonGroundProgramBuilder>   pb_ = nullptr;
     std::unique_ptr<PlogParser>                               parser_;
     FinishHandler                                             finishHandler_;
     GroundPlog::GroundPlogFacade                              *groundplog_ = nullptr;
@@ -161,7 +161,7 @@ public:
     // the flag is true if the mode is query mode, and the algorithm is for dco programs
     SolvingMode solvingMode;
 private:
-    PlogGroundProgramBuilder *pb;
+    std::unique_ptr<PlogGroundProgramBuilder> pb;
 };
 
 
